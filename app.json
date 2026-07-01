@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Vastu App",
+    "slug": "vastu-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.vastu.app"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4b83c463-0361-4f70-9ad1-22182a297d4b"
+      }
+    },
+    "owner": "madhu0586"
+  }
+}
