@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { SectionCard } from "@/components/SectionCard";
 import { PremiumInput } from "@/components/PremiumInput";
 import { SearchableSelect } from "@/components/SearchableSelect";
@@ -53,12 +54,10 @@ export const HomeScreen = () => {
 
   const [form, setForm] = useState<VastuFormValues>(initialForm);
 
-  // Three independent result tables
   const [table1, setTable1] = useState<ResultTableType | null>(null);
   const [table2, setTable2] = useState<ResultTableType | null>(null);
   const [table3, setTable3] = useState<ResultTableType | null>(null);
 
-  // PDF loading states per table
   const [pdfLoading1, setPdfLoading1] = useState(false);
   const [pdfLoading2, setPdfLoading2] = useState(false);
   const [pdfLoading3, setPdfLoading3] = useState(false);
@@ -70,28 +69,14 @@ export const HomeScreen = () => {
     setForm((current) => ({ ...current, [key]: value }));
   };
 
-  // ── Calculate handlers — each extracts its own table ──
-  const handleCalc1 = () => {
-    const report = calculateVastuReport(form);
-    setTable1(report.summaryTables[0]);
-  };
+  const handleCalc1 = () => { const r = calculateVastuReport(form); setTable1(r.summaryTables[0]); };
+  const handleCalc2 = () => { const r = calculateVastuReport(form); setTable2(r.summaryTables[1]); };
+  const handleCalc3 = () => { const r = calculateVastuReport(form); setTable3(r.summaryTables[2]); };
 
-  const handleCalc2 = () => {
-    const report = calculateVastuReport(form);
-    setTable2(report.summaryTables[1]);
-  };
+  const handleClear1 = () => setTable1(null);
+  const handleClear2 = () => setTable2(null);
+  const handleClear3 = () => setTable3(null);
 
-  const handleCalc3 = () => {
-    const report = calculateVastuReport(form);
-    setTable3(report.summaryTables[2]);
-  };
-
-  // ── Clear handlers — clear respective table ──
-  const handleClear1 = () => { setTable1(null); };
-  const handleClear2 = () => { setTable2(null); };
-  const handleClear3 = () => { setTable3(null); };
-
-  // ── PDF download — wraps the single table into a minimal report ──
   const downloadPdf = async (
     table: ResultTableType,
     setLoading: (v: boolean) => void,
@@ -109,20 +94,21 @@ export const HomeScreen = () => {
     }
   };
 
-  // ── Reusable inline Calculate / Clear row ──
-  const ActionRow = ({
-    onCalc,
-    onClear,
-  }: {
-    onCalc: () => void;
-    onClear: () => void;
-  }) => (
+  const ActionRow = ({ onCalc, onClear }: { onCalc: () => void; onClear: () => void }) => (
     <View style={styles.actionPair}>
+      {/* Gold gradient calculate button */}
       <Pressable
         onPress={onCalc}
         style={({ pressed }) => [styles.calcBtn, pressed && styles.btnPressed]}
       >
-        <Text style={styles.calcBtnText}>⚡ {strings.home.calculate}</Text>
+        <LinearGradient
+          colors={["#F4C430", "#C9830A"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.calcBtnGradient}
+        >
+          <Text style={styles.calcBtnText}>⚡ {strings.home.calculate}</Text>
+        </LinearGradient>
       </Pressable>
       <Pressable
         onPress={onClear}
@@ -133,7 +119,6 @@ export const HomeScreen = () => {
     </View>
   );
 
-  // ── Result block: table + PDF button ──
   const ResultBlock = ({
     table,
     loading,
@@ -149,17 +134,21 @@ export const HomeScreen = () => {
         <ResultTable table={{ ...table, visible: true }} />
         <Pressable
           onPress={onDownload}
-          style={({ pressed }) => [
-            styles.pdfBtn,
-            pressed && styles.btnPressed,
-          ]}
+          style={({ pressed }) => [styles.pdfBtn, pressed && styles.btnPressed]}
           disabled={loading}
         >
-          {loading ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <Text style={styles.pdfBtnText}>⬇ {strings.home.downloadPdf}</Text>
-          )}
+          <LinearGradient
+            colors={["#B71C1C", "#8B000F"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.pdfBtnGradient}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FFD95C" />
+            ) : (
+              <Text style={styles.pdfBtnText}>⬇ {strings.home.downloadPdf}</Text>
+            )}
+          </LinearGradient>
         </Pressable>
       </View>
     );
@@ -170,274 +159,324 @@ export const HomeScreen = () => {
       style={styles.flex}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <ScrollView
-        style={styles.flex}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <View style={styles.flex}>
+        {/* CRIMSON HEADER */}
         <ScreenHeader
           title={strings.home.title}
           subtitle={strings.home.subtitle}
         />
 
-        {/* Language */}
-        <SectionCard title={strings.home.languageLabel}>
-          <SearchableSelect
-            label={strings.home.languageLabel}
-            value={language}
-            options={languageOptions}
-            placeholder={strings.home.languagePlaceholder}
-            onChange={(value) => {
-              setLanguage(value as typeof language);
-              updateField("language", value);
-            }}
-          />
-        </SectionCard>
-
-        <View style={styles.formIntro}>
-          <Text style={styles.formSubtitle}>{strings.home.introSubtitle}</Text>
-        </View>
-
-        {/* Owner Information */}
-        <SectionCard
-          title={strings.home.ownerInfoTitle}
-          subtitle={strings.home.ownerInfoSubtitle}
+        {/* IVORY SCROLL BODY */}
+        <ScrollView
+          style={styles.scrollFlex}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
         >
-          <PremiumInput
-            label={strings.home.ownerNameLabel}
-            value={form.ownerName}
-            placeholder={strings.home.ownerNamePlaceholder}
-            autoCapitalize="words"
-            onChangeText={(text) =>
-              updateField("ownerName", text.replace(/[^A-Za-z\s]/g, ""))
-            }
-          />
-        </SectionCard>
+          {/* Festival-style banner below header */}
+          <LinearGradient
+            colors={["#F4C430", "#FFD95C"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.festivalBanner}
+          >
+            <Text style={styles.festivalIcon}>🏠</Text>
+            <View>
+              <Text style={styles.festivalTitle}>వాస్తు శాస్త్ర విశ్లేషణ</Text>
+              <Text style={styles.festivalSub}>ఈ రోజు మీ ఇంటి వాస్తు తెలుసుకోండి</Text>
+            </View>
+          </LinearGradient>
 
-        {/* Property Details */}
-        <SectionCard
-          title={strings.home.propertyTitle}
-          subtitle={strings.home.propertySubtitle}
-        >
-          <SearchableSelect
-            label={strings.home.nakshatramLabel}
-            value={form.nakshatram}
-            options={nakshatramOptions}
-            placeholder={strings.home.nakshatramPlaceholder}
-            onChange={(value) => updateField("nakshatram", value)}
-          />
-          <SearchableSelect
-            label={strings.home.directionLabel}
-            value={form.direction}
-            options={directionOptions}
-            placeholder={strings.home.directionPlaceholder}
-            onChange={(value) => updateField("direction", value)}
-          />
-        </SectionCard>
+          {/* Language */}
+          <SectionCard title={strings.home.languageLabel}>
+            <SearchableSelect
+              label={strings.home.languageLabel}
+              value={language}
+              options={languageOptions}
+              placeholder={strings.home.languagePlaceholder}
+              onChange={(value) => {
+                setLanguage(value as typeof language);
+                updateField("language", value);
+              }}
+            />
+          </SectionCard>
 
-        {/* ════════════════════════════════════════
-            Plot Width
-        ════════════════════════════════════════ */}
-        <SectionCard
-          title={strings.home.plotWidthTitle}
-          subtitle={strings.home.plotWidthSubtitle}
-        >
-          <View style={styles.row}>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.widthFeetLabel}
-                value={form.widthFeet}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("widthFeet", digitsOnly(t))}
-              />
-            </View>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.widthInchLabel}
-                value={form.widthInch}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("widthInch", digitsOnly(t))}
-              />
-            </View>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.widthNulluLabel}
-                value={form.widthNullu}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("widthNullu", digitsOnly(t))}
-              />
-            </View>
+          <View style={styles.sectionDivider}>
+            <View style={styles.divLine} />
+            <Text style={styles.divText}>{strings.home.introSubtitle}</Text>
+            <View style={styles.divLine} />
           </View>
-        </SectionCard>
 
-        {/* ════════════════════════════════════════
-            Plot Depth
-        ════════════════════════════════════════ */}
-        <SectionCard
-          title={strings.home.plotDepthTitle}
-          subtitle={strings.home.plotDepthSubtitle}
-        >
-          <View style={styles.row}>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.depthFeetLabel}
-                value={form.depthFeet}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("depthFeet", digitsOnly(t))}
-              />
+          {/* Owner Information */}
+          <SectionCard
+            title={strings.home.ownerInfoTitle}
+            subtitle={strings.home.ownerInfoSubtitle}
+          >
+            <PremiumInput
+              label={strings.home.ownerNameLabel}
+              value={form.ownerName}
+              placeholder={strings.home.ownerNamePlaceholder}
+              autoCapitalize="words"
+              onChangeText={(text) =>
+                updateField("ownerName", text.replace(/[^A-Za-z\s]/g, ""))
+              }
+            />
+          </SectionCard>
+
+          {/* Property Details */}
+          <SectionCard
+            title={strings.home.propertyTitle}
+            subtitle={strings.home.propertySubtitle}
+          >
+            <SearchableSelect
+              label={strings.home.nakshatramLabel}
+              value={form.nakshatram}
+              options={nakshatramOptions}
+              placeholder={strings.home.nakshatramPlaceholder}
+              onChange={(value) => updateField("nakshatram", value)}
+            />
+            <SearchableSelect
+              label={strings.home.directionLabel}
+              value={form.direction}
+              options={directionOptions}
+              placeholder={strings.home.directionPlaceholder}
+              onChange={(value) => updateField("direction", value)}
+            />
+          </SectionCard>
+
+          {/* Plot Width */}
+          <SectionCard
+            title={strings.home.plotWidthTitle}
+            subtitle={strings.home.plotWidthSubtitle}
+          >
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.widthFeetLabel}
+                  value={form.widthFeet}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("widthFeet", digitsOnly(t))}
+                />
+              </View>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.widthInchLabel}
+                  value={form.widthInch}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("widthInch", digitsOnly(t))}
+                />
+              </View>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.widthNulluLabel}
+                  value={form.widthNullu}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("widthNullu", digitsOnly(t))}
+                />
+              </View>
             </View>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.depthInchLabel}
-                value={form.depthInch}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("depthInch", digitsOnly(t))}
-              />
+          </SectionCard>
+
+          {/* Plot Depth */}
+          <SectionCard
+            title={strings.home.plotDepthTitle}
+            subtitle={strings.home.plotDepthSubtitle}
+          >
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.depthFeetLabel}
+                  value={form.depthFeet}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("depthFeet", digitsOnly(t))}
+                />
+              </View>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.depthInchLabel}
+                  value={form.depthInch}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("depthInch", digitsOnly(t))}
+                />
+              </View>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.depthNulluLabel}
+                  value={form.depthNullu}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("depthNullu", digitsOnly(t))}
+                />
+              </View>
             </View>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.depthNulluLabel}
-                value={form.depthNullu}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("depthNullu", digitsOnly(t))}
-              />
+          </SectionCard>
+
+          <ActionRow onCalc={handleCalc1} onClear={handleClear1} />
+          <ResultBlock
+            table={table1}
+            loading={pdfLoading1}
+            onDownload={() => table1 && downloadPdf(table1, setPdfLoading1)}
+          />
+
+          {/* Suddha Padham */}
+          <SectionCard
+            title={strings.home.suddhaTitle}
+            subtitle={strings.home.suddhaSubtitle}
+          >
+            <View style={styles.row}>
+              <View style={styles.colWide}>
+                <SearchableSelect
+                  label={strings.home.suddhaPadhamLabel}
+                  value={form.suddhaPadham}
+                  options={padhamOptions}
+                  placeholder={strings.home.suddhaPadhamPlaceholder}
+                  onChange={(value) => updateField("suddhaPadham", value)}
+                />
+              </View>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.feetLabel}
+                  value={form.suddhaFeet}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("suddhaFeet", digitsOnly(t))}
+                />
+              </View>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.inchLabel}
+                  value={form.suddhaInch}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("suddhaInch", digitsOnly(t))}
+                />
+              </View>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.nulluLabel}
+                  value={form.suddhaNullu}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("suddhaNullu", digitsOnly(t))}
+                />
+              </View>
             </View>
+          </SectionCard>
+
+          <ActionRow onCalc={handleCalc2} onClear={handleClear2} />
+          <ResultBlock
+            table={table2}
+            loading={pdfLoading2}
+            onDownload={() => table2 && downloadPdf(table2, setPdfLoading2)}
+          />
+
+          {/* Padam with Star */}
+          <SectionCard
+            title={strings.home.padamTitle}
+            subtitle={strings.home.padamSubtitle}
+          >
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <SearchableSelect
+                  label={strings.home.firstSuddhaPadhamLabel}
+                  value={form.firstSuddhaPadham}
+                  options={padhamOptions}
+                  placeholder="Select"
+                  onChange={(value) => updateField("firstSuddhaPadham", value)}
+                />
+              </View>
+              <View style={styles.col}>
+                <SearchableSelect
+                  label={strings.home.secondSuddhaPadhamLabel}
+                  value={form.secondSuddhaPadham}
+                  options={padhamOptions}
+                  placeholder="Select"
+                  onChange={(value) => updateField("secondSuddhaPadham", value)}
+                />
+              </View>
+            </View>
+          </SectionCard>
+
+          <ActionRow onCalc={handleCalc3} onClear={handleClear3} />
+          <ResultBlock
+            table={table3}
+            loading={pdfLoading3}
+            onDownload={() => table3 && downloadPdf(table3, setPdfLoading3)}
+          />
+
+          {/* Bottom ornament */}
+          <View style={styles.bottomOrnament}>
+            <View style={styles.bottomLine} />
+            <Text style={styles.bottomOm}>ॐ</Text>
+            <View style={styles.bottomLine} />
           </View>
-        </SectionCard>
-
-        {/* ── Action Row 1 ── */}
-        <ActionRow onCalc={handleCalc1} onClear={handleClear1} />
-
-        {/* ── Table 1 Result + PDF ── */}
-        <ResultBlock
-          table={table1}
-          loading={pdfLoading1}
-          onDownload={() => table1 && downloadPdf(table1, setPdfLoading1)}
-        />
-
-        {/* ════════════════════════════════════════
-            Suddha Padham
-        ════════════════════════════════════════ */}
-        <SectionCard
-          title={strings.home.suddhaTitle}
-          subtitle={strings.home.suddhaSubtitle}
-        >
-          <View style={styles.row}>
-            <View style={styles.colWide}>
-              <SearchableSelect
-                label={strings.home.suddhaPadhamLabel}
-                value={form.suddhaPadham}
-                options={padhamOptions}
-                placeholder={strings.home.suddhaPadhamPlaceholder}
-                onChange={(value) => updateField("suddhaPadham", value)}
-              />
-            </View>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.feetLabel}
-                value={form.suddhaFeet}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("suddhaFeet", digitsOnly(t))}
-              />
-            </View>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.inchLabel}
-                value={form.suddhaInch}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("suddhaInch", digitsOnly(t))}
-              />
-            </View>
-            <View style={styles.col}>
-              <PremiumInput
-                label={strings.home.nulluLabel}
-                value={form.suddhaNullu}
-                placeholder="0"
-                keyboardType="number-pad"
-                onChangeText={(t) => updateField("suddhaNullu", digitsOnly(t))}
-              />
-            </View>
-          </View>
-        </SectionCard>
-
-        {/* ── Action Row 2 ── */}
-        <ActionRow onCalc={handleCalc2} onClear={handleClear2} />
-
-        {/* ── Table 2 Result + PDF ── */}
-        <ResultBlock
-          table={table2}
-          loading={pdfLoading2}
-          onDownload={() => table2 && downloadPdf(table2, setPdfLoading2)}
-        />
-
-        {/* ════════════════════════════════════════
-            Padam with Star
-        ════════════════════════════════════════ */}
-        <SectionCard
-          title={strings.home.padamTitle}
-          subtitle={strings.home.padamSubtitle}
-        >
-          <View style={styles.row}>
-            <View style={styles.col}>
-              <SearchableSelect
-                label={strings.home.firstSuddhaPadhamLabel}
-                value={form.firstSuddhaPadham}
-                options={padhamOptions}
-                placeholder="Select"
-                onChange={(value) => updateField("firstSuddhaPadham", value)}
-              />
-            </View>
-            <View style={styles.col}>
-              <SearchableSelect
-                label={strings.home.secondSuddhaPadhamLabel}
-                value={form.secondSuddhaPadham}
-                options={padhamOptions}
-                placeholder="Select"
-                onChange={(value) => updateField("secondSuddhaPadham", value)}
-              />
-            </View>
-          </View>
-        </SectionCard>
-
-        {/* ── Action Row 3 ── */}
-        <ActionRow onCalc={handleCalc3} onClear={handleClear3} />
-
-        {/* ── Table 3 Result + PDF ── */}
-        <ResultBlock
-          table={table3}
-          loading={pdfLoading3}
-          onDownload={() => table3 && downloadPdf(table3, setPdfLoading3)}
-        />
-      </ScrollView>
+        </ScrollView>
+      </View>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
+  flex: { flex: 1, backgroundColor: palette.background },
+  scrollFlex: { flex: 1 },
 
   content: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.xxl,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.xxl + 20,
     backgroundColor: palette.background,
   },
 
-  formIntro: {
-    marginTop: spacing.sm,
-    marginBottom: spacing.lg,
+  /* Festival banner */
+  festivalBanner: {
+    borderRadius: cornerRadius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.md,
+    shadowColor: "#F4C430",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
   },
-  formSubtitle: {
-    ...typography.description,
+  festivalIcon: { fontSize: 32, lineHeight: 38 },
+  festivalTitle: {
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 17,
+    color: "#3B1F00",
+    lineHeight: 24,
+  },
+  festivalSub: {
+    fontFamily: "Manrope_400Regular",
+    fontSize: 12,
+    color: "#5C3800",
+    marginTop: 2,
+  },
+
+  /* Section divider */
+  sectionDivider: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: spacing.md,
+    marginTop: spacing.xs,
+  },
+  divLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: palette.border,
+  },
+  divText: {
+    ...typography.tiny,
     color: palette.secondaryText,
+    letterSpacing: 0.5,
+    fontStyle: "italic",
   },
 
   row: {
@@ -445,10 +484,10 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     flexWrap: "wrap",
   },
-  col: { flex: 1, minWidth: 100 },
-  colWide: { flex: 1.3, minWidth: 140 },
+  col: { flex: 1, minWidth: 88 },
+  colWide: { flex: 1.3, minWidth: 120 },
 
-  /* ── Inline Calculate / Clear pair ── */
+  /* Action pair */
   actionPair: {
     flexDirection: "row",
     gap: spacing.sm,
@@ -458,22 +497,24 @@ const styles = StyleSheet.create({
   calcBtn: {
     flex: 3,
     borderRadius: cornerRadius.md,
-    backgroundColor: palette.primary,
+    overflow: "hidden",
+    shadowColor: "#F4C430",
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
+  },
+  calcBtnGradient: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: spacing.md,
-    shadowColor: palette.primary,
-    shadowOpacity: 0.24,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 3,
   },
   calcBtnText: {
     ...typography.button,
-    fontSize: 14,
-    color: "#FFFFFF",
-    letterSpacing: 0.3,
+    color: "#3B1F00",
+    letterSpacing: 0.4,
   },
   clearBtn: {
     flex: 1.4,
@@ -481,48 +522,64 @@ const styles = StyleSheet.create({
     backgroundColor: palette.surface,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: spacing.sm,
     borderWidth: 1,
     borderColor: palette.border,
-    shadowColor: "#2E2118",
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
+    shadowColor: "#000",
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
     elevation: 1,
   },
   clearBtnText: {
     ...typography.button,
-    fontSize: 14,
+    fontSize: 13,
     color: palette.secondaryText,
   },
   btnPressed: {
     opacity: 0.82,
-    transform: [{ scale: 0.98 }],
+    transform: [{ scale: 0.97 }],
   },
 
-  /* ── Result block (table + PDF button) ── */
-  resultBlock: {
-    marginBottom: spacing.lg,
-  },
+  /* Result block */
+  resultBlock: { marginBottom: spacing.md },
   pdfBtn: {
     borderRadius: cornerRadius.md,
-    backgroundColor: palette.secondary,
+    overflow: "hidden",
+    shadowColor: "#B71C1C",
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+    marginTop: 2,
+  },
+  pdfBtnGradient: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 13,
+    paddingVertical: 14,
     paddingHorizontal: spacing.lg,
-    marginTop: 2,
-    shadowColor: palette.secondary,
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
   },
   pdfBtnText: {
     ...typography.button,
-    fontSize: 14,
-    color: "#FFFFFF",
-    letterSpacing: 0.3,
+    color: "#FFF8F0",
+    letterSpacing: 0.4,
+  },
+
+  /* Bottom ornament */
+  bottomOrnament: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginTop: spacing.lg,
+    paddingHorizontal: spacing.xl,
+  },
+  bottomLine: { flex: 1, height: 1, backgroundColor: palette.border },
+  bottomOm: {
+    fontFamily: "CormorantGaramond_600SemiBold",
+    fontSize: 20,
+    color: palette.primary,
+    lineHeight: 26,
+    opacity: 0.4,
   },
 });

@@ -13,18 +13,36 @@ export const ResultTable = ({ table }: ResultTableProps) => {
 
   return (
     <View style={styles.card}>
-      <View style={styles.headerRow}>
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>Report</Text>
+      {/* Crimson header band — like the reference image */}
+      <View style={styles.headerSection}>
+        <View style={styles.badgeRow}>
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>ఫల విశ్లేషణ</Text>
+          </View>
         </View>
         <Text style={styles.title}>{table.title}</Text>
       </View>
-      {table.rows.map((row) => (
-        <View key={row.label} style={styles.row}>
+
+      {/* Rows */}
+      {table.rows.map((row, index) => (
+        <View
+          key={row.label}
+          style={[
+            styles.row,
+            index % 2 === 0 ? styles.rowEven : styles.rowOdd,
+          ]}
+        >
           <Text style={styles.label}>{row.label}</Text>
           <Text style={styles.value}>{row.value}</Text>
         </View>
       ))}
+
+      {/* Footer gold divider */}
+      <View style={styles.footer}>
+        <View style={styles.footerLine} />
+        <Text style={styles.footerDot}>✦</Text>
+        <View style={styles.footerLine} />
+      </View>
     </View>
   );
 };
@@ -32,55 +50,89 @@ export const ResultTable = ({ table }: ResultTableProps) => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: palette.surface,
-    borderRadius: cornerRadius.xl,
+    borderRadius: cornerRadius.lg,
     borderWidth: 1,
     borderColor: palette.border,
-    padding: spacing.xl,
-    marginBottom: spacing.lg,
-    shadowColor: "#2E2118",
+    marginBottom: spacing.md,
+    overflow: "hidden",
+    shadowColor: "#B71C1C",
     shadowOpacity: 0.08,
     shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
   },
-  headerRow: {
-    marginBottom: spacing.md,
+  headerSection: {
+    backgroundColor: palette.primary,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.md,
+  },
+  badgeRow: {
+    marginBottom: 6,
   },
   badge: {
     alignSelf: "flex-start",
-    backgroundColor: "rgba(217, 119, 6, 0.12)",
+    backgroundColor: "rgba(255,217,92,0.2)",
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 999,
-    marginBottom: spacing.sm,
+    paddingVertical: 3,
+    borderRadius: 99,
+    borderWidth: 1,
+    borderColor: "rgba(255,217,92,0.4)",
   },
   badgeText: {
     ...typography.caption,
-    color: palette.primary,
-    letterSpacing: 0.5,
+    color: "#FFD95C",
+    letterSpacing: 0.4,
   },
   title: {
-    ...typography.cardHeading,
-    color: palette.primary,
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 20,
+    color: "#FFF8F0",
+    lineHeight: 28,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: spacing.md,
+    alignItems: "center",
     paddingVertical: 12,
+    paddingHorizontal: spacing.xl,
     borderBottomWidth: 1,
     borderBottomColor: palette.border,
   },
+  rowEven: {
+    backgroundColor: "#FFFDF9",
+  },
+  rowOdd: {
+    backgroundColor: palette.surface,
+  },
   label: {
     ...typography.body,
-    color: palette.text,
+    color: palette.textMedium,
     flex: 1,
+    fontSize: 14,
   },
   value: {
     ...typography.body,
-    color: palette.secondary,
-    fontWeight: "600",
+    color: palette.primary,
+    fontFamily: "Manrope_700Bold",
+    fontSize: 14,
     textAlign: "right",
+  },
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.sm,
+    backgroundColor: palette.surfaceWarm,
+  },
+  footerLine: {
     flex: 1,
+    height: 1,
+    backgroundColor: palette.border,
+  },
+  footerDot: {
+    fontSize: 9,
+    color: palette.gold,
   },
 });

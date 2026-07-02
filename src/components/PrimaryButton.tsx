@@ -26,13 +26,13 @@ export const PrimaryButton = ({
     style={({ pressed }) => [styles.outer, pressed && styles.pressed, style]}
   >
     <LinearGradient
-      colors={[palette.primary, palette.accent]}
+      colors={["#C9A227", "#A07B10"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.button}
     >
       {loading ? (
-        <ActivityIndicator color="#FFFFFF" />
+        <ActivityIndicator color="#0D0404" />
       ) : (
         <Text style={styles.label}>{title}</Text>
       )}
@@ -42,28 +42,29 @@ export const PrimaryButton = ({
 
 const styles = StyleSheet.create({
   outer: {
-    borderRadius: cornerRadius.lg,
+    borderRadius: cornerRadius.md,
     overflow: "hidden",
     shadowColor: palette.primary,
-    shadowOpacity: 0.18,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 4,
+    shadowOpacity: 0.4,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
   },
   pressed: {
-    transform: [{ scale: 0.99 }],
-    opacity: 0.96,
+    transform: [{ scale: 0.98 }],
+    opacity: 0.9,
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 17,
+    paddingVertical: 16,
     paddingHorizontal: spacing.xl,
-    minHeight: 60,
+    minHeight: 56,
   },
   label: {
-    color: "#FFFFFF",
+    color: "#0D0404",
     ...typography.button,
-    letterSpacing: 0.4,
+    letterSpacing: 0.6,
+    fontFamily: "Manrope_700Bold",
   },
 });

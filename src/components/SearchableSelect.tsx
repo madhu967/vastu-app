@@ -61,6 +61,7 @@ export const SearchableSelect = ({
         >
           {selectedLabel || placeholder}
         </Text>
+        <Text style={styles.chevron}>▾</Text>
       </Pressable>
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -72,7 +73,22 @@ export const SearchableSelect = ({
       >
         <Pressable style={styles.backdrop} onPress={() => setOpen(false)} />
         <View style={styles.modalCard}>
-          <Text style={styles.modalTitle}>{label}</Text>
+          {/* Modal header */}
+          <View style={styles.modalHeader}>
+            <View style={styles.modalTitleRow}>
+              <View style={styles.modalTitleAccent} />
+              <Text style={styles.modalTitle}>{label}</Text>
+            </View>
+            <Pressable
+              style={styles.closeBtn}
+              onPress={() => { setSearch(""); setOpen(false); }}
+            >
+              <Text style={styles.closeBtnText}>✕</Text>
+            </Pressable>
+          </View>
+
+          <View style={styles.modalDivider} />
+
           <TextInput
             placeholder="Search..."
             placeholderTextColor={palette.secondaryText}
@@ -86,14 +102,30 @@ export const SearchableSelect = ({
             keyboardShouldPersistTaps="handled"
             renderItem={({ item }) => (
               <Pressable
-                style={styles.option}
+                style={({ pressed }) => [
+                  styles.option,
+                  item.value === value ? styles.optionSelected : null,
+                  pressed ? styles.optionPressed : null,
+                ]}
                 onPress={() => {
                   onChange(item.value);
                   setSearch("");
                   setOpen(false);
                 }}
               >
-                <Text style={styles.optionText}>{item.label}</Text>
+                {item.value === value ? (
+                  <Text style={styles.checkIcon}>✔</Text>
+                ) : (
+                  <View style={styles.emptyCheck} />
+                )}
+                <Text
+                  style={[
+                    styles.optionText,
+                    item.value === value ? styles.optionTextSelected : null,
+                  ]}
+                >
+                  {item.label}
+                </Text>
               </Pressable>
             )}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -113,90 +145,160 @@ const styles = StyleSheet.create({
   },
   label: {
     ...typography.label,
-    color: palette.text,
-    marginBottom: 10,
+    color: palette.textMedium,
+    marginBottom: 8,
   },
   selector: {
-    backgroundColor: palette.mist,
-    borderRadius: cornerRadius.lg,
+    backgroundColor: palette.surfaceInput,
+    borderRadius: cornerRadius.md,
     borderWidth: 1,
     borderColor: palette.border,
-    paddingHorizontal: 16,
-    paddingVertical: 15,
-    minHeight: 56,
-    justifyContent: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    minHeight: 50,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
   },
   selectorError: {
-    borderColor: palette.secondary,
+    borderColor: palette.errorRed,
+    borderWidth: 1.5,
   },
   selectorPressed: {
-    opacity: 0.95,
-    transform: [{ scale: 0.995 }],
+    opacity: 0.9,
+    backgroundColor: "#FFF0E0",
   },
   selectorText: {
     ...typography.body,
     color: palette.text,
+    flex: 1,
   },
   placeholder: {
     color: palette.secondaryText,
   },
+  chevron: {
+    fontSize: 14,
+    color: palette.primary,
+    marginLeft: 8,
+  },
   error: {
-    marginTop: 6,
-    color: palette.secondary,
+    marginTop: 5,
+    color: palette.errorRed,
     ...typography.caption,
   },
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(46, 33, 24, 0.48)",
+    backgroundColor: "rgba(90, 0, 8, 0.45)",
   },
   modalCard: {
     position: "absolute",
     left: spacing.md,
     right: spacing.md,
-    top: "14%",
-    bottom: "14%",
+    top: "10%",
+    bottom: "10%",
     backgroundColor: palette.surface,
     borderRadius: cornerRadius.xl,
     padding: spacing.xl,
     borderWidth: 1,
     borderColor: palette.border,
-    shadowColor: "#2E2118",
-    shadowOpacity: 0.14,
-    shadowRadius: 20,
+    shadowColor: "#B71C1C",
+    shadowOpacity: 0.15,
+    shadowRadius: 24,
     shadowOffset: { width: 0, height: 10 },
-    elevation: 6,
+    elevation: 10,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: spacing.sm,
+  },
+  modalTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  modalTitleAccent: {
+    width: 3,
+    height: 18,
+    borderRadius: 2,
+    backgroundColor: palette.primary,
   },
   modalTitle: {
     ...typography.sectionTitle,
-    color: palette.text,
+    color: palette.primary,
+  },
+  closeBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: palette.primaryLight,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeBtnText: {
+    fontSize: 12,
+    color: palette.primary,
+    fontWeight: "700",
+  },
+  modalDivider: {
+    height: 1,
+    backgroundColor: palette.border,
     marginBottom: spacing.md,
   },
   search: {
-    backgroundColor: palette.mist,
-    borderRadius: cornerRadius.lg,
+    backgroundColor: palette.surfaceInput,
+    borderRadius: cornerRadius.md,
     borderWidth: 1,
     borderColor: palette.border,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    minHeight: 54,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    minHeight: 48,
     marginBottom: spacing.md,
     color: palette.text,
     ...typography.body,
   },
   option: {
-    paddingVertical: 15,
+    paddingVertical: 13,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    borderRadius: cornerRadius.sm,
+    paddingHorizontal: 6,
+  },
+  optionSelected: {
+    backgroundColor: palette.primaryLight,
+  },
+  optionPressed: {
+    backgroundColor: "#FFF5F5",
+  },
+  checkIcon: {
+    fontSize: 12,
+    color: palette.primary,
+    width: 16,
+    textAlign: "center",
+  },
+  emptyCheck: {
+    width: 16,
   },
   optionText: {
     ...typography.body,
     color: palette.text,
+    flex: 1,
+  },
+  optionTextSelected: {
+    color: palette.primary,
+    fontFamily: "Manrope_600SemiBold",
   },
   separator: {
     height: 1,
     backgroundColor: palette.border,
+    marginHorizontal: 6,
   },
   empty: {
     ...typography.body,
     color: palette.secondaryText,
     paddingTop: spacing.lg,
+    textAlign: "center",
   },
 });

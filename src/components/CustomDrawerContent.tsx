@@ -1,4 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -16,37 +17,62 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={styles.content}>
-      <View style={styles.brandBox}>
-        <Text style={styles.brandMark}>ॐ</Text>
-        <Text style={styles.brandTitle}>{strings.home.title}</Text>
-        <Text style={styles.brandSub}>Premium calculator and guide</Text>
-      </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.list}
+      {/* Brand header — crimson gradient like app header */}
+      <LinearGradient
+        colors={["#5A0008", "#8B000F", "#B71C1C"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.brandBox}
       >
-        {props.state.routes.map((route, index) => {
-          const label =
-            route.name === "Home"
-              ? strings.homeRoute
-              : (localizedPages.find((page) => page.key === route.name)
-                  ?.title ?? route.name);
-          const focused = props.state.index === index;
-          return (
-            <DrawerItem
-              key={route.key}
-              label={label}
-              focused={focused}
-              onPress={() => props.navigation.navigate(route.name as never)}
-              labelStyle={[
-                styles.itemLabel,
-                focused ? styles.itemLabelActive : null,
-              ]}
-              style={[styles.item, focused ? styles.itemActive : null]}
-            />
-          );
-        })}
-      </ScrollView>
+        <View style={styles.brandInner}>
+          <View style={styles.omCircle}>
+            <Text style={styles.brandMark}>ॐ</Text>
+          </View>
+          <View style={styles.brandText}>
+            <Text style={styles.brandTitle}>{strings.home.title}</Text>
+            <View style={styles.brandDivRow}>
+              <View style={styles.brandDivLine} />
+              <Text style={styles.brandDivDot}>✦</Text>
+              <View style={styles.brandDivLine} />
+            </View>
+            <Text style={styles.brandSub}>శ్రీ వాస్తు ఫల విశ్లేషణం</Text>
+          </View>
+        </View>
+      </LinearGradient>
+
+      {/* Navigation items */}
+      <View style={styles.navSection}>
+        <Text style={styles.navLabel}>నావిగేషన్</Text>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
+          {props.state.routes.map((route, index) => {
+            const label =
+              route.name === "Home"
+                ? strings.homeRoute
+                : (localizedPages.find((page) => page.key === route.name)
+                    ?.title ?? route.name);
+            const focused = props.state.index === index;
+            return (
+              <DrawerItem
+                key={route.key}
+                label={label}
+                focused={focused}
+                onPress={() => props.navigation.navigate(route.name as never)}
+                labelStyle={[
+                  styles.itemLabel,
+                  focused ? styles.itemLabelActive : null,
+                ]}
+                style={[styles.item, focused ? styles.itemActive : null]}
+              />
+            );
+          })}
+        </ScrollView>
+      </View>
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <View style={styles.footerDivider} />
+        <Text style={styles.footerText}>దేవో వాస్తు ప్రజావతే</Text>
+      </View>
     </DrawerContentScrollView>
   );
 };
@@ -54,54 +80,109 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    backgroundColor: palette.background,
-    paddingTop: spacing.xxl,
+    backgroundColor: palette.surfaceDrawer,
+    paddingTop: 0,
   },
   brandBox: {
-    marginHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
-    backgroundColor: palette.surface,
-    borderRadius: cornerRadius.xl,
-    padding: spacing.xl,
-    borderWidth: 1,
-    borderColor: palette.border,
-    shadowColor: "#2E2118",
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 2,
+    marginBottom: 0,
+  },
+  brandInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: 52,
+    paddingBottom: spacing.xl,
+    paddingHorizontal: spacing.xl,
+    gap: spacing.md,
+  },
+  omCircle: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: "#FFF8F0",
+    borderWidth: 2,
+    borderColor: "rgba(255,217,92,0.5)",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#FFD95C",
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   brandMark: {
-    ...typography.cardTitle,
-    color: palette.primary,
-    marginBottom: 8,
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 26,
+    color: "#B71C1C",
+    lineHeight: 32,
   },
+  brandText: { flex: 1 },
   brandTitle: {
-    ...typography.cardHeading,
-    color: palette.text,
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 18,
+    color: "#FFF8F0",
+    lineHeight: 24,
   },
-  brandSub: {
-    ...typography.caption,
-    color: palette.secondaryText,
-    marginTop: 4,
-  },
-  list: {
-    paddingBottom: spacing.xxl,
-  },
-  item: {
-    borderRadius: cornerRadius.lg,
-    marginHorizontal: spacing.sm,
+  brandDivRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
     marginVertical: 4,
   },
+  brandDivLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "rgba(255,217,92,0.3)",
+  },
+  brandDivDot: { fontSize: 8, color: "#FFD95C" },
+  brandSub: {
+    ...typography.tiny,
+    color: "rgba(255,248,240,0.6)",
+    fontStyle: "italic",
+  },
+  navSection: {
+    paddingHorizontal: spacing.md,
+    flex: 1,
+    paddingTop: spacing.md,
+  },
+  navLabel: {
+    ...typography.tiny,
+    color: palette.secondaryText,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    marginBottom: spacing.xs,
+    marginLeft: spacing.sm,
+  },
+  list: { paddingBottom: spacing.xxl },
+  item: {
+    borderRadius: cornerRadius.md,
+    marginHorizontal: 0,
+    marginVertical: 2,
+  },
   itemActive: {
-    backgroundColor: "rgba(217, 119, 6, 0.12)",
+    backgroundColor: palette.primaryLight,
   },
   itemLabel: {
-    ...typography.label,
-    color: palette.text,
+    ...typography.body,
+    color: palette.textMedium,
+    fontSize: 14,
   },
   itemLabelActive: {
     color: palette.primary,
-    fontWeight: "700",
+    fontFamily: "Manrope_700Bold",
+  },
+  footer: {
+    padding: spacing.xl,
+    alignItems: "center",
+  },
+  footerDivider: {
+    width: "60%",
+    height: 1,
+    backgroundColor: palette.border,
+    marginBottom: spacing.sm,
+  },
+  footerText: {
+    ...typography.tiny,
+    color: palette.secondaryText,
+    fontStyle: "italic",
+    letterSpacing: 0.4,
   },
 });

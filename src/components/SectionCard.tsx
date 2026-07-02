@@ -16,7 +16,12 @@ export const SectionCard = ({
   <View style={styles.card}>
     {(title || subtitle) && (
       <View style={styles.header}>
-        {title ? <Text style={styles.title}>{title}</Text> : null}
+        {title ? (
+          <View style={styles.titleRow}>
+            <View style={styles.titleAccent} />
+            <Text style={styles.title}>{title}</Text>
+          </View>
+        ) : null}
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
     )}
@@ -27,27 +32,40 @@ export const SectionCard = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: palette.surface,
-    borderRadius: cornerRadius.xl,
-    padding: spacing.xl,
-    marginBottom: spacing.lg,
+    borderRadius: cornerRadius.lg,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xl,
+    marginBottom: spacing.md,
     borderWidth: 1,
     borderColor: palette.border,
-    shadowColor: "#2E2118",
-    shadowOpacity: 0.08,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 8 },
+    shadowColor: "#B71C1C",
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
   header: {
     marginBottom: spacing.lg,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  titleAccent: {
+    width: 3,
+    height: 18,
+    borderRadius: 2,
+    backgroundColor: palette.primary,
+  },
   title: {
     ...typography.sectionTitle,
-    color: palette.text,
+    color: palette.primary,
   },
   subtitle: {
     ...typography.description,
     color: palette.secondaryText,
     marginTop: 4,
+    marginLeft: 11,
   },
 });
