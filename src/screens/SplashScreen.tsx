@@ -10,85 +10,97 @@ type SplashScreenProps = {
 };
 
 export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
-  const logoScale = useRef(new Animated.Value(0.75)).current;
-  const fade = useRef(new Animated.Value(0)).current;
-  const textOpacity = useRef(new Animated.Value(0)).current;
-  const textTranslate = useRef(new Animated.Value(16)).current;
-  const ringScale = useRef(new Animated.Value(0.5)).current;
-  const glowPulse = useRef(new Animated.Value(0.6)).current;
+  const logoScale    = useRef(new Animated.Value(0.75)).current;
+  const fade         = useRef(new Animated.Value(0)).current;
+  const textOpacity  = useRef(new Animated.Value(0)).current;
+  const textTranslate= useRef(new Animated.Value(16)).current;
+  const ringScale    = useRef(new Animated.Value(0.5)).current;
+  const glowPulse    = useRef(new Animated.Value(0.6)).current;
+  const screenFade   = useRef(new Animated.Value(1)).current; // for fade-out
 
   useEffect(() => {
+    // Step 1: entrance animation
     Animated.sequence([
       Animated.parallel([
-        Animated.timing(fade, { toValue: 1, duration: 600, useNativeDriver: true }),
+        Animated.timing(fade,      { toValue: 1, duration: 600, useNativeDriver: true }),
         Animated.spring(logoScale, { toValue: 1, tension: 55, friction: 8, useNativeDriver: true }),
         Animated.spring(ringScale, { toValue: 1, tension: 40, friction: 10, useNativeDriver: true }),
       ]),
       Animated.parallel([
-        Animated.timing(textOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(textTranslate, { toValue: 0, duration: 500, useNativeDriver: true }),
+        Animated.timing(textOpacity,  { toValue: 1, duration: 500, useNativeDriver: true }),
+        Animated.timing(textTranslate,{ toValue: 0, duration: 500, useNativeDriver: true }),
       ]),
-    ]).start(() => setTimeout(onFinish, 900));
+      // Step 2: hold on screen for 2 seconds
+      Animated.delay(2000),
+      // Step 3: smooth fade-out over 600ms
+      Animated.timing(screenFade, { toValue: 0, duration: 600, useNativeDriver: true }),
+    ]).start(() => onFinish());
 
+    // Glow pulse runs independently throughout
     Animated.loop(
       Animated.sequence([
-        Animated.timing(glowPulse, { toValue: 1, duration: 1100, useNativeDriver: true }),
+        Animated.timing(glowPulse, { toValue: 1,   duration: 1100, useNativeDriver: true }),
         Animated.timing(glowPulse, { toValue: 0.6, duration: 1100, useNativeDriver: true }),
       ]),
     ).start();
   }, []);
 
   return (
-    <LinearGradient
-      colors={["#5A0008", "#8B000F", "#B71C1C"]}
-      locations={[0, 0.5, 1]}
-      style={styles.container}
-    >
-      {/* Decorative corner marks */}
-      <View style={[styles.corner, styles.cornerTL]}><Text style={styles.cornerText}>✦</Text></View>
-      <View style={[styles.corner, styles.cornerTR]}><Text style={styles.cornerText}>✦</Text></View>
-      <View style={[styles.corner, styles.cornerBL]}><Text style={styles.cornerText}>✦</Text></View>
-      <View style={[styles.corner, styles.cornerBR]}><Text style={styles.cornerText}>✦</Text></View>
+    <Animated.View style={[styles.wrapper, { opacity: screenFade }]}>
+      <LinearGradient
+        colors={["#5A0008", "#8B000F", "#B71C1C"]}
+        locations={[0, 0.5, 1]}
+        style={styles.container}
+      >
+        {/* Decorative corner marks */}
+        <View style={[styles.corner, styles.cornerTL]}><Text style={styles.cornerText}>✦</Text></View>
+        <View style={[styles.corner, styles.cornerTR]}><Text style={styles.cornerText}>✦</Text></View>
+        <View style={[styles.corner, styles.cornerBL]}><Text style={styles.cornerText}>✦</Text></View>
+        <View style={[styles.corner, styles.cornerBR]}><Text style={styles.cornerText}>✦</Text></View>
 
-      {/* Outer decorative ring */}
-      <Animated.View style={[styles.outerRing, { transform: [{ scale: ringScale }], opacity: fade }]} />
+        {/* Outer decorative ring */}
+        <Animated.View style={[styles.outerRing, { transform: [{ scale: ringScale }], opacity: fade }]} />
 
-      {/* Glow behind OM circle */}
-      <Animated.View style={[styles.glow, { opacity: glowPulse }]} />
+        {/* Glow behind OM circle */}
+        <Animated.View style={[styles.glow, { opacity: glowPulse }]} />
 
-      {/* OM Circle — ivory on crimson */}
-      <Animated.View style={[styles.logoCircle, { transform: [{ scale: logoScale }], opacity: fade }]}>
-        <Text style={styles.omText}>ॐ</Text>
-      </Animated.View>
+        {/* OM Circle */}
+        <Animated.View style={[styles.logoCircle, { transform: [{ scale: logoScale }], opacity: fade }]}>
+          <Text style={styles.omText}>ॐ</Text>
+        </Animated.View>
 
-      {/* Text */}
-      <Animated.View style={[styles.textSection, { opacity: textOpacity, transform: [{ translateY: textTranslate }] }]}>
-        <View style={styles.divider}>
-          <View style={styles.divLine} />
-          <Text style={styles.divDot}>✦</Text>
-          <View style={styles.divLine} />
+        {/* Text block */}
+        <Animated.View
+          style={[styles.textSection, { opacity: textOpacity, transform: [{ translateY: textTranslate }] }]}
+        >
+          <View style={styles.divider}>
+            <View style={styles.divLine} />
+            <Text style={styles.divDot}>✦</Text>
+            <View style={styles.divLine} />
+          </View>
+          <Text style={styles.title}>శ్రీ వాస్తు</Text>
+          <Text style={styles.titleEn}>SRI VASTU</Text>
+          <View style={[styles.divider, { marginTop: 10 }]}>
+            <View style={styles.divLine} />
+            <Text style={styles.divDot}>✦</Text>
+            <View style={styles.divLine} />
+          </View>
+          <Text style={styles.tagline}>దేవో వాస్తు ప్రజావతే</Text>
+        </Animated.View>
+
+        {/* Bottom dots */}
+        <View style={styles.dots}>
+          {[0,1,2,3,4].map(i => (
+            <View key={i} style={[styles.dot, i === 2 && styles.dotCenter]} />
+          ))}
         </View>
-        <Text style={styles.title}>శ్రీ వాస్తు</Text>
-        <Text style={styles.titleEn}>SRI VASTU</Text>
-        <View style={[styles.divider, { marginTop: 10 }]}>
-          <View style={styles.divLine} />
-          <Text style={styles.divDot}>✦</Text>
-          <View style={styles.divLine} />
-        </View>
-        <Text style={styles.tagline}>దేవో వాస్తు ప్రజావతే</Text>
-      </Animated.View>
-
-      {/* Bottom dots */}
-      <View style={styles.dots}>
-        {[0,1,2,3,4].map(i => (
-          <View key={i} style={[styles.dot, i === 2 && styles.dotCenter]} />
-        ))}
-      </View>
-    </LinearGradient>
+      </LinearGradient>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: { flex: 1 },
   container: { flex: 1, alignItems: "center", justifyContent: "center" },
   corner: { position: "absolute", width: 36, height: 36, alignItems: "center", justifyContent: "center" },
   cornerTL: { top: 48, left: 20 },

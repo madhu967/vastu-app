@@ -49,4 +49,5 @@ export type GuidePage = {
   title: string;
   subtitle: string;
   sections: GuideSection[];
+  paragraphs?: string[]; // rich flowing paragraph content
 };

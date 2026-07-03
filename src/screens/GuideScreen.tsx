@@ -1,30 +1,42 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useRef, useEffect } from "react";
+import {
+  Animated,
+  Easing,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRoute } from "@react-navigation/native";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { guidePages } from "@/constants/content";
-import { palette, spacing, typography, cornerRadius } from "@/constants/theme";
+import { palette, spacing, cornerRadius } from "@/constants/theme";
 import { useAppLanguage } from "@/context/AppLanguageContext";
 import { getLocalizedGuidePages } from "@/i18n/strings";
 
+// ── icon map ─────────────────────────────────────────────────────────────────
 const pageIcons: Record<string, string> = {
   "main-entrance": "🚪",
-  "living-room": "🛋️",
-  kitchen: "🍳",
-  bedroom: "🛏️",
-  bathroom: "🚿",
-  "pooja-room": "🪔",
-  "dining-room": "🍽️",
-  staircase: "🪜",
-  parking: "🚗",
-  borewell: "💧",
-  "septic-tank": "🔧",
-  garden: "🌿",
-  "plot-shapes": "📐",
-  faq: "❓",
-  contact: "📞",
-  about: "ℹ️",
+  "living-room":   "🛋️",
+  kitchen:         "🍳",
+  bedroom:         "🛏️",
+  bathroom:        "🚿",
+  "pooja-room":    "🪔",
+  "dining-room":   "🍽️",
+  staircase:       "🪜",
+  parking:         "🚗",
+  borewell:        "💧",
+  "septic-tank":   "🔧",
+  garden:          "🌿",
+  "plot-shapes":   "📐",
+  faq:             "❓",
+  contact:         "📞",
+  about:           "ℹ️",
 };
+
+// ── section number labels ─────────────────────────────────────────────────────
+const romanNumerals = ["I", "II", "III", "IV", "V", "VI"];
 
 export const GuideScreen = () => {
   const { language } = useAppLanguage();
@@ -36,215 +48,297 @@ export const GuideScreen = () => {
 
   const icon = pageIcons[page.key] ?? "ॐ";
 
+  // hero entrance animation
+  const heroFade  = useRef(new Animated.Value(0)).current;
+  const heroShift = useRef(new Animated.Value(20)).current;
+  const glowPulse = useRef(new Animated.Value(0.5)).current;
+  const ringRotate= useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(heroFade,  { toValue: 1, duration: 700, useNativeDriver: true }),
+      Animated.timing(heroShift, { toValue: 0, duration: 700, useNativeDriver: true }),
+    ]).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowPulse, { toValue: 1,   duration: 2000, useNativeDriver: true }),
+        Animated.timing(glowPulse, { toValue: 0.5, duration: 2000, useNativeDriver: true }),
+      ]),
+    ).start();
+
+    Animated.loop(
+      Animated.timing(ringRotate, {
+        toValue: 1,
+        duration: 20000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ).start();
+  }, [page.key]);
+
+  const rotateDeg = ringRotate.interpolate({ inputRange: [0, 1], outputRange: ["0deg", "360deg"] });
+
   return (
-    <View style={styles.container}>
-      {/* Crimson header */}
+    <View style={s.container}>
       <ScreenHeader title={page.title} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={s.scrollContent}
       >
-        {/* Hero banner — crimson gradient like reference */}
-        <LinearGradient
-          colors={["#5A0008", "#8B000F", "#B71C1C"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.hero}
-        >
-          <View style={styles.heroIconWrap}>
-            <Text style={styles.heroIcon}>{icon}</Text>
-          </View>
-          <Text style={styles.heroTitle}>{page.title}</Text>
-          <View style={styles.heroDivider}>
-            <View style={styles.heroDivLine} />
-            <Text style={styles.heroDivDot}>✦</Text>
-            <View style={styles.heroDivLine} />
-          </View>
-          <Text style={styles.heroSubtitle}>{page.subtitle}</Text>
-        </LinearGradient>
+        {/* ══════════ HERO BANNER ══════════ */}
+        <Animated.View style={[s.heroWrap, { opacity: heroFade, transform: [{ translateY: heroShift }] }]}>
+          <LinearGradient
+            colors={["#5A0008", "#8B000F", "#B71C1C"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={s.hero}
+          >
+            {/* Subtle corner ornaments */}
+            <Text style={[s.heroCorner, { top: 12, left: 16 }]}>✦</Text>
+            <Text style={[s.heroCorner, { top: 12, right: 16 }]}>✦</Text>
 
-        {/* Content on ivory background */}
-        <View style={styles.content}>
-          {page.sections.map((section, sIdx) => (
-            <View key={section.title} style={styles.section}>
-              <View style={styles.sectionHeadRow}>
-                <View style={styles.sectionAccentBar} />
-                <Text style={styles.sectionTitle}>{section.title}</Text>
+            {/* Animated icon ring */}
+            <View style={s.iconWrap}>
+              <Animated.View style={[s.iconRingOuter, { transform: [{ rotate: rotateDeg }] }]} />
+              <Animated.View style={[s.iconGlow, { opacity: glowPulse }]} />
+              <View style={s.iconCircle}>
+                <Text style={s.heroIcon}>{icon}</Text>
               </View>
-
-              <View style={styles.pointsCard}>
-                {section.points.map((point, pIdx) => (
-                  <View key={pIdx} style={styles.pointRow}>
-                    <View style={styles.bulletDot} />
-                    <Text style={styles.pointText}>{point}</Text>
-                  </View>
-                ))}
-              </View>
-
-              {sIdx < page.sections.length - 1 && (
-                <View style={styles.divider} />
-              )}
             </View>
-          ))}
+
+            {/* Gold rule */}
+            <View style={s.heroDivider}>
+              <View style={s.heroDivLine} />
+              <Text style={s.heroDivDot}>◆</Text>
+              <View style={s.heroDivLine} />
+            </View>
+
+            <Text style={s.heroTitle}>{page.title}</Text>
+            <Text style={s.heroSubtitle}>{page.subtitle}</Text>
+          </LinearGradient>
+        </Animated.View>
+
+        {/* ══════════ CONTENT PARAGRAPHS ══════════ */}
+        <View style={s.content}>
+          <View style={s.paraCard}>
+            {(page.paragraphs || []).map((paragraph, pIdx) => (
+              <View key={pIdx} style={s.paraRow}>
+                {/* Slim gold left accent line */}
+                <View style={s.accentBar} />
+                <Text style={s.paraText}>{paragraph}</Text>
+              </View>
+            ))}
+          </View>
         </View>
 
-        {/* Bottom ornament */}
-        <View style={styles.footer}>
-          <View style={styles.footerLine} />
-          <Text style={styles.footerOm}>ॐ</Text>
-          <View style={styles.footerLine} />
+        {/* ══════════ BOTTOM ORNAMENT ══════════ */}
+        <View style={s.footerOrnament}>
+          <View style={s.footerLine} />
+          <View style={s.footerOmCircle}>
+            <Text style={s.footerOmText}>ॐ</Text>
+          </View>
+          <View style={s.footerLine} />
         </View>
+        <Text style={s.footerShanti}>ॐ शान्तिः शान्तिः शान्तिः</Text>
+
       </ScrollView>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+// ─── Styles ───────────────────────────────────────────────────────────────────
+const s = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: palette.background,
   },
   scrollContent: {
-    paddingBottom: spacing.xxl + 20,
+    paddingBottom: 60,
     backgroundColor: palette.background,
   },
 
-  hero: {
+  // ══ HERO ══
+  heroWrap: {
     marginHorizontal: spacing.lg,
     marginTop: spacing.md,
-    borderRadius: cornerRadius.lg,
-    padding: spacing.xl,
     marginBottom: spacing.xl,
-    borderWidth: 1,
-    borderColor: "rgba(255,217,92,0.3)",
-    alignItems: "center",
-    shadowColor: "#B71C1C",
-    shadowOpacity: 0.2,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 6,
+    borderRadius: cornerRadius.xl,
+    overflow: "hidden",
+    shadowColor: "#8B000F",
+    shadowOpacity: 0.25,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
   },
-  heroIconWrap: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: "#FFF8F0",
-    borderWidth: 2,
-    borderColor: "rgba(255,217,92,0.4)",
+  hero: {
+    borderRadius: cornerRadius.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.xl + 4,
+    paddingHorizontal: spacing.xl,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255,217,92,0.25)",
+  },
+  heroCorner: {
+    position: "absolute",
+    fontSize: 12,
+    color: "rgba(255,217,92,0.45)",
+  },
+
+  // icon area
+  iconWrap: {
+    width: 90,
+    height: 90,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: spacing.md,
+  },
+  iconRingOuter: {
+    position: "absolute",
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 1,
+    borderColor: "rgba(255,217,92,0.35)",
+    borderStyle: "dashed",
+  },
+  iconGlow: {
+    position: "absolute",
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: "rgba(255,217,92,0.1)",
+  },
+  iconCircle: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: "#FFF8F0",
+    borderWidth: 2,
+    borderColor: "rgba(255,217,92,0.5)",
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#FFD95C",
     shadowOpacity: 0.3,
     shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
   },
-  heroIcon: { fontSize: 34, lineHeight: 40 },
-  heroTitle: {
-    fontFamily: "CormorantGaramond_700Bold",
-    fontSize: 22,
-    color: "#FFF8F0",
-    textAlign: "center",
-    lineHeight: 30,
-    marginBottom: spacing.sm,
-  },
+  heroIcon: { fontSize: 30, lineHeight: 36 },
+
   heroDivider: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    width: 150,
-    marginBottom: 8,
+    width: 140,
+    marginBottom: 10,
   },
   heroDivLine: { flex: 1, height: 1, backgroundColor: "rgba(255,217,92,0.4)" },
-  heroDivDot: { fontSize: 10, color: "#FFD95C" },
+  heroDivDot:  { fontSize: 9, color: "#FFD95C" },
+
+  heroTitle: {
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 26,
+    color: "#FFF8F0",
+    textAlign: "center",
+    lineHeight: 34,
+    marginBottom: spacing.sm,
+    textShadowColor: "rgba(255,217,92,0.15)",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8,
+  },
   heroSubtitle: {
-    ...typography.description,
-    color: "rgba(255,248,240,0.7)",
+    fontFamily: "Manrope_400Regular",
+    fontSize: 14,
+    color: "rgba(255,248,240,0.72)",
     textAlign: "center",
     lineHeight: 22,
     paddingHorizontal: spacing.md,
     fontStyle: "italic",
+    letterSpacing: 0.2,
   },
 
+  // ══ CONTENT ══
   content: {
     paddingHorizontal: spacing.lg,
-    gap: 4,
   },
-  section: { marginBottom: 4 },
-  sectionHeadRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+  section: {
     marginBottom: spacing.sm,
-    marginTop: spacing.md,
   },
-  sectionAccentBar: {
-    width: 3,
-    height: 18,
-    borderRadius: 2,
-    backgroundColor: palette.primary,
-  },
-  sectionTitle: {
-    fontFamily: "CormorantGaramond_600SemiBold",
-    fontSize: 20,
-    color: palette.text,
-    lineHeight: 28,
-  },
-  pointsCard: {
+
+  // paragraph card
+  paraCard: {
     backgroundColor: palette.surface,
     borderRadius: cornerRadius.md,
     borderWidth: 1,
     borderColor: palette.border,
-    padding: spacing.md,
-    gap: 2,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    gap: 14,
     shadowColor: "#000",
-    shadowOpacity: 0.04,
-    shadowRadius: 6,
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 1,
   },
-  pointRow: {
+  paraRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 10,
-    paddingVertical: 7,
+    gap: 12,
   },
-  bulletDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+  accentBar: {
+    width: 3,
+    borderRadius: 2,
     backgroundColor: palette.primary,
-    marginTop: 8,
-    flexShrink: 0,
+    opacity: 0.5,
+    marginTop: 4,
+    alignSelf: "stretch",
+    minHeight: 16,
   },
-  pointText: {
-    ...typography.body,
-    color: palette.textMedium,
+  paraText: {
     flex: 1,
-    lineHeight: 26,
-    fontSize: 14,
+    fontFamily: "Manrope_400Regular",
+    fontSize: 16,
+    color: palette.textMedium,
+    lineHeight: 28,
+    letterSpacing: 0.1,
   },
-  divider: {
-    height: 1,
-    backgroundColor: palette.border,
-    marginTop: spacing.lg,
-    marginHorizontal: spacing.sm,
-  },
-  footer: {
+
+  // ══ FOOTER ORNAMENT ══
+  footerOrnament: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
-    marginTop: spacing.xl,
-    paddingHorizontal: spacing.xxl,
+    gap: 14,
+    marginTop: spacing.xl + 4,
+    marginHorizontal: spacing.xxl,
   },
   footerLine: { flex: 1, height: 1, backgroundColor: palette.border },
-  footerOm: {
-    fontFamily: "CormorantGaramond_600SemiBold",
-    fontSize: 20,
+  footerOmCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: "rgba(183,28,28,0.25)",
+    backgroundColor: palette.primaryLight,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  footerOmText: {
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 22,
     color: palette.primary,
-    lineHeight: 26,
-    opacity: 0.5,
+    lineHeight: 28,
+  },
+  footerShanti: {
+    fontFamily: "Manrope_400Regular",
+    fontSize: 11,
+    color: palette.secondaryText,
+    textAlign: "center",
+    letterSpacing: 0.8,
+    marginTop: spacing.sm,
+    marginBottom: spacing.md,
+    opacity: 0.65,
   },
 });

@@ -15,14 +15,13 @@ import { PremiumInput } from "@/components/PremiumInput";
 import { SearchableSelect } from "@/components/SearchableSelect";
 import { ResultTable } from "@/components/ResultTable";
 import { ScreenHeader } from "@/components/ScreenHeader";
+import { FooterSection, PhoneFAB } from "@/components/FooterSection";
 import { calculateVastuReport } from "@/calculationEngine/calculateVastuReport";
 import { useAppLanguage } from "@/context/AppLanguageContext";
 import { generateVastuPdf } from "@/pdf/generateVastuPdf";
 import { getAppStrings } from "@/i18n/strings";
 import {
-  directionOptions,
   languageOptions,
-  nakshatramOptions,
   padhamOptions,
 } from "@/constants/content";
 import { cornerRadius, palette, spacing, typography } from "@/constants/theme";
@@ -107,7 +106,7 @@ export const HomeScreen = () => {
           end={{ x: 1, y: 1 }}
           style={styles.calcBtnGradient}
         >
-          <Text style={styles.calcBtnText}>⚡ {strings.home.calculate}</Text>
+          <Text style={styles.calcBtnText}> {strings.home.calculate}</Text>
         </LinearGradient>
       </Pressable>
       <Pressable
@@ -159,7 +158,7 @@ export const HomeScreen = () => {
       style={styles.flex}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View style={styles.flex}>
+      <View style={styles.flexRelative}>
         {/* CRIMSON HEADER */}
         <ScreenHeader
           title={strings.home.title}
@@ -230,14 +229,14 @@ export const HomeScreen = () => {
             <SearchableSelect
               label={strings.home.nakshatramLabel}
               value={form.nakshatram}
-              options={nakshatramOptions}
+              options={strings.nakshatrams}
               placeholder={strings.home.nakshatramPlaceholder}
               onChange={(value) => updateField("nakshatram", value)}
             />
             <SearchableSelect
               label={strings.home.directionLabel}
               value={form.direction}
-              options={directionOptions}
+              options={strings.directions}
               placeholder={strings.home.directionPlaceholder}
               onChange={(value) => updateField("direction", value)}
             />
@@ -408,13 +407,12 @@ export const HomeScreen = () => {
             onDownload={() => table3 && downloadPdf(table3, setPdfLoading3)}
           />
 
-          {/* Bottom ornament */}
-          <View style={styles.bottomOrnament}>
-            <View style={styles.bottomLine} />
-            <Text style={styles.bottomOm}>ॐ</Text>
-            <View style={styles.bottomLine} />
-          </View>
+          {/* Premium Footer */}
+          <FooterSection />
         </ScrollView>
+
+        {/* Floating Phone Button */}
+        <PhoneFAB />
       </View>
     </KeyboardAvoidingView>
   );
@@ -422,12 +420,13 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: palette.background },
+  flexRelative: { flex: 1, backgroundColor: palette.background, position: "relative" },
   scrollFlex: { flex: 1 },
 
   content: {
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.md,
-    paddingBottom: spacing.xxl + 20,
+    paddingBottom: 0,
     backgroundColor: palette.background,
   },
 
@@ -566,20 +565,5 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
   },
 
-  /* Bottom ornament */
-  bottomOrnament: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    marginTop: spacing.lg,
-    paddingHorizontal: spacing.xl,
-  },
-  bottomLine: { flex: 1, height: 1, backgroundColor: palette.border },
-  bottomOm: {
-    fontFamily: "CormorantGaramond_600SemiBold",
-    fontSize: 20,
-    color: palette.primary,
-    lineHeight: 26,
-    opacity: 0.4,
-  },
+  /* Bottom ornament (replaced by FooterSection) */
 });
