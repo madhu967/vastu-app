@@ -4,103 +4,100 @@ import {
   VastuFormValues,
   VastuReport,
 } from "@/types/vastu";
-import { formatCompact, formatDecimal, toFeetValue } from "@/utils/number";
-
-const stableScore = (value: string) =>
-  value
-    .split("")
-    .reduce(
-      (total, character, index) =>
-        total + character.charCodeAt(0) * (index + 1),
-      0,
-    );
-
-const lookupMetric = (
-  seed: number,
-  offset: number,
-  modulus: number,
-  label: string,
-) => {
-  const result = ((seed + offset) % modulus) + 1;
-  return `${label} ${result}`;
-};
+import { formatDecimal, toNumber } from "@/utils/number";
 
 const createRows = (entries: Array<[string, string]>): ResultRow[] =>
   entries.map(([label, value]) => ({ label, value }));
 
+// Correct formula: nullu divides by 8, not 96
+const toFeetValueCorrect = (feet: string, inch: string, nullu: string) => {
+  const feetValue = toNumber(feet);
+  const inchValue = toNumber(inch);
+  const nulluValue = toNumber(nullu);
+  return feetValue + inchValue / 12 + nulluValue / 8;
+};
+
+const getRemainderLabel = (value: number, modulus: number): string => {
+  const remainder = value % modulus;
+  const r = remainder === 0 ? modulus : remainder;
+  return String(Math.round(r * 100) / 100);
+};
+
 export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
-  const width = toFeetValue(form.widthFeet, form.widthInch, form.widthNullu);
-  const depth = toFeetValue(form.depthFeet, form.depthInch, form.depthNullu);
-  const plotArea = width * depth;
-  const squareFeet = plotArea;
-  const cents = plotArea / 435.6;
-  const guntalu = plotArea / 1089;
-  const ankanam = plotArea / 36;
-  const perimeter = 2 * (width + depth);
+  // Plot Length & Width with correct nullu formula
+  const length = toFeetValueCorrect(form.lengthFeet, form.lengthInch, form.lengthNullu);
+  const width = toFeetValueCorrect(form.widthFeet, form.widthInch, form.widthNullu);
 
-  const seed = stableScore(
-    `${form.language}-${form.ownerName}-${form.nakshatram}-${form.direction}`,
-  );
-  const firstPadhamSeed = stableScore(
-    `${form.firstSuddhaPadham}-${form.suddhaPadham}-${form.secondSuddhaPadham}`,
-  );
+  // Plot Area in sq feet
+  const plotAreaSqFeet = length * width;
 
+  // Padamu = PlotAreaSqFeet / 9
+  const padamu = plotAreaSqFeet / 9;
+
+  // Plot Area in Sq Yards = Padamu
+  const plotAreaSqYards = padamu;
+
+  // Plot Area in Cents = Padamu / 48.4
+  const plotAreaCents = padamu / 48.4;
+
+  // Perimeter
+  const perimeter = 2 * (length + width);
+
+  // Diagonal
+  const diagonal = Math.sqrt(length * length + width * width);
+
+  // Vastu metrics (remainder-based)
+  const dhanamu = getRemainderLabel((padamu * 8), 12);
+  const runamu = getRemainderLabel((padamu * 3), 8);
+  const tithi = getRemainderLabel((padamu * 6), 30);
+  const vaaramu = getRemainderLabel((padamu * 9), 7);
+  const nakshatram = getRemainderLabel((padamu * 8), 27);
+  const aayamu = getRemainderLabel((padamu * 9), 8);
+  const ayurdayamu = getRemainderLabel((padamu * 9), 120);
+  const amsa = getRemainderLabel((padamu * 6), 9);
+  const dikruti = getRemainderLabel((padamu * 9), 8);
+
+  // Summary table 1 — exact order as specified
   const summaryTable: ResultTable = {
     title: "Result Table 1",
     rows: createRows([
+      ["Plot Length", `${formatDecimal(length)} ft`],
       ["Plot Width", `${formatDecimal(width)} ft`],
-      ["Plot Depth", `${formatDecimal(depth)} ft`],
-      ["Plot Area", `${formatDecimal(plotArea)} sq ft`],
-      ["Square Feet", formatCompact(squareFeet)],
-      ["Cents", formatDecimal(cents)],
-      ["Guntalu", formatDecimal(guntalu)],
-      ["Ankanam", formatDecimal(ankanam)],
+      ["Padamu", formatDecimal(padamu)],
+      ["Plot Area", `${formatDecimal(plotAreaSqFeet)} sq ft`],
+      ["Plot Area", `${formatDecimal(plotAreaSqYards)} sq yds`],
+      ["Plot Area", `${formatDecimal(plotAreaCents)} cents`],
       ["Plot Perimeter", `${formatDecimal(perimeter)} ft`],
+      ["Padamu", formatDecimal(padamu)],
+      ["Diagonal", `${formatDecimal(diagonal)} ft`],
+      ["Dhanamu", dhanamu],
+      ["Runamu", runamu],
+      ["Tithi", tithi],
+      ["Vaaramu", vaaramu],
+      ["Nakshatram", nakshatram],
+      ["Aayamu", aayamu],
+      ["Ayurdayamu", ayurdayamu],
+      ["Amsa", amsa],
+      ["Dikruti", dikruti],
     ]),
     visible: true,
   };
 
+  // Keep existing Table 2 (Suddha Padham based)
   const padamuTable: ResultTable = {
     title: "Result Table 2",
     rows: createRows([
       ["Padamu", form.suddhaPadham || "-"],
-      ["Income", lookupMetric(seed, 3, 12, "Income")],
-      ["Expenditure", lookupMetric(seed, 6, 12, "Expenditure")],
-      ["Ayamu", lookupMetric(seed, 1, 12, "Ayamu")],
-      ["Life Span", lookupMetric(seed, 4, 12, "Life Span")],
-      ["Amsa", lookupMetric(seed, 2, 9, "Amsa")],
-      ["Star", form.nakshatram || "-"],
-      ["Star Matching", lookupMetric(seed, 5, 27, "Match")],
-      ["Tidhi", lookupMetric(seed, 7, 30, "Tidhi")],
-      ["Week", lookupMetric(seed, 8, 7, "Week")],
-      ["Dikpathi", lookupMetric(seed, 9, 8, "Dikpathi")],
-      ["Yogamu", lookupMetric(seed, 10, 27, "Yogamu")],
-      ["Karanamu", lookupMetric(seed, 11, 11, "Karanamu")],
     ]),
     visible: true,
   };
 
-  // Table 3 always generates — shows Padam with Star data
+  // Keep existing Table 3 (Padam with Star)
   const padamWithStarTable: ResultTable = {
     title: "Result Table 3",
     rows: createRows([
       ["1st Suddha Padham", form.firstSuddhaPadham || "-"],
       ["2nd Suddha Padham", form.secondSuddhaPadham || "-"],
-      [
-        "Suddha Feet-Inch-Nullu",
-        `${formatDecimal(toFeetValue(form.suddhaFeet, form.suddhaInch, form.suddhaNullu))} ft`,
-      ],
-      ["Income", lookupMetric(firstPadhamSeed, 2, 12, "Income")],
-      ["Expenditure", lookupMetric(firstPadhamSeed, 5, 12, "Expenditure")],
-      ["Ayamu", lookupMetric(firstPadhamSeed, 1, 12, "Ayamu")],
-      ["Life Span", lookupMetric(firstPadhamSeed, 6, 12, "Life Span")],
-      ["Amsa", lookupMetric(firstPadhamSeed, 4, 9, "Amsa")],
-      ["Star Padham", form.firstSuddhaPadham || "-"],
-      ["Tidhi", lookupMetric(firstPadhamSeed, 7, 30, "Tidhi")],
-      ["Week", lookupMetric(firstPadhamSeed, 8, 7, "Week")],
-      ["Dikpathi", lookupMetric(firstPadhamSeed, 9, 8, "Dikpathi")],
-      ["Yogamu", lookupMetric(firstPadhamSeed, 10, 27, "Yogamu")],
-      ["Karanamu", lookupMetric(firstPadhamSeed, 11, 11, "Karanamu")],
     ]),
     visible: true,
   };
@@ -108,9 +105,6 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   return {
     summaryTables: [summaryTable, padamuTable, padamWithStarTable],
     status: "success",
-    notes: [
-      "Calculation engine is isolated from the UI.",
-      "Replace the derived lookup logic with your website formulas to match production output exactly.",
-    ],
+    notes: [],
   };
 };

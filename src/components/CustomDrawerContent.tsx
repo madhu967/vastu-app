@@ -73,17 +73,8 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         </View>
 
         {/* Brand text */}
-        <Text style={s.brandTitle}>{strings.home.title}</Text>
-        <Text style={s.brandEn}>SRI VASTU</Text>
-
-        {/* gold rule */}
-        <View style={s.brandRule}>
-          <View style={s.brandRuleLine} />
-          <Text style={s.brandRuleDot}>◆</Text>
-          <View style={s.brandRuleLine} />
-        </View>
-
-        <Text style={s.brandTagline}>వాస్తు శాస్త్ర విశ్లేషణ</Text>
+        <Text style={s.brandTitle}>Viswakarma</Text>
+        <Text style={s.brandTitle}>Vastu Sarvaswam</Text>
       </LinearGradient>
 
       {/* ══════════ NAV SECTION LABEL ══════════ */}
@@ -209,42 +200,20 @@ const s = StyleSheet.create({
   },
   omText: {
     fontFamily: "CormorantGaramond_700Bold",
-    fontSize: 30,
+    fontSize: 28,
     color: "#B71C1C",
-    lineHeight: 36,
+    lineHeight: 34,
   },
 
   brandTitle: {
     fontFamily: "CormorantGaramond_700Bold",
     fontSize: 24,
-    color: "#FFF8F0",
-    lineHeight: 32,
-    textShadowColor: "rgba(255,217,92,0.2)",
+    color: "#f5f4ef",
+    lineHeight: 28,
+    textAlign: "center",
+    textShadowColor: "rgba(255,217,92,0.25)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 8,
-  },
-  brandEn: {
-    fontFamily: "Manrope_500Medium",
-    fontSize: 10,
-    color: "rgba(255,217,92,0.75)",
-    letterSpacing: 5,
-    marginTop: 2,
-  },
-  brandRule: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    width: 120,
-    marginVertical: 10,
-  },
-  brandRuleLine: { flex: 1, height: 1, backgroundColor: "rgba(255,217,92,0.35)" },
-  brandRuleDot:  { fontSize: 8, color: "rgba(255,217,92,0.7)" },
-  brandTagline: {
-    fontFamily: "Manrope_400Regular",
-    fontSize: 11,
-    color: "rgba(255,248,240,0.55)",
-    letterSpacing: 0.4,
-    fontStyle: "italic",
   },
 
   // ══ NAV LABEL ══

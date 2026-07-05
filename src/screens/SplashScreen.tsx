@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Animated, Dimensions, StyleSheet, Text, View } from "react-native";
+import { Animated, Dimensions, Easing, StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { palette, typography } from "@/constants/theme";
 
@@ -10,46 +10,79 @@ type SplashScreenProps = {
 };
 
 export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
-  const logoScale    = useRef(new Animated.Value(0.75)).current;
+  const logoScale    = useRef(new Animated.Value(0.5)).current;
   const fade         = useRef(new Animated.Value(0)).current;
   const textOpacity  = useRef(new Animated.Value(0)).current;
-  const textTranslate= useRef(new Animated.Value(16)).current;
-  const ringScale    = useRef(new Animated.Value(0.5)).current;
-  const glowPulse    = useRef(new Animated.Value(0.6)).current;
+  const textTranslate= useRef(new Animated.Value(20)).current;
+  const ringScale    = useRef(new Animated.Value(0.3)).current;
+  const glowPulse    = useRef(new Animated.Value(0.4)).current;
+  const spinValue    = useRef(new Animated.Value(0)).current;
+  const reverseSpin  = useRef(new Animated.Value(0)).current;
   const screenFade   = useRef(new Animated.Value(1)).current; // for fade-out
 
   useEffect(() => {
-    // Step 1: entrance animation
+    // Entrance animations
     Animated.sequence([
       Animated.parallel([
-        Animated.timing(fade,      { toValue: 1, duration: 600, useNativeDriver: true }),
-        Animated.spring(logoScale, { toValue: 1, tension: 55, friction: 8, useNativeDriver: true }),
-        Animated.spring(ringScale, { toValue: 1, tension: 40, friction: 10, useNativeDriver: true }),
+        Animated.timing(fade,      { toValue: 1, duration: 800, easing: Easing.out(Easing.ease), useNativeDriver: true }),
+        Animated.spring(logoScale, { toValue: 1, tension: 40, friction: 7, useNativeDriver: true }),
+        Animated.spring(ringScale, { toValue: 1, tension: 35, friction: 8, useNativeDriver: true }),
       ]),
       Animated.parallel([
-        Animated.timing(textOpacity,  { toValue: 1, duration: 500, useNativeDriver: true }),
-        Animated.timing(textTranslate,{ toValue: 0, duration: 500, useNativeDriver: true }),
+        Animated.timing(textOpacity,  { toValue: 1, duration: 600, useNativeDriver: true }),
+        Animated.timing(textTranslate,{ toValue: 0, duration: 600, easing: Easing.out(Easing.ease), useNativeDriver: true }),
       ]),
-      // Step 2: hold on screen for 2 seconds
-      Animated.delay(2000),
-      // Step 3: smooth fade-out over 600ms
+      // Hold on screen for 2.5 seconds
+      Animated.delay(2500),
+      // Smooth fade-out over 600ms
       Animated.timing(screenFade, { toValue: 0, duration: 600, useNativeDriver: true }),
     ]).start(() => onFinish());
 
-    // Glow pulse runs independently throughout
+    // Continuous Glow pulse
     Animated.loop(
       Animated.sequence([
-        Animated.timing(glowPulse, { toValue: 1,   duration: 1100, useNativeDriver: true }),
-        Animated.timing(glowPulse, { toValue: 0.6, duration: 1100, useNativeDriver: true }),
+        Animated.timing(glowPulse, { toValue: 1,   duration: 1500, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+        Animated.timing(glowPulse, { toValue: 0.4, duration: 1500, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
       ]),
     ).start();
+
+    // Continuous slow rotations for compass rings
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 20000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+
+    Animated.loop(
+      Animated.timing(reverseSpin, {
+        toValue: 1,
+        duration: 25000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
   }, []);
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
+  const spinReverse = reverseSpin.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["360deg", "0deg"],
+  });
+
+  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
   return (
     <Animated.View style={[styles.wrapper, { opacity: screenFade }]}>
       <LinearGradient
-        colors={["#5A0008", "#8B000F", "#B71C1C"]}
-        locations={[0, 0.5, 1]}
+        colors={["#4A0006", "#7A000D", "#A61515"]}
+        locations={[0, 0.6, 1]}
         style={styles.container}
       >
         {/* Decorative corner marks */}
@@ -58,16 +91,43 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
         <View style={[styles.corner, styles.cornerBL]}><Text style={styles.cornerText}>✦</Text></View>
         <View style={[styles.corner, styles.cornerBR]}><Text style={styles.cornerText}>✦</Text></View>
 
-        {/* Outer decorative ring */}
-        <Animated.View style={[styles.outerRing, { transform: [{ scale: ringScale }], opacity: fade }]} />
-
         {/* Glow behind OM circle */}
         <Animated.View style={[styles.glow, { opacity: glowPulse }]} />
 
-        {/* OM Circle */}
-        <Animated.View style={[styles.logoCircle, { transform: [{ scale: logoScale }], opacity: fade }]}>
-          <Text style={styles.omText}>ॐ</Text>
-        </Animated.View>
+        {/* Vastu Compass Assembly */}
+        <View style={styles.compassContainer}>
+          {/* Outer Reverse Spinning Ring */}
+          <Animated.View style={[styles.outerRing, { opacity: fade, transform: [{ scale: ringScale }, { rotate: spinReverse }] }]}>
+            <View style={styles.dashedBorder} />
+            <View style={[styles.ringNode, { top: -4, left: 136 }]} />
+            <View style={[styles.ringNode, { bottom: -4, left: 136 }]} />
+            <View style={[styles.ringNode, { top: 136, left: -4 }]} />
+            <View style={[styles.ringNode, { top: 136, right: -4 }]} />
+          </Animated.View>
+
+          {/* Inner Spinning Direction Ring */}
+          <Animated.View style={[styles.innerRing, { opacity: fade, transform: [{ scale: ringScale }, { rotate: spin }] }]}>
+            {directions.map((dir, index) => {
+              const angle = (index * 45 * Math.PI) / 180;
+              const radius = 100;
+              const x = radius * Math.sin(angle);
+              const y = -radius * Math.cos(angle);
+              
+              return (
+                <View key={dir} style={[styles.directionContainer, { transform: [{ translateX: x }, { translateY: y }, { rotate: `${index * 45}deg` }] }]}>
+                  <Text style={styles.directionText}>{dir}</Text>
+                  <View style={styles.directionTick} />
+                </View>
+              );
+            })}
+          </Animated.View>
+
+          {/* Central OM */}
+          <Animated.View style={[styles.logoCircle, { transform: [{ scale: logoScale }], opacity: fade }]}>
+            <View style={styles.innerLogoGlow} />
+            <Text style={styles.omText}>ॐ</Text>
+          </Animated.View>
+        </View>
 
         {/* Text block */}
         <Animated.View
@@ -78,9 +138,9 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
             <Text style={styles.divDot}>✦</Text>
             <View style={styles.divLine} />
           </View>
-          <Text style={styles.title}>శ్రీ వాస్తు</Text>
-          <Text style={styles.titleEn}>SRI VASTU</Text>
-          <View style={[styles.divider, { marginTop: 10 }]}>
+          <Text style={styles.title}>వాస్తు సర్వస్వం</Text>
+          <Text style={styles.titleEn}>VASTU SARVASWAM</Text>
+          <View style={[styles.divider, { marginTop: 15 }]}>
             <View style={styles.divLine} />
             <Text style={styles.divDot}>✦</Text>
             <View style={styles.divLine} />
@@ -107,71 +167,147 @@ const styles = StyleSheet.create({
   cornerTR: { top: 48, right: 20 },
   cornerBL: { bottom: 48, left: 20 },
   cornerBR: { bottom: 48, right: 20 },
-  cornerText: { fontSize: 18, color: "rgba(255, 217, 92, 0.6)" },
+  cornerText: { fontSize: 18, color: "rgba(255, 217, 92, 0.8)", textShadowColor: "#FFD95C", textShadowRadius: 6 },
+  
+  compassContainer: {
+    width: 280,
+    height: 280,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   outerRing: {
+    position: "absolute",
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    borderWidth: 1,
+    borderColor: "rgba(255, 217, 92, 0.4)",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dashedBorder: {
+    position: "absolute",
+    width: 264,
+    height: 264,
+    borderRadius: 132,
+    borderWidth: 1,
+    borderColor: "rgba(255, 217, 92, 0.6)",
+    borderStyle: 'dashed',
+  },
+  ringNode: {
+    position: 'absolute',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#FFD95C",
+    shadowColor: "#FFD95C",
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 4,
+  },
+  innerRing: {
     position: "absolute",
     width: 230,
     height: 230,
     borderRadius: 115,
-    borderWidth: 1,
-    borderColor: "rgba(255, 217, 92, 0.25)",
+    borderWidth: 2,
+    borderColor: "rgba(255, 217, 92, 0.2)",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  directionContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  directionText: {
+    color: "#FFD95C",
+    fontFamily: "Manrope_600SemiBold",
+    fontSize: 12,
+    marginBottom: 2,
+    textShadowColor: "rgba(255, 217, 92, 0.6)",
+    textShadowRadius: 4,
+  },
+  directionTick: {
+    width: 2,
+    height: 8,
+    backgroundColor: "#FFD95C",
+    borderRadius: 1,
   },
   glow: {
     position: "absolute",
-    width: 170,
-    height: 170,
-    borderRadius: 85,
-    backgroundColor: "rgba(255, 217, 92, 0.08)",
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: "rgba(255, 217, 92, 0.15)",
+    shadowColor: "#FFD95C",
+    shadowOpacity: 1,
+    shadowRadius: 40,
+    elevation: 10,
   },
   logoCircle: {
-    width: 155,
-    height: 155,
-    borderRadius: 78,
-    backgroundColor: "#FFF8F0",
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: "rgba(255, 248, 240, 0.95)",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderColor: "rgba(255, 217, 92, 0.5)",
+    borderWidth: 3,
+    borderColor: "#FFD95C",
     shadowColor: "#FFD95C",
-    shadowOpacity: 0.4,
-    shadowRadius: 24,
+    shadowOpacity: 0.6,
+    shadowRadius: 20,
     shadowOffset: { width: 0, height: 0 },
-    elevation: 12,
+    elevation: 15,
+  },
+  innerLogoGlow: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 1,
+    borderColor: "rgba(183, 28, 28, 0.15)",
   },
   omText: {
     fontFamily: "CormorantGaramond_700Bold",
-    fontSize: 70,
-    color: "#B71C1C",
-    lineHeight: 80,
+    fontSize: 72,
+    color: "#A61515",
+    lineHeight: 82,
+    textShadowColor: "rgba(166, 21, 21, 0.3)",
+    textShadowRadius: 8,
+    textShadowOffset: { width: 0, height: 2 },
   },
-  textSection: { marginTop: 28, alignItems: "center" },
-  divider: { flexDirection: "row", alignItems: "center", gap: 8, width: 180, marginBottom: 10 },
-  divLine: { flex: 1, height: 1, backgroundColor: "rgba(255, 217, 92, 0.4)" },
-  divDot: { fontSize: 10, color: "#FFD95C" },
+  textSection: { marginTop: 40, alignItems: "center" },
+  divider: { flexDirection: "row", alignItems: "center", gap: 8, width: 220, marginBottom: 12 },
+  divLine: { flex: 1, height: 1, backgroundColor: "rgba(255, 217, 92, 0.6)" },
+  divDot: { fontSize: 12, color: "#FFD95C" },
   title: {
     fontFamily: "CormorantGaramond_700Bold",
-    fontSize: 42,
+    fontSize: 38,
     color: "#FFF8F0",
-    lineHeight: 50,
-    textShadowColor: "rgba(255,217,92,0.3)",
+    lineHeight: 46,
+    textShadowColor: "rgba(255,217,92,0.4)",
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 10,
+    textShadowRadius: 12,
   },
   titleEn: {
-    fontFamily: "Manrope_500Medium",
-    fontSize: 13,
-    color: "rgba(255, 217, 92, 0.75)",
-    letterSpacing: 5,
-    marginTop: 2,
+    fontFamily: "Manrope_600SemiBold",
+    fontSize: 16,
+    color: "#FFD95C",
+    letterSpacing: 6,
+    marginTop: 4,
+    textShadowColor: "rgba(255,217,92,0.3)",
+    textShadowRadius: 8,
   },
   tagline: {
-    fontFamily: "Manrope_400Regular",
-    fontSize: 12,
-    color: "rgba(255, 248, 240, 0.55)",
-    letterSpacing: 0.4,
+    fontFamily: "Manrope_500Medium",
+    fontSize: 13,
+    color: "rgba(255, 248, 240, 0.7)",
+    letterSpacing: 0.5,
     fontStyle: "italic",
   },
-  dots: { position: "absolute", bottom: 52, flexDirection: "row", gap: 7, alignItems: "center" },
-  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(255,217,92,0.3)" },
-  dotCenter: { width: 10, height: 10, borderRadius: 5, backgroundColor: "rgba(255,217,92,0.7)" },
+  dots: { position: "absolute", bottom: 40, flexDirection: "row", gap: 8, alignItems: "center" },
+  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(255,217,92,0.4)" },
+  dotCenter: { width: 10, height: 10, borderRadius: 5, backgroundColor: "rgba(255,217,92,0.9)", shadowColor: "#FFD95C", shadowRadius: 4, shadowOpacity: 0.8 },
 });

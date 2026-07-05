@@ -32,6 +32,17 @@ export const nakshatramOptions: OptionItem[] = [
   "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati",
 ].map((item) => ({ label: item, value: item }));
 
+export const varguOptions: OptionItem[] = [
+  { label: "1 (a, aa, i, ee...)", value: "1" },
+  { label: "2 (ka, kha, ga, gha...)", value: "2" },
+  { label: "3 (cha, chha, ja, jha...)", value: "3" },
+  { label: "4 (ta, tha, da, dha...)", value: "4" },
+  { label: "5 (ta, tha, da, dha...)", value: "5" },
+  { label: "6 (pa, pha, ba, bha...)", value: "6" },
+  { label: "7 (ya, ra, la, va...)", value: "7" },
+  { label: "8 (sha, sha, sa, ha...)", value: "8" },
+];
+
 export const guidePages: GuidePage[] = [
   {
     key: "main-entrance",

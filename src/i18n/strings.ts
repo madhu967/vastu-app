@@ -1,6 +1,6 @@
 import { AppLanguage } from "@/context/AppLanguageContext";
 import { GuidePage, OptionItem } from "@/types/vastu";
-import { directionOptions, nakshatramOptions } from "@/constants/content";
+import { directionOptions, nakshatramOptions, varguOptions } from "@/constants/content";
 
 type HomeStrings = {
   title: string;
@@ -13,22 +13,32 @@ type HomeStrings = {
   ownerInfoSubtitle: string;
   ownerNameLabel: string;
   ownerNamePlaceholder: string;
+  varguLabel: string;
+  varguPlaceholder: string;
+  wifeInfoTitle: string;
+  wifeInfoSubtitle: string;
+  wifeNameLabel: string;
+  wifeNamePlaceholder: string;
+  wifeNakshatramLabel: string;
+  wifeNakshatramPlaceholder: string;
+  wifeVarguLabel: string;
+  wifeVarguPlaceholder: string;
   propertyTitle: string;
   propertySubtitle: string;
   nakshatramLabel: string;
   nakshatramPlaceholder: string;
   directionLabel: string;
   directionPlaceholder: string;
+  plotLengthTitle: string;
+  plotLengthSubtitle: string;
+  lengthFeetLabel: string;
+  lengthInchLabel: string;
+  lengthNulluLabel: string;
   plotWidthTitle: string;
   plotWidthSubtitle: string;
   widthFeetLabel: string;
   widthInchLabel: string;
   widthNulluLabel: string;
-  plotDepthTitle: string;
-  plotDepthSubtitle: string;
-  depthFeetLabel: string;
-  depthInchLabel: string;
-  depthNulluLabel: string;
   suddhaTitle: string;
   suddhaSubtitle: string;
   suddhaPadhamLabel: string;
@@ -50,41 +60,52 @@ type AppStrings = {
   home: HomeStrings;
   directions: OptionItem[];
   nakshatrams: OptionItem[];
+  vargus: OptionItem[];
 };
 
 const englishStrings: AppStrings = {
   homeRoute: "Home",
   home: {
-    title: "Vastu Analysis",
-    subtitle: "Only the calculator and report flow",
+    title: "Viswakarma Vastu Sarvaswam",
+    subtitle: "Premium Vastu Analysis",
     languageLabel: "Language",
     languagePlaceholder: "Choose language",
-    introTitle: "Vastu Analysis",
+    introTitle: "Viswakarma Vastu Sarvaswam",
     introSubtitle: "Fill the inputs below to generate the full report and PDF.",
-    ownerInfoTitle: "Owner Information",
+    ownerInfoTitle: "Owner Information (Yajamani)",
     ownerInfoSubtitle: "Language and owner name",
-    propertyTitle: "Property Details",
-    propertySubtitle: "Nakshatram and direction",
-    plotWidthTitle: "Plot Width",
-    plotWidthSubtitle: "Enter the complete width in feet, inch, and nullu",
-    plotDepthTitle: "Plot Depth",
-    plotDepthSubtitle: "Enter the complete depth in feet, inch, and nullu",
-    suddhaTitle: "Suddha Padham",
-    suddhaSubtitle: "Optional section shown when you want Table 3",
-    padamTitle: "Padam With Star",
-    padamSubtitle: "Use when Table 3 needs a star mapping",
-    ownerNameLabel: "Owner Name (English only)",
+    ownerNameLabel: "Yajamani Name (English only)",
     ownerNamePlaceholder: "Enter owner name",
+    varguLabel: "Vargu",
+    varguPlaceholder: "Select Vargu",
+    wifeInfoTitle: "Owner Wife Information (Yajamaniralu)",
+    wifeInfoSubtitle: "Wife's details",
+    wifeNameLabel: "Yajamaniralu Name (English only)",
+    wifeNamePlaceholder: "Enter wife name",
+    wifeNakshatramLabel: "Nakshatram",
+    wifeNakshatramPlaceholder: "Select nakshatram",
+    wifeVarguLabel: "Vargu",
+    wifeVarguPlaceholder: "Select Vargu",
+    propertyTitle: "Direction Details",
+    propertySubtitle: "Direction property is facing",
     nakshatramLabel: "Nakshatram",
     nakshatramPlaceholder: "Select nakshatram",
     directionLabel: "Direction",
     directionPlaceholder: "Select direction",
+    plotLengthTitle: "Plot Length",
+    plotLengthSubtitle: "Enter the complete length in feet, inch, and nullu",
+    plotWidthTitle: "Plot Width",
+    plotWidthSubtitle: "Enter the complete width in feet, inch, and nullu",
+    lengthFeetLabel: "Length (Feet)",
+    lengthInchLabel: "Length (Inch)",
+    lengthNulluLabel: "Length (Nullu)",
     widthFeetLabel: "Width (Feet)",
     widthInchLabel: "Width (Inch)",
     widthNulluLabel: "Width (Nullu)",
-    depthFeetLabel: "Depth (Feet)",
-    depthInchLabel: "Depth (Inch)",
-    depthNulluLabel: "Depth (Nullu)",
+    suddhaTitle: "Suddha Padham",
+    suddhaSubtitle: "Optional section shown when you want Table 3",
+    padamTitle: "Padam With Star",
+    padamSubtitle: "Use when Table 3 needs a star mapping",
     suddhaPadhamLabel: "Suddha Padham",
     suddhaPadhamPlaceholder: "Optional",
     feetLabel: "Feet",
@@ -98,42 +119,52 @@ const englishStrings: AppStrings = {
   },
   directions: directionOptions,
   nakshatrams: nakshatramOptions,
+  vargus: varguOptions,
 };
 
 const teluguStrings: AppStrings = {
   homeRoute: "హోమ్",
   home: {
-    title: "వాస్తు విశ్లేషణ",
-    subtitle: "క్యాలిక్యులేటర్ మరియు రిపోర్ట్ మాత్రమే",
+    title: "విశ్వకర్మ వాస్తు సర్వస్వం",
+    subtitle: "ప్రీమియం వాస్తు విశ్లేషణ",
     languageLabel: "భాష",
     languagePlaceholder: "భాషను ఎంచుకోండి",
-    introTitle: "వాస్తు విశ్లేషణ",
+    introTitle: "విశ్వకర్మ వాస్తు సర్వస్వం",
     introSubtitle: "పూర్తి రిపోర్ట్ మరియు PDF కోసం దిగువ వివరాలు నమోదు చేయండి.",
     ownerInfoTitle: "యజమాని సమాచారం",
     ownerInfoSubtitle: "భాష మరియు యజమాని పేరు",
-    propertyTitle: "ఆస్తి వివరాలు",
-    propertySubtitle: "నక్షత్రం మరియు దిశ",
-    plotWidthTitle: "ప్లాట్ వెడల్పు",
-    plotWidthSubtitle:
-      "అడుగులు, ఇంచ్, మరియు నులు లో పూర్తి వెడల్పు నమోదు చేయండి",
-    plotDepthTitle: "ప్లాట్ లోతు",
-    plotDepthSubtitle: "అడుగులు, ఇంచ్, మరియు నులు లో పూర్తి లోతు నమోదు చేయండి",
-    suddhaTitle: "శుద్ధ పాదం",
-    suddhaSubtitle: "టేబుల్ 3 అవసరమైనప్పుడు చూపించే ఐచ్ఛిక విభాగం",
-    padamTitle: "నక్షత్రంతో పాదం",
-    padamSubtitle: "టేబుల్ 3 కి స్టార్ మ్యాపింగ్ అవసరమైనప్పుడు ఉపయోగించండి",
     ownerNameLabel: "యజమాని పేరు (ఇంగ్లీష్ మాత్రమే)",
     ownerNamePlaceholder: "యజమాని పేరును నమోదు చేయండి",
+    varguLabel: "వర్గు",
+    varguPlaceholder: "వర్గును ఎంచుకోండి",
+    wifeInfoTitle: "యజమానురాలు సమాచారం",
+    wifeInfoSubtitle: "యజమానురాలు వివరాలు",
+    wifeNameLabel: "యజమానురాలు పేరు (ఇంగ్లీష్ మాత్రమే)",
+    wifeNamePlaceholder: "యజమానురాలు పేరును నమోదు చేయండి",
+    wifeNakshatramLabel: "నక్షత్రం",
+    wifeNakshatramPlaceholder: "నక్షత్రాన్ని ఎంచుకోండి",
+    wifeVarguLabel: "వర్గు",
+    wifeVarguPlaceholder: "వర్గును ఎంచుకోండి",
+    propertyTitle: "దిశ వివరాలు",
+    propertySubtitle: "ఇంటి దిశ",
     nakshatramLabel: "నక్షత్రం",
     nakshatramPlaceholder: "నక్షత్రాన్ని ఎంచుకోండి",
     directionLabel: "దిశ",
     directionPlaceholder: "దిశను ఎంచుకోండి",
+    plotLengthTitle: "ప్లాట్ పొడవు",
+    plotLengthSubtitle: "అడుగులు, ఇంచ్, మరియు నులు లో పూర్తి పొడవు నమోదు చేయండి",
+    plotWidthTitle: "ప్లాట్ వెడల్పు",
+    plotWidthSubtitle: "అడుగులు, ఇంచ్, మరియు నులు లో పూర్తి వెడల్పు నమోదు చేయండి",
+    lengthFeetLabel: "పొడవు (అడుగులు)",
+    lengthInchLabel: "పొడవు (ఇంచ్)",
+    lengthNulluLabel: "పొడవు (నులు)",
     widthFeetLabel: "వెడల్పు (అడుగులు)",
     widthInchLabel: "వెడల్పు (ఇంచ్)",
     widthNulluLabel: "వెడల్పు (నులు)",
-    depthFeetLabel: "లోతు (అడుగులు)",
-    depthInchLabel: "లోతు (ఇంచ్)",
-    depthNulluLabel: "లోతు (నులు)",
+    suddhaTitle: "శుద్ధ పాదం",
+    suddhaSubtitle: "టేబుల్ 3 అవసరమైనప్పుడు చూపించే ఐచ్ఛిక విభాగం",
+    padamTitle: "నక్షత్రంతో పాదం",
+    padamSubtitle: "టేబుల్ 3 కి స్టార్ మ్యాపింగ్ అవసరమైనప్పుడు ఉపయోగించండి",
     suddhaPadhamLabel: "శుద్ధ పాదం",
     suddhaPadhamPlaceholder: "ఐచ్ఛికం",
     feetLabel: "అడుగులు",
@@ -155,41 +186,61 @@ const teluguStrings: AppStrings = {
     "జ్యేష్ఠ", "మూల", "పూర్వాషాఢ", "ఉత్తరాషాఢ", "శ్రవణం",
     "ధనిష్ఠ", "శతభిషం", "పూర్వాభాద్ర", "ఉత్తరాభాద్ర", "రేవతి"
   ].map(n => ({ label: n, value: n })),
+  vargus: [
+    { label: "1 (అ, ఆ, ఇ, ఈ...)", value: "1" },
+    { label: "2 (క, ఖ, గ, ఘ...)", value: "2" },
+    { label: "3 (చ, ఛ, జ, ఝ...)", value: "3" },
+    { label: "4 (ట, ఠ, డ, ఢ...)", value: "4" },
+    { label: "5 (త, థ, ద, ధ...)", value: "5" },
+    { label: "6 (ప, ఫ, బ, భ...)", value: "6" },
+    { label: "7 (య, ర, ల, వ...)", value: "7" },
+    { label: "8 (శ, ష, స, హ...)", value: "8" },
+  ],
 };
 
 const hindiStrings: AppStrings = {
   homeRoute: "होम",
   home: {
-    title: "वास्तु विश्लेषण",
-    subtitle: "केवल कैलकुलेटर और रिपोर्ट प्रवाह",
+    title: "विश्वकर्मा वास्तु सर्वस्वम",
+    subtitle: "प्रीमियम वास्तु विश्लेषण",
     languageLabel: "भाषा",
     languagePlaceholder: "भाषा चुनें",
-    introTitle: "वास्तु विश्लेषण",
+    introTitle: "विश्वकर्मा वास्तु सर्वस्वम",
     introSubtitle: "पूरा रिपोर्ट और PDF बनाने के लिए नीचे विवरण भरें।",
-    ownerInfoTitle: "मालिक की जानकारी",
+    ownerInfoTitle: "मालिक की जानकारी (यजमानी)",
     ownerInfoSubtitle: "भाषा और मालिक का नाम",
-    propertyTitle: "संपत्ति विवरण",
-    propertySubtitle: "नक्षत्र और दिशा",
-    plotWidthTitle: "प्लॉट चौड़ाई",
-    plotWidthSubtitle: "फीट, इंच, और नुल्लु में पूरी चौड़ाई दर्ज करें",
-    plotDepthTitle: "प्लॉट गहराई",
-    plotDepthSubtitle: "फीट, इंच, और नुल्लु में पूरी गहराई दर्ज करें",
-    suddhaTitle: "शुद्ध पादम",
-    suddhaSubtitle: "टेबल 3 के लिए दिखाई देने वाला वैकल्पिक भाग",
-    padamTitle: "स्टार के साथ पादम",
-    padamSubtitle: "जब टेबल 3 को स्टार मैपिंग की जरूरत हो तब उपयोग करें",
     ownerNameLabel: "मालिक का नाम (केवल अंग्रेज़ी)",
     ownerNamePlaceholder: "मालिक का नाम दर्ज करें",
+    varguLabel: "वर्ग",
+    varguPlaceholder: "वर्ग चुनें",
+    wifeInfoTitle: "पत्नी की जानकारी (यजमानिरालु)",
+    wifeInfoSubtitle: "पत्नी का विवरण",
+    wifeNameLabel: "पत्नी का नाम (केवल अंग्रेज़ी)",
+    wifeNamePlaceholder: "पत्नी का नाम दर्ज करें",
+    wifeNakshatramLabel: "नक्षत्र",
+    wifeNakshatramPlaceholder: "नक्षत्र चुनें",
+    wifeVarguLabel: "वर्ग",
+    wifeVarguPlaceholder: "वर्ग चुनें",
+    propertyTitle: "दिशा विवरण",
+    propertySubtitle: "घर की दिशा",
     nakshatramLabel: "नक्षत्र",
     nakshatramPlaceholder: "नक्षत्र चुनें",
     directionLabel: "दिशा",
     directionPlaceholder: "दिशा चुनें",
+    plotLengthTitle: "प्लॉट लंबाई",
+    plotLengthSubtitle: "फीट, इंच, और नुल्लु में पूरी लंबाई दर्ज करें",
+    plotWidthTitle: "प्लॉट चौड़ाई",
+    plotWidthSubtitle: "फीट, इंच, और नुल्लु में पूरी चौड़ाई दर्ज करें",
+    lengthFeetLabel: "लंबाई (फीट)",
+    lengthInchLabel: "लंबाई (इंच)",
+    lengthNulluLabel: "लंबाई (नुल्लु)",
     widthFeetLabel: "चौड़ाई (फीट)",
     widthInchLabel: "चौड़ाई (इंच)",
     widthNulluLabel: "चौड़ाई (नुल्लु)",
-    depthFeetLabel: "गहराई (फीट)",
-    depthInchLabel: "गहराई (इंच)",
-    depthNulluLabel: "गहराई (नुल्लु)",
+    suddhaTitle: "शुद्ध पादम",
+    suddhaSubtitle: "टेबल 3 के लिए दिखाई देने वाला वैकल्पिक भाग",
+    padamTitle: "स्टार के साथ पादम",
+    padamSubtitle: "जब टेबल 3 को स्टार मैपिंग की जरूरत हो तब उपयोग करें",
     suddhaPadhamLabel: "शुद्ध पादम",
     suddhaPadhamPlaceholder: "वैकल्पिक",
     feetLabel: "फीट",
@@ -211,6 +262,16 @@ const hindiStrings: AppStrings = {
     "ज्येष्ठा", "मूल", "पूर्वाषाढ़ा", "उत्तराषाढ़ा", "श्रवण",
     "धनिष्ठा", "शतभिषा", "पूर्वा भाद्रपद", "उत्तरा भाद्रपद", "रेवती"
   ].map(n => ({ label: n, value: n })),
+  vargus: [
+    { label: "1 (अ, आ, इ, ई...)", value: "1" },
+    { label: "2 (क, ख, ग, घ...)", value: "2" },
+    { label: "3 (च, छ, ज, झ...)", value: "3" },
+    { label: "4 (ट, ठ, ड, ढ...)", value: "4" },
+    { label: "5 (त, थ, द, ध...)", value: "5" },
+    { label: "6 (प, फ, ब, भ...)", value: "6" },
+    { label: "7 (य, र, ल, व...)", value: "7" },
+    { label: "8 (श, ष, स, ह...)", value: "8" },
+  ],
 };
 
 const guideTranslations: Record<

@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "Vastu App",
+    "name": "Vastu Sarvaswam",
     "slug": "vastu-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "icon":"./assets/icon1.jpg",
     "assetBundlePatterns": [
       "**/*"
     ],

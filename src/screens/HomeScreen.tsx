@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Picker } from "@react-native-picker/picker";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -32,13 +33,17 @@ const initialForm: VastuFormValues = {
   language: "English",
   ownerName: "",
   nakshatram: "",
+  vargu: "",
+  wifeName: "",
+  wifeNakshatram: "",
+  wifeVargu: "",
   direction: "",
+  lengthFeet: "",
+  lengthInch: "",
+  lengthNullu: "",
   widthFeet: "",
   widthInch: "",
   widthNullu: "",
-  depthFeet: "",
-  depthInch: "",
-  depthNullu: "",
   suddhaPadham: "",
   suddhaFeet: "",
   suddhaInch: "",
@@ -185,19 +190,41 @@ export const HomeScreen = () => {
             </View>
           </LinearGradient>
 
-          {/* Language */}
-          <SectionCard title={strings.home.languageLabel}>
-            <SearchableSelect
-              label={strings.home.languageLabel}
-              value={language}
-              options={languageOptions}
-              placeholder={strings.home.languagePlaceholder}
-              onChange={(value) => {
-                setLanguage(value as typeof language);
-                updateField("language", value);
-              }}
-            />
-          </SectionCard>
+          {/* App Title & Language Banner */}
+          <LinearGradient
+            colors={["#5A0008", "#8B000F"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.appTitleBanner}
+          >
+            <View style={styles.appTitleRow}>
+              <View style={styles.appTitleLeft}>
+                <Text style={styles.appTitleText}>{strings.home.title}</Text>
+                <Text style={styles.appTitleSub}>Viswakarma Vastu Sarvaswam</Text>
+              </View>
+              
+              <View style={styles.appTitleRight}>
+                <Pressable
+                  style={styles.bannerLangDropdown}
+                  onPress={() => {
+                     const nextMap: Record<string, string> = {
+                        English: "Telugu",
+                        Telugu: "Hindi",
+                        Hindi: "English",
+                     };
+                     const nextLang = nextMap[language] || "English";
+                     setLanguage(nextLang as typeof language);
+                     updateField("language", nextLang);
+                  }}
+                >
+                  <Text style={styles.bannerLangText}>
+                    {language === "English" ? "English" : language === "Telugu" ? "తెలుగు" : "हिंदी"}
+                  </Text>
+                  <Text style={styles.bannerLangIcon}>▾</Text>
+                </Pressable>
+              </View>
+            </View>
+          </LinearGradient>
 
           <View style={styles.sectionDivider}>
             <View style={styles.divLine} />
@@ -205,7 +232,7 @@ export const HomeScreen = () => {
             <View style={styles.divLine} />
           </View>
 
-          {/* Owner Information */}
+          {/* Owner Information (Yajamani) */}
           <SectionCard
             title={strings.home.ownerInfoTitle}
             subtitle={strings.home.ownerInfoSubtitle}
@@ -219,20 +246,69 @@ export const HomeScreen = () => {
                 updateField("ownerName", text.replace(/[^A-Za-z\s]/g, ""))
               }
             />
+            <View style={styles.rowEqual}>
+              <View style={styles.col}>
+                <SearchableSelect
+                  label={strings.home.nakshatramLabel}
+                  value={form.nakshatram}
+                  options={strings.nakshatrams}
+                  placeholder={strings.home.nakshatramPlaceholder}
+                  onChange={(value) => updateField("nakshatram", value)}
+                />
+              </View>
+              <View style={styles.col}>
+                <SearchableSelect
+                  label={strings.home.varguLabel}
+                  value={form.vargu}
+                  options={strings.vargus}
+                  placeholder={strings.home.varguPlaceholder}
+                  onChange={(value) => updateField("vargu", value)}
+                />
+              </View>
+            </View>
           </SectionCard>
 
-          {/* Property Details */}
+          {/* Wife Information (Yajamaniralu) */}
+          <SectionCard
+            title={strings.home.wifeInfoTitle}
+            subtitle={strings.home.wifeInfoSubtitle}
+          >
+            <PremiumInput
+              label={strings.home.wifeNameLabel}
+              value={form.wifeName}
+              placeholder={strings.home.wifeNamePlaceholder}
+              autoCapitalize="words"
+              onChangeText={(text) =>
+                updateField("wifeName", text.replace(/[^A-Za-z\s]/g, ""))
+              }
+            />
+            <View style={styles.rowEqual}>
+              <View style={styles.col}>
+                <SearchableSelect
+                  label={strings.home.wifeNakshatramLabel}
+                  value={form.wifeNakshatram}
+                  options={strings.nakshatrams}
+                  placeholder={strings.home.wifeNakshatramPlaceholder}
+                  onChange={(value) => updateField("wifeNakshatram", value)}
+                />
+              </View>
+              <View style={styles.col}>
+                <SearchableSelect
+                  label={strings.home.wifeVarguLabel}
+                  value={form.wifeVargu}
+                  options={strings.vargus}
+                  placeholder={strings.home.wifeVarguPlaceholder}
+                  onChange={(value) => updateField("wifeVargu", value)}
+                />
+              </View>
+            </View>
+          </SectionCard>
+
+          {/* Direction Details */}
           <SectionCard
             title={strings.home.propertyTitle}
             subtitle={strings.home.propertySubtitle}
           >
-            <SearchableSelect
-              label={strings.home.nakshatramLabel}
-              value={form.nakshatram}
-              options={strings.nakshatrams}
-              placeholder={strings.home.nakshatramPlaceholder}
-              onChange={(value) => updateField("nakshatram", value)}
-            />
             <SearchableSelect
               label={strings.home.directionLabel}
               value={form.direction}
@@ -240,6 +316,54 @@ export const HomeScreen = () => {
               placeholder={strings.home.directionPlaceholder}
               onChange={(value) => updateField("direction", value)}
             />
+          </SectionCard>
+
+          {/* Plot Length */}
+          <SectionCard
+            title={strings.home.plotLengthTitle}
+            subtitle={strings.home.plotLengthSubtitle}
+          >
+            <View style={styles.row}>
+              <View style={styles.col}>
+                <PremiumInput
+                  label={strings.home.lengthFeetLabel}
+                  value={form.lengthFeet}
+                  placeholder="0"
+                  keyboardType="number-pad"
+                  onChangeText={(t) => updateField("lengthFeet", digitsOnly(t))}
+                />
+              </View>
+              <View style={styles.col}>
+                <Text style={styles.inlinePickerLabel}>{strings.home.lengthInchLabel}</Text>
+                <View style={styles.inlinePickerBox}>
+                  <Picker
+                    selectedValue={form.lengthInch || "0"}
+                    onValueChange={(v) => updateField("lengthInch", String(v))}
+                    style={styles.inlinePicker}
+                    dropdownIconColor="#8B000F"
+                  >
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <Picker.Item key={i} label={String(i)} value={String(i)} />
+                    ))}
+                  </Picker>
+                </View>
+              </View>
+              <View style={styles.col}>
+                <Text style={styles.inlinePickerLabel}>{strings.home.lengthNulluLabel}</Text>
+                <View style={styles.inlinePickerBox}>
+                  <Picker
+                    selectedValue={form.lengthNullu || "0"}
+                    onValueChange={(v) => updateField("lengthNullu", String(v))}
+                    style={styles.inlinePicker}
+                    dropdownIconColor="#8B000F"
+                  >
+                    {Array.from({ length: 9 }, (_, i) => (
+                      <Picker.Item key={i} label={String(i)} value={String(i)} />
+                    ))}
+                  </Picker>
+                </View>
+              </View>
+            </View>
           </SectionCard>
 
           {/* Plot Width */}
@@ -258,58 +382,34 @@ export const HomeScreen = () => {
                 />
               </View>
               <View style={styles.col}>
-                <PremiumInput
-                  label={strings.home.widthInchLabel}
-                  value={form.widthInch}
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  onChangeText={(t) => updateField("widthInch", digitsOnly(t))}
-                />
+                <Text style={styles.inlinePickerLabel}>{strings.home.widthInchLabel}</Text>
+                <View style={styles.inlinePickerBox}>
+                  <Picker
+                    selectedValue={form.widthInch || "0"}
+                    onValueChange={(v) => updateField("widthInch", String(v))}
+                    style={styles.inlinePicker}
+                    dropdownIconColor="#8B000F"
+                  >
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <Picker.Item key={i} label={String(i)} value={String(i)} />
+                    ))}
+                  </Picker>
+                </View>
               </View>
               <View style={styles.col}>
-                <PremiumInput
-                  label={strings.home.widthNulluLabel}
-                  value={form.widthNullu}
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  onChangeText={(t) => updateField("widthNullu", digitsOnly(t))}
-                />
-              </View>
-            </View>
-          </SectionCard>
-
-          {/* Plot Depth */}
-          <SectionCard
-            title={strings.home.plotDepthTitle}
-            subtitle={strings.home.plotDepthSubtitle}
-          >
-            <View style={styles.row}>
-              <View style={styles.col}>
-                <PremiumInput
-                  label={strings.home.depthFeetLabel}
-                  value={form.depthFeet}
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  onChangeText={(t) => updateField("depthFeet", digitsOnly(t))}
-                />
-              </View>
-              <View style={styles.col}>
-                <PremiumInput
-                  label={strings.home.depthInchLabel}
-                  value={form.depthInch}
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  onChangeText={(t) => updateField("depthInch", digitsOnly(t))}
-                />
-              </View>
-              <View style={styles.col}>
-                <PremiumInput
-                  label={strings.home.depthNulluLabel}
-                  value={form.depthNullu}
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  onChangeText={(t) => updateField("depthNullu", digitsOnly(t))}
-                />
+                <Text style={styles.inlinePickerLabel}>{strings.home.widthNulluLabel}</Text>
+                <View style={styles.inlinePickerBox}>
+                  <Picker
+                    selectedValue={form.widthNullu || "0"}
+                    onValueChange={(v) => updateField("widthNullu", String(v))}
+                    style={styles.inlinePicker}
+                    dropdownIconColor="#8B000F"
+                  >
+                    {Array.from({ length: 9 }, (_, i) => (
+                      <Picker.Item key={i} label={String(i)} value={String(i)} />
+                    ))}
+                  </Picker>
+                </View>
               </View>
             </View>
           </SectionCard>
@@ -430,6 +530,64 @@ const styles = StyleSheet.create({
     backgroundColor: palette.background,
   },
 
+  /* App Title & Language Banner */
+  appTitleBanner: {
+    borderRadius: cornerRadius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    shadowColor: "#8B000F",
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: "rgba(255,217,92,0.3)",
+  },
+  appTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  appTitleLeft: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  appTitleText: {
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 20,
+    color: "#FFD95C",
+    lineHeight: 26,
+  },
+  appTitleSub: {
+    fontFamily: "Manrope_400Regular",
+    fontSize: 10,
+    color: "#FFF8F0",
+    opacity: 0.8,
+  },
+  appTitleRight: {
+    flexShrink: 0,
+  },
+  bannerLangDropdown: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderWidth: 1,
+    borderColor: "rgba(255,217,92,0.4)",
+    borderRadius: cornerRadius.sm,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    gap: 6,
+  },
+  bannerLangText: {
+    fontFamily: "Manrope_600SemiBold",
+    fontSize: 13,
+    color: "#FFF8F0",
+  },
+  bannerLangIcon: {
+    fontSize: 14,
+    color: "#FFD95C",
+  },
+
   /* Festival banner */
   festivalBanner: {
     borderRadius: cornerRadius.lg,
@@ -483,8 +641,38 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     flexWrap: "wrap",
   },
+  rowEqual: {
+    flexDirection: "row",
+    gap: spacing.sm,
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+  },
   col: { flex: 1, minWidth: 88 },
   colWide: { flex: 1.3, minWidth: 120 },
+
+  /* Inline Picker — matches SearchableSelect visually */
+  inlinePickerLabel: {
+    fontFamily: "Manrope_600SemiBold",
+    fontSize: 12,
+    color: palette.textMedium,
+    marginBottom: 8,
+    letterSpacing: 0.2,
+  },
+  inlinePickerBox: {
+    backgroundColor: palette.surfaceInput,
+    borderRadius: cornerRadius.md,
+    borderWidth: 1,
+    borderColor: palette.border,
+    minHeight: 50,
+    justifyContent: "center",
+    overflow: "hidden",
+    marginBottom: spacing.lg,
+  },
+  inlinePicker: {
+    height: 50,
+    color: palette.text,
+    marginHorizontal: -4,
+  },
 
   /* Action pair */
   actionPair: {
@@ -564,6 +752,4 @@ const styles = StyleSheet.create({
     color: "#FFF8F0",
     letterSpacing: 0.4,
   },
-
-  /* Bottom ornament (replaced by FooterSection) */
 });

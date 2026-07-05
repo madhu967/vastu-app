@@ -157,54 +157,62 @@ const TELEGRAM_ICON = `<svg width="48" height="48" viewBox="0 0 48 48" xmlns="ht
   <path d="M14,26 L17,36 L20,30 L32,20" fill="none" stroke="#2CA5E0" stroke-width="2"/>
 </svg>`;
 
-// ──────────────────────────────────────────────────────────────
-//  Build the 9 main data rows
-// ──────────────────────────────────────────────────────────────
-const buildRows = (rows: Array<{ label: string; value: string }>) =>
-  rows.slice(0, 9).map((row, i) => {
-    const bg    = i % 2 === 0 ? "#FFFFFF" : "#FFF9F0";
-    const te    = METRICS_TE[i] ?? row.label;
-    const phala = PHALA_TE[i] ?? "శుభం";
-    const raw   = row.value;
-    const num   = (raw.match(/[\d.]+/) ?? [raw])[0];
+// Build the 9 main Vastu metric rows in 5 columns: S.No, Aspect, Formula, Result, Phala Analysis
+const buildRows = (table: ResultTable) => {
+  const findVal = (label: string) => {
+    const row = table.rows.find(r => r.label === label);
+    return row ? row.value : "—";
+  };
 
+  const metrics = [
+    { label: "ఆయాది సంఖ్య", formula: "(పదము * 9) / 8", value: findVal("Aayamu"), phala: "శుభ ఫలితం" },
+    { label: "వ్యాది సంఖ్య", formula: "(పదము * 3) / 8", value: findVal("Runamu"), phala: "శుభం" },
+    { label: "రుణ సంఖ్య", formula: "(పదము * 3) / 8", value: findVal("Runamu"), phala: "శుభప్రదం" },
+    { label: "ధన సంఖ్య", formula: "(పదము * 8) / 12", value: findVal("Dhanamu"), phala: "అత్యుత్తమం" },
+    { label: "గుణ సంఖ్య", formula: "(పదము * 6) / 30", value: findVal("Tithi"), phala: "శ్రేయస్సు" },
+    { label: "ఆయురాయ సంఖ్య", formula: "(పదము * 9) / 120", value: findVal("Ayurdayamu"), phala: "దీర్ఘాయువు" },
+    { label: "అంశ సంఖ్య", formula: "(పదము * 6) / 9", value: findVal("Amsa"), phala: "శుభం" },
+    { label: "దిక్సాల సంఖ్య", formula: "(పదము * 9) / 8", value: findVal("Dikruti"), phala: "శ్రేయావయం" },
+    { label: "నక్షత్ర సంఖ్య", formula: "(పదము * 8) / 27", value: findVal("Nakshatram"), phala: "శుభ ఫలితం" }
+  ];
+
+  return metrics.map((row, i) => {
+    const bg = i % 2 === 0 ? "#FFFFFF" : "#FFF9F0";
     return `
-<tr>
-  <td style="background:#F5EDD8;text-align:center;font-size:14px;font-weight:700;
-      color:#3D1A00;border:1px solid #D4B896;width:48px;padding:11px 6px;">${i + 1}</td>
-  <td style="background:${bg};font-size:14px;color:#2C1000;border:1px solid #D4B896;
-      padding:11px 12px;font-weight:500;">${te}</td>
-  <td style="background:${bg};font-size:13px;color:#5A3000;border:1px solid #D4B896;
-      padding:11px 12px;">${raw}</td>
-  <td style="background:${bg};text-align:center;font-size:15px;font-weight:700;
-      color:#1A0A00;border:1px solid #D4B896;width:65px;padding:11px 6px;">${num}</td>
-  <td style="background:${bg};text-align:center;border:1px solid #D4B896;
-      width:130px;padding:11px 8px;font-size:14px;font-weight:600;color:#1B5E20;">
-    ${phala}&nbsp;&nbsp;<span style="color:#2E7D32;font-size:16px;font-weight:700;">↑</span>
-  </td>
-</tr>`;
+ <tr>
+   <td style="background:#F5EDD8;text-align:center;font-size:14px;font-weight:700;
+       color:#3D1A00;border:1px solid #D4B896;width:48px;padding:11px 6px;">${i + 1}</td>
+   <td style="background:${bg};font-size:14px;color:#2C1000;border:1px solid #D4B896;
+       padding:11px 12px;font-weight:600;">${row.label}</td>
+   <td style="background:${bg};font-size:13px;color:#5A3000;border:1px solid #D4B896;
+       padding:11px 12px;text-align:center;">${row.formula}</td>
+   <td style="background:${bg};text-align:center;font-size:15px;font-weight:700;
+       color:#1A0A00;border:1px solid #D4B896;width:65px;padding:11px 6px;">${row.value}</td>
+   <td style="background:${bg};text-align:center;border:1px solid #D4B896;
+       width:130px;padding:11px 8px;font-size:14px;font-weight:600;color:#1B5E20;">
+     ${row.phala}&nbsp;&nbsp;<span style="color:#2E7D32;font-size:16px;font-weight:700;">↑</span>
+   </td>
+ </tr>`;
   }).join("");
+};
 
-// ──────────────────────────────────────────────────────────────
-//  Full HTML — pixel-matched to reference image
-// ──────────────────────────────────────────────────────────────
 const buildHtml = (form: VastuFormValues, table: ResultTable): string => {
   const owner  = form.ownerName || "—";
   const date   = todayFormatted();
   const dir    = DIR_TE[form.direction] || form.direction || "ఉత్తరం";
 
+  const lFt  = parseFloat(form.lengthFeet  || "0");
+  const lIn  = parseFloat(form.lengthInch  || "0");
   const wFt  = parseFloat(form.widthFeet  || "0");
   const wIn  = parseFloat(form.widthInch  || "0");
-  const dFt  = parseFloat(form.depthFeet  || "0");
-  const dIn  = parseFloat(form.depthInch  || "0");
-  const area = ((wFt + wIn / 12) * (dFt + dIn / 12)).toFixed(2);
+  const area = ((lFt + lIn / 12) * (wFt + wIn / 12)).toFixed(2);
 
-  const widthStr = form.widthFeet
-    ? `${form.widthFeet}'${form.widthInch ? " " + form.widthInch + '"' : ""}`
+  const lengthStr = form.lengthFeet
+    ? `${form.lengthFeet}'${form.lengthInch ? " " + form.lengthInch + '"' : ""}`
     : "—";
-  const depthStr = form.depthFeet ? `${form.depthFeet}'` : "—";
+  const widthStr = form.widthFeet ? `${form.widthFeet}'${form.widthInch ? " " + form.widthInch + '"' : ""}` : "—";
 
-  const dataRows = buildRows(table.rows);
+  const dataRows = buildRows(table);
 
   return `<!DOCTYPE html>
 <html lang="te">
@@ -390,7 +398,7 @@ body {
   border: 1px solid rgba(212,175,55,0.35);
 }
 .main-table thead th:nth-child(2) { text-align:left; }
-.main-table thead th:nth-child(3) { text-align:left; }
+.main-table thead th:nth-child(3) { text-align:center; }
 
 /* ═══════════════════════════════════════════
    SUMMARY / RECOMMENDATION BOX
@@ -473,7 +481,7 @@ body {
 ═══════════════════════════════ -->
 <div class="client">
   <div class="client-col" style="border-right:2px solid #D4B080;">
-    <div class="client-lbl">క్షయింట్ పేరు</div>
+    <div class="client-lbl">క్లయింట్ పేరు</div>
     <div class="client-val">${owner}</div>
   </div>
   <div class="client-col" style="border-right:2px solid #D4B080;">
@@ -497,12 +505,12 @@ body {
      DIMENSION ROWS
 ═══════════════════════════════ -->
 <div class="dim-row">
-  <div class="dim-lbl">వేడల్పు</div>
-  <div class="dim-val">${widthStr}</div>
+  <div class="dim-lbl">పొడవు (Length)</div>
+  <div class="dim-val">${lengthStr}</div>
 </div>
 <div class="dim-row">
-  <div class="dim-lbl">లోతు</div>
-  <div class="dim-val">${depthStr}</div>
+  <div class="dim-lbl">వెడల్పు (Width)</div>
+  <div class="dim-val">${widthStr}</div>
 </div>
 
 <!-- ═══════════════════════════════

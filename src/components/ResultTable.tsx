@@ -26,7 +26,7 @@ export const ResultTable = ({ table }: ResultTableProps) => {
       {/* Rows */}
       {table.rows.map((row, index) => (
         <View
-          key={row.label}
+          key={`${row.label}-${index}`}
           style={[
             styles.row,
             index % 2 === 0 ? styles.rowEven : styles.rowOdd,
