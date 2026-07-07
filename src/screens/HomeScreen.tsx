@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SectionCard } from "@/components/SectionCard";
@@ -183,11 +184,15 @@ export const HomeScreen = () => {
             end={{ x: 1, y: 0 }}
             style={styles.festivalBanner}
           >
-            <Text style={styles.festivalIcon}>🏠</Text>
-            <View>
-              <Text style={styles.festivalTitle}>వాస్తు శాస్త్ర విశ్లేషణ</Text>
-              <Text style={styles.festivalSub}>ఈ రోజు మీ ఇంటి వాస్తు తెలుసుకోండి</Text>
+            <Image 
+              source={require("../../assets/icon1.jpg")} 
+              style={styles.bannerIconImage} 
+            />
+            <View style={styles.bannerTextContainer}>
+              <Text style={styles.festivalTitle}>{strings.home.festivalTitle}</Text>
+              <Text style={styles.festivalSub}>{strings.home.festivalSub}</Text>
             </View>
+            <Text style={styles.festivalIcon}>🏠</Text>
           </LinearGradient>
 
           {/* App Title & Language Banner */}
@@ -357,7 +362,7 @@ export const HomeScreen = () => {
                     style={styles.inlinePicker}
                     dropdownIconColor="#8B000F"
                   >
-                    {Array.from({ length: 9 }, (_, i) => (
+                    {Array.from({ length: 8 }, (_, i) => (
                       <Picker.Item key={i} label={String(i)} value={String(i)} />
                     ))}
                   </Picker>
@@ -405,7 +410,7 @@ export const HomeScreen = () => {
                     style={styles.inlinePicker}
                     dropdownIconColor="#8B000F"
                   >
-                    {Array.from({ length: 9 }, (_, i) => (
+                    {Array.from({ length: 8 }, (_, i) => (
                       <Picker.Item key={i} label={String(i)} value={String(i)} />
                     ))}
                   </Picker>
@@ -595,12 +600,21 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.md,
+    justifyContent: "space-between",
     shadowColor: "#F4C430",
     shadowOpacity: 0.3,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
     elevation: 4,
+  },
+  bannerIconImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  bannerTextContainer: {
+    flex: 1,
   },
   festivalIcon: { fontSize: 32, lineHeight: 38 },
   festivalTitle: {

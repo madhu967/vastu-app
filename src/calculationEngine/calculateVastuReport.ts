@@ -6,21 +6,21 @@ import {
 } from "@/types/vastu";
 import { formatDecimal, toNumber } from "@/utils/number";
 
-const createRows = (entries: Array<[string, string]>): ResultRow[] =>
-  entries.map(([label, value]) => ({ label, value }));
+const createRows = (entries: Array<[string, string, string?]>): ResultRow[] =>
+  entries.map(([label, value, roundedValue]) => ({ label, value, roundedValue }));
 
-// Correct formula: nullu divides by 8, not 96
+// Calculate in reverse order without roundoff: nullu / 8 + inches / 12 + feet
 const toFeetValueCorrect = (feet: string, inch: string, nullu: string) => {
   const feetValue = toNumber(feet);
   const inchValue = toNumber(inch);
   const nulluValue = toNumber(nullu);
-  return feetValue + inchValue / 12 + nulluValue / 8;
+  return feetValue + (inchValue + (nulluValue / 8)) / 12;
 };
 
 const getRemainderLabel = (value: number, modulus: number): string => {
   const remainder = value % modulus;
   const r = remainder === 0 ? modulus : remainder;
-  return String(Math.round(r * 100) / 100);
+  return String(r); // never round the actual value
 };
 
 export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
@@ -57,28 +57,40 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   const amsa = getRemainderLabel((padamu * 6), 9);
   const dikruti = getRemainderLabel((padamu * 9), 8);
 
-  // Summary table 1 — exact order as specified
+  const formatDisplay = (v: number) => Number.isInteger(v) ? String(v) : parseFloat(v.toFixed(3)).toString();
+
+  const exactAndRounded = (val: number | string, suffix: string = "") => {
+    if (typeof val === "string") {
+      const num = parseFloat(val);
+      if (!isNaN(num)) {
+        return [formatDisplay(num) + suffix, Math.round(num) + suffix] as [string, string];
+      }
+      return [val + suffix, val + suffix] as [string, string];
+    }
+    return [formatDisplay(val) + suffix, Math.round(val) + suffix] as [string, string];
+  };
+
   const summaryTable: ResultTable = {
     title: "Result Table 1",
     rows: createRows([
-      ["Plot Length", `${formatDecimal(length)} ft`],
-      ["Plot Width", `${formatDecimal(width)} ft`],
-      ["Padamu", formatDecimal(padamu)],
-      ["Plot Area", `${formatDecimal(plotAreaSqFeet)} sq ft`],
-      ["Plot Area", `${formatDecimal(plotAreaSqYards)} sq yds`],
-      ["Plot Area", `${formatDecimal(plotAreaCents)} cents`],
-      ["Plot Perimeter", `${formatDecimal(perimeter)} ft`],
-      ["Padamu", formatDecimal(padamu)],
-      ["Diagonal", `${formatDecimal(diagonal)} ft`],
-      ["Dhanamu", dhanamu],
-      ["Runamu", runamu],
-      ["Tithi", tithi],
-      ["Vaaramu", vaaramu],
-      ["Nakshatram", nakshatram],
-      ["Aayamu", aayamu],
-      ["Ayurdayamu", ayurdayamu],
-      ["Amsa", amsa],
-      ["Dikruti", dikruti],
+      ["Plot Length", ...exactAndRounded(length, " ft")],
+      ["Plot Width", ...exactAndRounded(width, " ft")],
+      ["Padamu", ...exactAndRounded(padamu)],
+      ["Plot Area", ...exactAndRounded(plotAreaSqFeet, " sq ft")],
+      ["Plot Area", ...exactAndRounded(plotAreaSqYards, " sq yds")],
+      ["Plot Area", ...exactAndRounded(plotAreaCents, " cents")],
+      ["Plot Perimeter", ...exactAndRounded(perimeter, " ft")],
+      ["Padamu", ...exactAndRounded(padamu)],
+      ["Diagonal", ...exactAndRounded(diagonal, " ft")],
+      ["Dhanamu", ...exactAndRounded(dhanamu)],
+      ["Runamu", ...exactAndRounded(runamu)],
+      ["Tithi", ...exactAndRounded(tithi)],
+      ["Vaaramu", ...exactAndRounded(vaaramu)],
+      ["Nakshatram", ...exactAndRounded(nakshatram)],
+      ["Aayamu", ...exactAndRounded(aayamu)],
+      ["Ayurdayamu", ...exactAndRounded(ayurdayamu)],
+      ["Amsa", ...exactAndRounded(amsa)],
+      ["Dikruti", ...exactAndRounded(dikruti)],
     ]),
     visible: true,
   };

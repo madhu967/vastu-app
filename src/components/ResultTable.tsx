@@ -23,6 +23,15 @@ export const ResultTable = ({ table }: ResultTableProps) => {
         <Text style={styles.title}>{table.title}</Text>
       </View>
 
+      {/* Header for columns if rounded values exist */}
+      {table.rows.some((r) => r.roundedValue) && (
+        <View style={[styles.row, { backgroundColor: palette.surfaceWarm, paddingVertical: 8 }]}>
+          <Text style={[styles.label, { fontWeight: "bold" }]}>Field</Text>
+          <Text style={[styles.value, { flex: 1, textAlign: "center", fontWeight: "bold" }]}>Actual</Text>
+          <Text style={[styles.value, { fontWeight: "bold" }]}>Rounded</Text>
+        </View>
+      )}
+
       {/* Rows */}
       {table.rows.map((row, index) => (
         <View
@@ -33,7 +42,8 @@ export const ResultTable = ({ table }: ResultTableProps) => {
           ]}
         >
           <Text style={styles.label}>{row.label}</Text>
-          <Text style={styles.value}>{row.value}</Text>
+          <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}]}>{row.value}</Text>
+          {row.roundedValue && <Text style={styles.value}>{row.roundedValue}</Text>}
         </View>
       ))}
 

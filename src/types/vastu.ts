@@ -29,6 +29,7 @@ export type VastuFormValues = {
 export type ResultRow = {
   label: string;
   value: string;
+  roundedValue?: string;
 };
 
 export type ResultTable = {

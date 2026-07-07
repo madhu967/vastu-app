@@ -161,19 +161,19 @@ const TELEGRAM_ICON = `<svg width="48" height="48" viewBox="0 0 48 48" xmlns="ht
 const buildRows = (table: ResultTable) => {
   const findVal = (label: string) => {
     const row = table.rows.find(r => r.label === label);
-    return row ? row.value : "—";
+    return { val: row ? row.value : "—", rounded: row?.roundedValue || "—" };
   };
 
   const metrics = [
-    { label: "ఆయాది సంఖ్య", formula: "(పదము * 9) / 8", value: findVal("Aayamu"), phala: "శుభ ఫలితం" },
-    { label: "వ్యాది సంఖ్య", formula: "(పదము * 3) / 8", value: findVal("Runamu"), phala: "శుభం" },
-    { label: "రుణ సంఖ్య", formula: "(పదము * 3) / 8", value: findVal("Runamu"), phala: "శుభప్రదం" },
-    { label: "ధన సంఖ్య", formula: "(పదము * 8) / 12", value: findVal("Dhanamu"), phala: "అత్యుత్తమం" },
-    { label: "గుణ సంఖ్య", formula: "(పదము * 6) / 30", value: findVal("Tithi"), phala: "శ్రేయస్సు" },
-    { label: "ఆయురాయ సంఖ్య", formula: "(పదము * 9) / 120", value: findVal("Ayurdayamu"), phala: "దీర్ఘాయువు" },
-    { label: "అంశ సంఖ్య", formula: "(పదము * 6) / 9", value: findVal("Amsa"), phala: "శుభం" },
-    { label: "దిక్సాల సంఖ్య", formula: "(పదము * 9) / 8", value: findVal("Dikruti"), phala: "శ్రేయావయం" },
-    { label: "నక్షత్ర సంఖ్య", formula: "(పదము * 8) / 27", value: findVal("Nakshatram"), phala: "శుభ ఫలితం" }
+    { label: "ధన సంఖ్య", formula: "(పదము * 8) / 12", ...findVal("Dhanamu"), phala: "అత్యుత్తమం" },
+    { label: "రుణ సంఖ్య", formula: "(పదము * 3) / 8", ...findVal("Runamu"), phala: "శుభప్రదం" },
+    { label: "తిథి సంఖ్య", formula: "(పదము * 6) / 30", ...findVal("Tithi"), phala: "శ్రేయస్సు" },
+    { label: "వార సంఖ్య", formula: "(పదము * 9) / 7", ...findVal("Vaaramu"), phala: "శుభం" },
+    { label: "నక్షత్ర సంఖ్య", formula: "(పదము * 8) / 27", ...findVal("Nakshatram"), phala: "శుభ ఫలితం" },
+    { label: "ఆయాది సంఖ్య", formula: "(పదము * 9) / 8", ...findVal("Aayamu"), phala: "శుభ ఫలితం" },
+    { label: "ఆయుర్దాయ సంఖ్య", formula: "(పదము * 9) / 120", ...findVal("Ayurdayamu"), phala: "దీర్ఘాయువు" },
+    { label: "అంశ సంఖ్య", formula: "(పదము * 6) / 9", ...findVal("Amsa"), phala: "శుభం" },
+    { label: "దిక్పతి సంఖ్య", formula: "(పదము * 9) / 8", ...findVal("Dikruti"), phala: "శ్రేయావయం" }
   ];
 
   return metrics.map((row, i) => {
@@ -186,8 +186,10 @@ const buildRows = (table: ResultTable) => {
        padding:11px 12px;font-weight:600;">${row.label}</td>
    <td style="background:${bg};font-size:13px;color:#5A3000;border:1px solid #D4B896;
        padding:11px 12px;text-align:center;">${row.formula}</td>
-   <td style="background:${bg};text-align:center;font-size:15px;font-weight:700;
-       color:#1A0A00;border:1px solid #D4B896;width:65px;padding:11px 6px;">${row.value}</td>
+   <td style="background:${bg};text-align:center;font-size:13px;font-weight:700;
+       color:#1A0A00;border:1px solid #D4B896;width:60px;padding:11px 4px;">${row.val}</td>
+   <td style="background:${bg};text-align:center;font-size:14px;font-weight:700;
+       color:#8B0000;border:1px solid #D4B896;width:55px;padding:11px 4px;">${row.rounded}</td>
    <td style="background:${bg};text-align:center;border:1px solid #D4B896;
        width:130px;padding:11px 8px;font-size:14px;font-weight:600;color:#1B5E20;">
      ${row.phala}&nbsp;&nbsp;<span style="color:#2E7D32;font-size:16px;font-weight:700;">↑</span>
@@ -207,10 +209,19 @@ const buildHtml = (form: VastuFormValues, table: ResultTable): string => {
   const wIn  = parseFloat(form.widthInch  || "0");
   const area = ((lFt + lIn / 12) * (wFt + wIn / 12)).toFixed(2);
 
-  const lengthStr = form.lengthFeet
-    ? `${form.lengthFeet}'${form.lengthInch ? " " + form.lengthInch + '"' : ""}`
-    : "—";
-  const widthStr = form.widthFeet ? `${form.widthFeet}'${form.widthInch ? " " + form.widthInch + '"' : ""}` : "—";
+  const formatDim = (ft: string, inc: string, nul: string) => {
+    if (!ft && !inc && !nul) return "—";
+    return `${ft || "0"}' ${inc || "0"}" ${nul || "0"}"'`;
+  };
+
+  const lengthStr = formatDim(form.lengthFeet, form.lengthInch, form.lengthNullu);
+  const widthStr = formatDim(form.widthFeet, form.widthInch, form.widthNullu);
+
+  const findDiagonal = () => {
+    const row = table.rows.find(r => r.label === "Diagonal");
+    return row ? (row.roundedValue ? `${row.value} (Rounded: ${row.roundedValue})` : row.value) : "—";
+  };
+  const diagonalStr = findDiagonal();
 
   const dataRows = buildRows(table);
 
@@ -512,6 +523,10 @@ body {
   <div class="dim-lbl">వెడల్పు (Width)</div>
   <div class="dim-val">${widthStr}</div>
 </div>
+<div class="dim-row">
+  <div class="dim-lbl">కర్ణం (Diagonal)</div>
+  <div class="dim-val">${diagonalStr}</div>
+</div>
 
 <!-- ═══════════════════════════════
      AREA RESULT ROW
@@ -535,10 +550,11 @@ body {
   <thead>
     <tr>
       <th style="width:48px;">క్రమం</th>
-      <th style="width:160px;text-align:left;padding-left:12px;">అంశం</th>
+      <th style="width:140px;text-align:left;padding-left:12px;">అంశం</th>
       <th style="text-align:left;padding-left:12px;">సూత్రం (అడుగులు/అంగుళాలు)</th>
-      <th style="width:65px;">ఫలితం</th>
-      <th style="width:132px;">ఫల విశ్లేషణ</th>
+      <th style="width:60px;">ఫలితం (వాస్తవ)</th>
+      <th style="width:55px;">సవరించిన (Rounded)</th>
+      <th style="width:120px;">ఫల విశ్లేషణ</th>
     </tr>
   </thead>
   <tbody>
