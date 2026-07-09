@@ -99,17 +99,17 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
           {/* Outer Reverse Spinning Ring */}
           <Animated.View style={[styles.outerRing, { opacity: fade, transform: [{ scale: ringScale }, { rotate: spinReverse }] }]}>
             <View style={styles.dashedBorder} />
-            <View style={[styles.ringNode, { top: -4, left: 136 }]} />
-            <View style={[styles.ringNode, { bottom: -4, left: 136 }]} />
-            <View style={[styles.ringNode, { top: 136, left: -4 }]} />
-            <View style={[styles.ringNode, { top: 136, right: -4 }]} />
+            <View style={[styles.ringNode, { top: -4, left: 116 }]} />
+            <View style={[styles.ringNode, { bottom: -4, left: 116 }]} />
+            <View style={[styles.ringNode, { top: 116, left: -4 }]} />
+            <View style={[styles.ringNode, { top: 116, right: -4 }]} />
           </Animated.View>
 
           {/* Inner Spinning Direction Ring */}
           <Animated.View style={[styles.innerRing, { opacity: fade, transform: [{ scale: ringScale }, { rotate: spin }] }]}>
             {directions.map((dir, index) => {
               const angle = (index * 45 * Math.PI) / 180;
-              const radius = 100;
+              const radius = 84;
               const x = radius * Math.sin(angle);
               const y = -radius * Math.cos(angle);
               
@@ -170,16 +170,16 @@ const styles = StyleSheet.create({
   cornerText: { fontSize: 18, color: "rgba(255, 217, 92, 0.8)", textShadowColor: "#FFD95C", textShadowRadius: 6 },
   
   compassContainer: {
-    width: 280,
-    height: 280,
+    width: 240,
+    height: 240,
     alignItems: 'center',
     justifyContent: 'center',
   },
   outerRing: {
     position: "absolute",
-    width: 280,
-    height: 280,
-    borderRadius: 140,
+    width: 240,
+    height: 240,
+    borderRadius: 120,
     borderWidth: 1,
     borderColor: "rgba(255, 217, 92, 0.4)",
     alignItems: 'center',
@@ -187,9 +187,9 @@ const styles = StyleSheet.create({
   },
   dashedBorder: {
     position: "absolute",
-    width: 264,
-    height: 264,
-    borderRadius: 132,
+    width: 224,
+    height: 224,
+    borderRadius: 112,
     borderWidth: 1,
     borderColor: "rgba(255, 217, 92, 0.6)",
     borderStyle: 'dashed',
@@ -208,9 +208,9 @@ const styles = StyleSheet.create({
   },
   innerRing: {
     position: "absolute",
-    width: 230,
-    height: 230,
-    borderRadius: 115,
+    width: 194,
+    height: 194,
+    borderRadius: 97,
     borderWidth: 2,
     borderColor: "rgba(255, 217, 92, 0.2)",
     alignItems: 'center',
@@ -247,9 +247,9 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   logoCircle: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
     backgroundColor: "rgba(255, 248, 240, 0.95)",
     alignItems: "center",
     justifyContent: "center",
@@ -263,17 +263,17 @@ const styles = StyleSheet.create({
   },
   innerLogoGlow: {
     position: 'absolute',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 94,
+    height: 94,
+    borderRadius: 47,
     borderWidth: 1,
     borderColor: "rgba(183, 28, 28, 0.15)",
   },
   omText: {
     fontFamily: "CormorantGaramond_700Bold",
-    fontSize: 72,
+    fontSize: 54,
     color: "#A61515",
-    lineHeight: 82,
+    lineHeight: 62,
     textShadowColor: "rgba(166, 21, 21, 0.3)",
     textShadowRadius: 8,
     textShadowOffset: { width: 0, height: 2 },
@@ -284,16 +284,16 @@ const styles = StyleSheet.create({
   divDot: { fontSize: 12, color: "#FFD95C" },
   title: {
     fontFamily: "CormorantGaramond_700Bold",
-    fontSize: 38,
+    fontSize: 32,
     color: "#FFF8F0",
-    lineHeight: 46,
+    lineHeight: 38,
     textShadowColor: "rgba(255,217,92,0.4)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 12,
   },
   titleEn: {
     fontFamily: "Manrope_600SemiBold",
-    fontSize: 16,
+    fontSize: 14,
     color: "#FFD95C",
     letterSpacing: 6,
     marginTop: 4,
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontFamily: "Manrope_500Medium",
-    fontSize: 13,
+    fontSize: 12,
     color: "rgba(255, 248, 240, 0.7)",
     letterSpacing: 0.5,
     fontStyle: "italic",

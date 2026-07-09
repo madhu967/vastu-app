@@ -1,12 +1,17 @@
 import { StyleSheet, Text, View } from "react-native";
 import { cornerRadius, palette, spacing, typography } from "@/constants/theme";
 import { ResultTable as ResultTableType } from "@/types/vastu";
+import { useAppLanguage } from "@/context/AppLanguageContext";
+import { getAppStrings } from "@/i18n/strings";
 
 type ResultTableProps = {
   table: ResultTableType;
 };
 
 export const ResultTable = ({ table }: ResultTableProps) => {
+  const { language } = useAppLanguage();
+  const strings = getAppStrings(language);
+
   if (!table.visible) {
     return null;
   }
@@ -33,19 +38,22 @@ export const ResultTable = ({ table }: ResultTableProps) => {
       )}
 
       {/* Rows */}
-      {table.rows.map((row, index) => (
-        <View
-          key={`${row.label}-${index}`}
-          style={[
-            styles.row,
-            index % 2 === 0 ? styles.rowEven : styles.rowOdd,
-          ]}
-        >
-          <Text style={styles.label}>{row.label}</Text>
-          <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}]}>{row.value}</Text>
-          {row.roundedValue && <Text style={styles.value}>{row.roundedValue}</Text>}
-        </View>
-      ))}
+      {table.rows.map((row, index) => {
+        const translatedLabel = strings.resultTableLabels[row.label] || row.label;
+        return (
+          <View
+            key={`${row.label}-${index}`}
+            style={[
+              styles.row,
+              index % 2 === 0 ? styles.rowEven : styles.rowOdd,
+            ]}
+          >
+            <Text style={styles.label}>{translatedLabel}</Text>
+            <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}]}>{row.value}</Text>
+            {row.roundedValue && <Text style={styles.value}>{row.roundedValue}</Text>}
+          </View>
+        );
+      })}
 
       {/* Footer gold divider */}
       <View style={styles.footer}>
