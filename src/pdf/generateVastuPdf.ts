@@ -1,5 +1,8 @@
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system/legacy";
+import { Platform, Alert, Image } from "react-native";
+import { Asset } from 'expo-asset';
 import { VastuFormValues, VastuReport, ResultTable } from "@/types/vastu";
 
 // ──────────────────────────────────────────────────────────────
@@ -35,79 +38,12 @@ const PHALA_TE = [
 // ──────────────────────────────────────────────────────────────
 //  SVG: Sri Yantra (left header, ~100×100, gold on dark maroon)
 // ──────────────────────────────────────────────────────────────
-const YANTRA = `<svg width="108" height="108" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
-  <rect width="108" height="108" fill="#7B0A10" rx="4"/>
-  <!-- Outer gold border -->
-  <rect x="3" y="3" width="102" height="102" fill="none" stroke="#D4AF37" stroke-width="2" rx="3"/>
-  <!-- Second thin gold border -->
-  <rect x="7" y="7" width="94" height="94" fill="none" stroke="#C9A227" stroke-width="0.8" rx="2"/>
-  <!-- Lotus petals - simplified 8 petals -->
-  <ellipse cx="54" cy="18" rx="5" ry="9" fill="#C9A227" opacity="0.6"/>
-  <ellipse cx="54" cy="18" rx="5" ry="9" fill="#C9A227" opacity="0.6" transform="rotate(45,54,54)"/>
-  <ellipse cx="54" cy="18" rx="5" ry="9" fill="#C9A227" opacity="0.6" transform="rotate(90,54,54)"/>
-  <ellipse cx="54" cy="18" rx="5" ry="9" fill="#C9A227" opacity="0.6" transform="rotate(135,54,54)"/>
-  <ellipse cx="54" cy="18" rx="5" ry="9" fill="#C9A227" opacity="0.6" transform="rotate(180,54,54)"/>
-  <ellipse cx="54" cy="18" rx="5" ry="9" fill="#C9A227" opacity="0.6" transform="rotate(225,54,54)"/>
-  <ellipse cx="54" cy="18" rx="5" ry="9" fill="#C9A227" opacity="0.6" transform="rotate(270,54,54)"/>
-  <ellipse cx="54" cy="18" rx="5" ry="9" fill="#C9A227" opacity="0.6" transform="rotate(315,54,54)"/>
-  <!-- Outer circle -->
-  <circle cx="54" cy="54" r="36" fill="none" stroke="#D4AF37" stroke-width="1.2"/>
-  <!-- Large upward triangle -->
-  <polygon points="54,15 87,67 21,67" fill="none" stroke="#D4AF37" stroke-width="1.8"/>
-  <!-- Large downward triangle -->
-  <polygon points="54,93 87,41 21,41" fill="none" stroke="#D4AF37" stroke-width="1.8"/>
-  <!-- Mid upward triangle -->
-  <polygon points="54,26 78,65 30,65" fill="none" stroke="#E8C060" stroke-width="1.2"/>
-  <!-- Mid downward triangle -->
-  <polygon points="54,82 78,43 30,43" fill="none" stroke="#E8C060" stroke-width="1.2"/>
-  <!-- Small upward triangle -->
-  <polygon points="54,36 70,62 38,62" fill="none" stroke="#F0D080" stroke-width="0.9"/>
-  <!-- Small downward triangle -->
-  <polygon points="54,72 70,46 38,46" fill="none" stroke="#F0D080" stroke-width="0.9"/>
-  <!-- Center bindu -->
-  <circle cx="54" cy="54" r="5" fill="#D4AF37"/>
-  <circle cx="54" cy="54" r="2.5" fill="#FFF8E8"/>
-</svg>`;
+// We now pass base64 image strings dynamically to avoid WebView delays.
 
 // ──────────────────────────────────────────────────────────────
 //  SVG: Compass Rose (right header, ~108×108, gold on dark maroon)
 // ──────────────────────────────────────────────────────────────
-const COMPASS = `<svg width="108" height="108" viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
-  <rect width="108" height="108" fill="#7B0A10" rx="4"/>
-  <rect x="3" y="3" width="102" height="102" fill="none" stroke="#D4AF37" stroke-width="2" rx="3"/>
-  <rect x="7" y="7" width="94" height="94" fill="none" stroke="#C9A227" stroke-width="0.8" rx="2"/>
-  <!-- Outer ring -->
-  <circle cx="54" cy="54" r="38" fill="none" stroke="#D4AF37" stroke-width="1.8"/>
-  <!-- Inner ring -->
-  <circle cx="54" cy="54" r="28" fill="none" stroke="#C9A227" stroke-width="0.9"/>
-  <!-- N arrow (pointing up, gold/filled) -->
-  <polygon points="54,16 48,54 60,54" fill="#D4AF37"/>
-  <!-- S arrow (pointing down, dimmer) -->
-  <polygon points="54,92 48,54 60,54" fill="#9A7020" opacity="0.8"/>
-  <!-- E arrow (pointing right) -->
-  <polygon points="92,54 54,48 54,60" fill="#9A7020" opacity="0.8"/>
-  <!-- W arrow (pointing left) -->
-  <polygon points="16,54 54,48 54,60" fill="#9A7020" opacity="0.8"/>
-  <!-- Tick marks at 45 degrees -->
-  <line x1="54" y1="16" x2="54" y2="22" stroke="#D4AF37" stroke-width="1"/>
-  <line x1="54" y1="86" x2="54" y2="92" stroke="#D4AF37" stroke-width="1"/>
-  <line x1="16" y1="54" x2="22" y2="54" stroke="#D4AF37" stroke-width="1"/>
-  <line x1="86" y1="54" x2="92" y2="54" stroke="#D4AF37" stroke-width="1"/>
-  <!-- Diagonal ticks -->
-  <line x1="27" y1="27" x2="31" y2="31" stroke="#C9A227" stroke-width="1"/>
-  <line x1="77" y1="27" x2="73" y2="31" stroke="#C9A227" stroke-width="1"/>
-  <line x1="27" y1="81" x2="31" y2="77" stroke="#C9A227" stroke-width="1"/>
-  <line x1="77" y1="81" x2="73" y2="77" stroke="#C9A227" stroke-width="1"/>
-  <!-- Center jewel -->
-  <circle cx="54" cy="54" r="7" fill="#D4AF37"/>
-  <circle cx="54" cy="54" r="4" fill="#7B0A10"/>
-  <circle cx="54" cy="54" r="2" fill="#D4AF37"/>
-  <!-- Direction labels -->
-  <text x="54" y="13" text-anchor="middle" font-size="11" fill="#FFE57A" font-family="Arial" font-weight="bold">N</text>
-  <text x="54" y="104" text-anchor="middle" font-size="11" fill="#C9A227" font-family="Arial" font-weight="bold">S</text>
-  <text x="100" y="58" text-anchor="middle" font-size="11" fill="#C9A227" font-family="Arial" font-weight="bold">E</text>
-  <text x="8" y="58" text-anchor="middle" font-size="11" fill="#C9A227" font-family="Arial" font-weight="bold">W</text>
-</svg>`;
+// We now pass base64 image strings dynamically to avoid WebView delays.
 
 // ──────────────────────────────────────────────────────────────
 //  SVG: Brass Diya with flame (for summary section)
@@ -302,13 +238,15 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
     let phalaHtml = "";
     if (phalaData[1] && phalaData[1] !== "") {
        phalaHtml = `
-         <div style="display:flex; width:100%; height:100%; align-items:stretch;">
-           <div style="flex:1; border-right:1px solid #D4B896; padding:11px 4px; text-align:center; color:#4A4A4A; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center;">${phalaData[0]}</div>
-           <div style="flex:1; padding:11px 4px; text-align:center; color:${colorCode}; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;">${phalaData[1]}</div>
-         </div>
+         <table style="width:100%; height:100%; border-collapse:collapse; margin:0; padding:0; border:none;">
+           <tr>
+             <td style="width:50%; border-right:1px solid #D4B896; padding:11px 4px; text-align:center; vertical-align:middle; color:#4A4A4A; font-size:13px; font-weight:600; border-top:none; border-bottom:none; border-left:none;">${phalaData[0]}</td>
+             <td style="width:50%; padding:11px 4px; text-align:center; vertical-align:middle; color:${colorCode}; font-size:13px; font-weight:700; border:none;">${phalaData[1]}</td>
+           </tr>
+         </table>
        `;
     } else {
-       phalaHtml = `<div style="padding:11px 8px; font-size:13px; font-weight:700; color:${colorCode}; display:flex; align-items:center; justify-content:center; height:100%;">${phalaData[0]}</div>`;
+       phalaHtml = `<div style="padding:11px 8px; font-size:13px; font-weight:700; color:${colorCode}; text-align:center; display:block;">${phalaData[0]}</div>`;
     }
 
     return `
@@ -333,15 +271,15 @@ const getPdfTranslations = (lang: string) => {
   if (lang === 'Telugu') {
     return {
       title: 'విశ్వకర్మ వాస్తు సర్వస్వం',
-      subtitle: '${T.subtitle}',
-      headerDesc: '${T.headerDesc}',
-      clientName: '${T.clientName}',
+      subtitle: 'దేవో వాస్తు ప్రజావతే',
+      headerDesc: 'వాస్తు శాస్త్ర ప్రామాణిక విశ్లేషణ వివరాలు',
+      clientName: 'క్లయింట్ పేరు',
       date: 'తేది',
       direction: 'దిక్కు',
-      dimensions: '${T.dimensions}',
-      length: '${T.length}',
-      width: '${T.width}',
-      diagonal: '${T.diagonal}',
+      dimensions: 'ఇల్లు కొలతలు (అడుగులు-అంగుళాలు)',
+      length: 'పొడవు (Length)',
+      width: 'వెడల్పు (Width)',
+      diagonal: 'కర్ణం (Diagonal)',
       areaTitle: 'పరిమాణం',
       areaUnit: 'విస్తీర్ణం (చ.అ.)',
       col1: 'క్రమం',
@@ -353,11 +291,16 @@ const getPdfTranslations = (lang: string) => {
       phalaDetails: 'వివరాలు',
       phalaResult: 'ఫలితం',
       summary: '✦ సారాంశ ఫలితం ✦',
-      s1: '${T.s1}',
-      s2: '${T.s2}',
-      s3: '${T.s3}',
-      whatsapp: '${T.whatsapp}',
-      telegram: '${T.telegram}',
+      s1: 'ఈ భవన వాస్తు సమన్వయంగా ఉంది. శుభ ఫలితాలు కలుగును.',
+      s2: 'సంపద, ఆరోగ్యం, విజయం, శాంతి, శుభం మీ సహవాసం కలుగును.',
+      s3: 'శ్రీ వాస్తు దేవుని కృప మీ కుటుంబం పై ఉండగరా కలుగును.',
+      whatsapp: 'సంప్రదించండి (WhatsApp)',
+      telegram: 'మరిన్ని వివరాలకు (Telegram)',
+      nakshatram: 'నక్షత్రం',
+      vargu: 'వర్గు',
+      wifeName: 'భార్య పేరు',
+      wifeNakshatram: 'భార్య నక్షత్రం',
+      wifeVargu: 'భార్య వర్గు',
       north: 'ఉత్తరం', south: 'దక్షిణం', east: 'తూర్పు', west: 'పడమర',
       ne: 'ఈశాన్యం', nw: 'వాయువ్యం', se: 'ఆగ్నేయం', sw: 'నైరుతి'
     };
@@ -390,6 +333,11 @@ const getPdfTranslations = (lang: string) => {
       s3: 'श्री वास्तु देव की कृपा आपके परिवार पर बनी रहे।',
       whatsapp: 'संपर्क करें (WhatsApp)',
       telegram: 'अधिक जानकारी के लिए (Telegram)',
+      nakshatram: 'नक्षत्र',
+      vargu: 'वर्ग',
+      wifeName: 'पत्नी का नाम',
+      wifeNakshatram: 'पत्नी का नक्षत्र',
+      wifeVargu: 'पत्नी का वर्ग',
       north: 'उत्तर', south: 'दक्षिण', east: 'पूर्व', west: 'पश्चिम',
       ne: 'ईशान', nw: 'वायव्य', se: 'आग्नेय', sw: 'नैऋत्य'
     };
@@ -421,12 +369,19 @@ const getPdfTranslations = (lang: string) => {
     s3: 'May the grace of Sri Vastu Deva be upon your family.',
     whatsapp: 'Contact (WhatsApp)',
     telegram: 'More Details (Telegram)',
+    nakshatram: 'Nakshatram',
+    vargu: 'Vargu',
+    wifeName: 'Wife Name',
+    wifeNakshatram: 'Wife Nakshatram',
+    wifeVargu: 'Wife Vargu',
     north: 'North', south: 'South', east: 'East', west: 'West',
     ne: 'North-East', nw: 'North-West', se: 'South-East', sw: 'South-West'
   };
 };
 
-const buildHtml = (form: VastuFormValues, table: ResultTable): string => {
+const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: string, compassBase64: string): string => {
+  const YANTRA = `<img src="${yantraBase64}" width="108" height="108" style="object-fit: cover; border-radius: 4px; border: 2px solid #D4AF37;" />`;
+  const COMPASS = `<img src="${compassBase64}" width="108" height="108" style="object-fit: cover; border-radius: 4px; border: 2px solid #D4AF37;" />`;
   const T = getPdfTranslations(form.language || "Telugu");
   const owner  = form.ownerName || "—";
   const date   = todayFormatted();
@@ -444,12 +399,24 @@ const buildHtml = (form: VastuFormValues, table: ResultTable): string => {
     return `${ft || "0"}' ${inc || "0"}" ${nul || "0"}"'`;
   };
 
+  const formatDecimalToFeet = (valStr: string) => {
+    let dec = parseFloat(valStr);
+    if (isNaN(dec)) return valStr;
+    let feet = Math.floor(dec);
+    let remainderInch = (dec - feet) * 12;
+    let inch = Math.floor(remainderInch);
+    let nullu = Math.round((remainderInch - inch) * 8);
+    if (nullu === 8) { nullu = 0; inch++; }
+    if (inch === 12) { inch = 0; feet++; }
+    return `${feet}' ${inch}" ${nullu}"'`;
+  };
+
   const lengthStr = formatDim(form.lengthFeet, form.lengthInch, form.lengthNullu);
   const widthStr = formatDim(form.widthFeet, form.widthInch, form.widthNullu);
 
   const findDiagonal = () => {
-    const row = table.rows.find(r => r.label === "Diagonal");
-    return row ? (row.roundedValue ? `${row.value} (Rounded: ${row.roundedValue})` : row.value) : "—";
+    const row = table.rows.find(r => r.label === "Diagonal" || r.label === "కర్ణం (Diagonal)" || r.label === "विकर्ण (Diagonal)");
+    return row ? formatDecimalToFeet(row.value) : "—";
   };
   const diagonalStr = findDiagonal();
 
@@ -463,11 +430,17 @@ const buildHtml = (form: VastuFormValues, table: ResultTable): string => {
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 
-/* Use system Telugu font — Expo-Print renders system fonts */
+@page { margin: 0; size: 720px 1600px; }
+html, body {
+  width: 720px;
+  height: 1600px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
 body {
   font-family: 'Noto Sans Telugu', 'Noto Serif Telugu', 'Gowri', serif;
-  background: #D4B896;
-  padding: 0; margin: 0;
+  background: #FFFDF8;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
@@ -479,10 +452,8 @@ body {
   width: 680px;
   margin: 0 auto;
   border: 10px solid #D4AF37;      /* Gold outer */
-  box-shadow:
-    inset 0 0 0 3px #6B0F1A,       /* Dark maroon inner stripe */
-    inset 0 0 0 5px #D4AF37,       /* Gold inner stripe */
-    0 0 0 2px #A07020;             /* Outer accent */
+  outline: 3px solid #6B0F1A;      /* Dark maroon inner stripe */
+  outline-offset: -3px;
   background: #FFFDF8;
 }
 
@@ -495,26 +466,26 @@ body {
   width: 100%;
   background: linear-gradient(180deg, #7B0A10 0%, #9B1515 50%, #7B0A10 100%);
   border-bottom: 4px solid #D4AF37;
-  min-height: 124px;
+  min-height: 100px;
 }
 .hdr-col { display: table-cell; vertical-align: middle; }
 
-.hdr-left  { width: 120px; padding: 10px 10px 10px 12px; }
-.hdr-right { width: 120px; padding: 10px 12px 10px 10px; }
+.hdr-left  { width: 100px; padding: 5px; }
+.hdr-right { width: 100px; padding: 5px; }
 
-.hdr-center { text-align: center; padding: 10px 8px; }
+.hdr-center { text-align: center; padding: 5px; }
 .hdr-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
   color: #FFE57A;
-  line-height: 1.2;
+  line-height: 1.1;
   letter-spacing: 1px;
   text-shadow: 1px 2px 6px rgba(0,0,0,0.6);
 }
 .hdr-divrow {
   display: flex;
   align-items: center;
-  margin: 7px auto 6px;
+  margin: 4px auto 3px;
   width: 85%;
   gap: 8px;
 }
@@ -539,7 +510,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   CLIENT INFO ROW — 3 equal columns
+   CLIENT INFO ROW — 2 rows, 4 columns
 ═══════════════════════════════════════════ */
 .client {
   display: table;
@@ -547,16 +518,21 @@ body {
   background: #FFFDF2;
   border-bottom: 3px solid #D4AF37;
 }
+.client-row {
+  display: table-row;
+}
 .client-col {
   display: table-cell;
-  padding: 11px 14px;
+  padding: 6px 8px;
   text-align: center;
   vertical-align: middle;
   border-right: 1px solid #D4B080;
+  width: 25%;
 }
 .client-col:last-child { border-right: none; }
-.client-lbl { font-size: 12px; color: #7A4A20; margin-bottom: 4px; font-weight: 600; }
-.client-val { font-size: 18px; font-weight: 800; color: #8B0000; line-height: 1.2; }
+.client-row + .client-row .client-col { border-top: 1px solid #D4B080; }
+.client-lbl { font-size: 11px; color: #7A4A20; margin-bottom: 2px; font-weight: 600; }
+.client-val { font-size: 15px; font-weight: 800; color: #8B0000; line-height: 1.1; }
 
 /* ═══════════════════════════════════════════
    BLUE SECTION HEADER
@@ -718,20 +694,20 @@ body {
 </div>
 
 <!-- ═══════════════════════════════
-     CLIENT INFO
+     CLIENT INFO (2 Rows x 4 Cols)
 ═══════════════════════════════ -->
 <div class="client">
-  <div class="client-col" style="border-right:2px solid #D4B080;">
-    <div class="client-lbl">${T.clientName}</div>
-    <div class="client-val">${owner}</div>
+  <div class="client-row">
+    <div class="client-col"><div class="client-lbl">${T.clientName}</div><div class="client-val">${owner}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.nakshatram}</div><div class="client-val">${form.nakshatram || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.vargu}</div><div class="client-val">${form.vargu || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.date}</div><div class="client-val">${date}</div></div>
   </div>
-  <div class="client-col" style="border-right:2px solid #D4B080;">
-    <div class="client-lbl">${T.date}</div>
-    <div class="client-val">${date}</div>
-  </div>
-  <div class="client-col">
-    <div class="client-lbl">${T.direction}</div>
-    <div class="client-val">${dir}</div>
+  <div class="client-row">
+    <div class="client-col"><div class="client-lbl">${T.wifeName}</div><div class="client-val">${form.wifeName || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.wifeNakshatram}</div><div class="client-val">${form.wifeNakshatram || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.wifeVargu}</div><div class="client-val">${form.wifeVargu || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl"></div><div class="client-val"></div></div>
   </div>
 </div>
 
@@ -844,18 +820,62 @@ export const generateVastuPdf = async (
   form: VastuFormValues,
   report: VastuReport,
 ) => {
-  const table = report.summaryTables[0];
-  const html  = buildHtml(form, table);
-
-  const { uri } = await Print.printToFileAsync({ html, width: 700, height: 1050 });
-
-  if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(uri, {
-      mimeType: "application/pdf",
-      dialogTitle: "${T.title}",
-      UTI: "com.adobe.pdf",
-    });
+  let yantraBase64 = '';
+  let compassBase64 = '';
+  try {
+    const asset1 = Asset.fromModule(require('../../assets/icon1.jpg'));
+    const asset2 = Asset.fromModule(require('../../assets/icon2.png'));
+    await Promise.all([asset1.downloadAsync(), asset2.downloadAsync()]);
+    
+    const b64Icon1 = await FileSystem.readAsStringAsync(asset1.localUri || asset1.uri, { encoding: 'base64' });
+    const b64Icon2 = await FileSystem.readAsStringAsync(asset2.localUri || asset2.uri, { encoding: 'base64' });
+    
+    yantraBase64 = `data:image/jpeg;base64,${b64Icon1}`;
+    compassBase64 = `data:image/png;base64,${b64Icon2}`;
+  } catch (e) {
+    console.log("Asset load error", e);
+    // fallback if file system read fails
+    yantraBase64 = Image.resolveAssetSource(require('../../assets/icon1.jpg')).uri;
+    compassBase64 = Image.resolveAssetSource(require('../../assets/icon2.png')).uri;
   }
 
-  return uri;
+  const table = report.summaryTables[0];
+  const html  = buildHtml(form, table, yantraBase64, compassBase64);
+
+  const { uri } = await Print.printToFileAsync({ html, width: 720, height: 1600 });
+  const finalUri = `${FileSystem.cacheDirectory}viswakarma vastu analysis.pdf`;
+  
+  if (Platform.OS !== 'web') {
+    try {
+      await FileSystem.deleteAsync(finalUri, { idempotent: true });
+      await FileSystem.moveAsync({ from: uri, to: finalUri });
+    } catch (e) {
+      console.log("Error renaming PDF", e);
+    }
+  }
+
+  const pdfUri = Platform.OS === 'web' ? uri : finalUri;
+
+  if (Platform.OS === 'web') {
+    const link = document.createElement('a');
+    link.href = pdfUri;
+    link.download = `viswakarman vastu anayalsis.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } else if (Platform.OS === 'android') {
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(pdfUri, { mimeType: "application/pdf", UTI: "com.adobe.pdf" });
+    }
+  } else {
+    if (await Sharing.isAvailableAsync()) {
+      await Sharing.shareAsync(pdfUri, {
+        mimeType: "application/pdf",
+        dialogTitle: "viswakarman vastu anayalsis",
+        UTI: "com.adobe.pdf",
+      });
+    }
+  }
+
+  return pdfUri;
 };

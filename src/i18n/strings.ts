@@ -356,7 +356,37 @@ const guideTranslations: Record<
     { title: string; subtitle: string; paragraphs: string[] }
   >
 > = {
-  English: {},
+  English: {
+    "nava-vargu-ganitha-kramamu": {
+      title: "Nava Vargu Ganitha Kramamu",
+      subtitle: "Vastu calculation formulas and analysis details",
+      paragraphs: [],
+      tableData: [
+        { label: "Padam", formula: "Length × Width ÷ 9" },
+        { label: "Dhanam", formula: "Padam × 8 ÷ 12" },
+        { label: "Runam", formula: "Padam × 3 ÷ 8" },
+        { label: "Tithi", formula: "Padam × 6 ÷ 30" },
+        { label: "Vaaram", formula: "Padam × 9 ÷ 7" },
+        { label: "Nakshatram", formula: "Padam × 8 ÷ 27" },
+        { label: "Aayam", formula: "Padam × 9 ÷ 8" },
+        { label: "Ayurdayam", formula: "Padam × 9 ÷ 120" },
+        { label: "Amsam", formula: "Padam × 6 ÷ 9" },
+        { label: "Dikruthi", formula: "Padam × 9 ÷ 8" },
+      ],
+      bottomContent: [
+        { heading: "Calculation Result Determination", text: "" },
+        { heading: "1. Dhanam (Wealth)", text: "Total dhanams are 12. The remainder should be greater than the remainder in Runam." },
+        { heading: "2. Runam (Debt)", text: "Total runams are 8. The remainder should be less than the remainder in Dhanam." },
+        { heading: "3. Tithi", text: "Total tithis are 30. Remainders 1, 4, 9, 19, 24, 29, 30 are inauspicious. The rest are auspicious." },
+        { heading: "4. Vaaram (Day)", text: "Total days are 7. The 3rd day (Tuesday) is prohibited. 1,7 are average. 2,4,5,6 are auspicious." },
+        { heading: "5. Nakshatram (Star)", text: "Total nakshatras are 27. The resulting nakshatram must have Tarabalam for the owners." },
+        { heading: "6. Aayam", text: "Total aayams are 8. Here 2,4,6,8 give inauspicious results. 1,3,5,7 give auspicious results. According to Main Door: East 3,5,7; West 1,3,7; North 1,3,5; South 1,5,7." },
+        { heading: "7. Ayurdayam (Longevity)", text: "Out of 120 years, it should be at least 60 years or above." },
+        { heading: "8. Amsa", text: "Total amsas are 9. Excluding 1, 4, 5, 6; the numbers 2,3,7,8,9 give auspicious results." },
+        { heading: "9. Dikruthi", text: "There are 8 lords for directions. Here 2,4,6,8 should not come, and 1,3,5,7 should come." }
+      ]
+    },
+  },
   Telugu: {
     "main-entrance": {
       title: "ముఖ్య ద్వారం",
@@ -501,6 +531,24 @@ const guideTranslations: Record<
         "సాంప్రదాయం పట్ల ఎంతో గౌరవంతో ఈ అప్లికేషన్ నిర్మించబడింది. రంగులు, అక్షర శైలి నుండి క్యాలిక్యులేటర్ నిర్మాణం వరకు ప్రతి అంశం వాస్తు యొక్క అందాన్ని ప్రతిబింబించేలా ఎంపిక చేయబడింది.",
         "శ్రీ వాస్తు నిరంతరం అభివృద్ధి చెందుతున్న ఉత్పత్తి. మార్గదర్శకాలు మరియు PDF టెంప్లేట్‌లు మెరుగుపరచబడిన కొద్దీ, అవి భవిష్యత్ వెర్షన్లలో అందుబాటులోకి వస్తాయి."
       ],
+    },
+    "nava-vargu-ganitha-kramamu": {
+      title: "నవ వర్గు గణిత క్రమము",
+      subtitle: "వాస్తు గణిత సూత్రాలు మరియు విశ్లేషణ వివరాలు",
+      paragraphs: [
+        "పదం = పొడవు × వెడల్పు ÷ 9 (శేషం)",
+        "ధనం = పదం × 8 ÷ 12 (శేషం)\nబుణం = పదం × 3 ÷ 8 (శేషం)\nతిథి = పదం × 6 ÷ 30 (శేషం)\nవారం = పదం × 9 ÷ 7 (శేషం)\nనక్షత్రం = పదం × 8 ÷ 27 (శేషం)\nఆయం = పదం × 9 ÷ 8 (శేషం)\nఆయుర్దాయం = పదం × 9 ÷ 120 (శేషం)\nఅంశం = పదం × 6 ÷ 9 (శేషం)\nదిక్పతి = పదం × 9 ÷ 8 (శేషం)",
+        "గణిత ఫల నిర్ణయారణ",
+        "1. ధనం :\nమొత్తం ధనాలు 12. బుణంలో వచ్చిన శేషం కన్నా ఎక్కువ ఉండాలి.",
+        "2. బుణం :\nమొత్తం బుణాలు 8. ధనంలో వచ్చిన శేషం కన్నా తక్కువ ఉండాలి.",
+        "3. తిథి :\nమొత్తం తిథులు 30. శేషం 1, 4, 9, 19, 24, 29, 30 తిథులు అశుభం. మిగిలినవి శుభం.",
+        "4. వారం :\nమొత్తం వారాలు 7. (1 ఆది, 2 సోమ, 3 మంగళ, 4 బుధ, 5 గురు, 6 శుక్ర, 7 శని) 3వ మంగళవారం నిషిద్ధం. 1,7 వారాలు మధ్యమం. 2,4,5,6 శుభం.",
+        "5. నక్షత్రం :\nమొత్తం నక్షత్రాలు 27 (అశ్విని నుండి రేవతి వరకు) ఇందులో వచ్చిన నక్షత్రం యజమానులకు తారాబలం కలిగి ఉండాలి.",
+        "6. ఆయం :\nమొత్తం ఆయాలు 8. ఇందులో 2,4,6,8 అశుభ ఫలితాలనిస్తాయి. 1,3,5,7 శుభ ఫలితాలనిస్తాయి. సింహాయద్వారం అనుసరించి తూర్పు 3,5,7 పడమర 1,3,7 ఉత్తరం 1,3,5 దక్షిణం 1,5,7 లుగా నిర్ణయించుకోవాలి.",
+        "7. ఆయుర్దాయం :\nమొత్తం 120 సంవత్సరాల ఆయుర్దాయంలో కనీసం 60 సంవత్సరాలు పైన ఉండవలెను.",
+        "8. అంశ :\nమొత్తం అంశాలు 9. ఇందులో 1 స్వాంశం, 4 కులాంశం, 5 ధనాంశం, 6 చోరాంశం కాకుండా 2,3,7,8,9 సంఖ్యలు శుభ ఫలితాలనిస్తాయి.",
+        "9. దిక్పతి :\nదిక్కులకు 8 మంది. ఇందులో 2,4,6,8 రాకుండా 1,3,5,7 వచ్చినట్లు ఉండాలి. (ఆయంలో వచ్చిన సంఖ్యలే ఇక్కడ గణితం అవ్వవు.)"
+      ]
     },
   },
   Hindi: {

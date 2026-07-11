@@ -122,15 +122,45 @@ export const GuideScreen = () => {
 
         {/* ══════════ CONTENT PARAGRAPHS ══════════ */}
         <View style={s.content}>
-          <View style={s.paraCard}>
-            {(page.paragraphs || []).map((paragraph, pIdx) => (
-              <View key={pIdx} style={s.paraRow}>
-                {/* Slim gold left accent line */}
-                <View style={s.accentBar} />
-                <Text style={s.paraText}>{paragraph}</Text>
-              </View>
-            ))}
-          </View>
+          {page.paragraphs && page.paragraphs.length > 0 && (
+            <View style={s.paraCard}>
+              {page.paragraphs.map((paragraph, pIdx) => (
+                <View key={pIdx} style={s.paraRow}>
+                  {/* Slim gold left accent line */}
+                  <View style={s.accentBar} />
+                  <Text style={s.paraText}>{paragraph}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* ══════════ TABLE DATA ══════════ */}
+          {page.tableData && page.tableData.length > 0 && (
+            <View style={s.tableCard}>
+              {page.tableData.map((row, rIdx) => (
+                <View key={rIdx} style={[s.tableRow, rIdx === page.tableData!.length - 1 && { borderBottomWidth: 0 }]}>
+                  <Text style={s.tableLabel}>{row.label}</Text>
+                  <Text style={s.tableFormula}>{row.formula}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* ══════════ BOTTOM CONTENT ══════════ */}
+          {page.bottomContent && page.bottomContent.length > 0 && (
+            <View style={s.bottomContentWrap}>
+              {page.bottomContent.map((item, bIdx) => (
+                <View key={bIdx} style={s.bottomItem}>
+                  {item.heading ? (
+                    <Text style={s.bottomHeading}>{item.heading}</Text>
+                  ) : null}
+                  {item.text ? (
+                    <Text style={s.bottomText}>{item.text}</Text>
+                  ) : null}
+                </View>
+              ))}
+            </View>
+          )}
         </View>
 
         {/* ══════════ BOTTOM ORNAMENT ══════════ */}
@@ -304,6 +334,64 @@ const s = StyleSheet.create({
     color: palette.textMedium,
     lineHeight: 28,
     letterSpacing: 0.1,
+  },
+
+  // ══ TABLE ══
+  tableCard: {
+    backgroundColor: palette.surface,
+    borderRadius: cornerRadius.md,
+    borderWidth: 1,
+    borderColor: palette.border,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
+    marginTop: spacing.md,
+  },
+  tableRow: {
+    flexDirection: "row",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: palette.border,
+    alignItems: "center",
+  },
+  tableLabel: {
+    flex: 1,
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 18,
+    color: palette.primary,
+  },
+  tableFormula: {
+    flex: 2,
+    fontFamily: "Manrope_400Regular",
+    fontSize: 16,
+    color: palette.textMedium,
+    textAlign: "right",
+  },
+
+  // ══ BOTTOM CONTENT ══
+  bottomContentWrap: {
+    marginTop: spacing.xl,
+    gap: spacing.md,
+  },
+  bottomItem: {
+    marginBottom: spacing.sm,
+  },
+  bottomHeading: {
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 20,
+    color: palette.text,
+    marginBottom: 6,
+  },
+  bottomText: {
+    fontFamily: "Manrope_400Regular",
+    fontSize: 16,
+    color: palette.textMedium,
+    lineHeight: 26,
+    letterSpacing: 0.2,
   },
 
   // ══ FOOTER ORNAMENT ══

@@ -94,6 +94,8 @@ export const HomeScreen = () => {
     setLoading: (v: boolean) => void,
   ) => {
     setLoading(true);
+    // Allow UI to render loading spinner before heavy PDF task
+    await new Promise(r => setTimeout(r, 100));
     try {
       const fakeReport = {
         summaryTables: [table, table, table] as [ResultTableType, ResultTableType, ResultTableType],
@@ -101,6 +103,9 @@ export const HomeScreen = () => {
         notes: [],
       };
       await generateVastuPdf(form, fakeReport);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to generate PDF. Please try again.");
     } finally {
       setLoading(false);
     }

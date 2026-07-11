@@ -220,6 +220,36 @@ export const guidePages: GuidePage[] = [
       "Sri Vastu is an evolving product. As the formulas, guidelines, and PDF templates are refined and updated, those improvements will be reflected in future versions of the application. We are committed to keeping the calculation engine accurate and current, the guidance content relevant and thoughtful, and the overall user experience as seamless and dignified as the science it represents. We thank all practitioners and users who have placed their trust in this application and invite your continued feedback as we grow and improve together.",
     ],
   },
+  {
+    key: "nava-vargu-ganitha-kramamu",
+    title: "Nava Vargu Ganitha Kramamu",
+    subtitle: "Vastu calculation formulas and analysis details",
+    sections: [],
+    tableData: [
+      { label: "Padam", formula: "Length × Width ÷ 9" },
+      { label: "Dhanam", formula: "Padam × 8 ÷ 12" },
+      { label: "Runam", formula: "Padam × 3 ÷ 8" },
+      { label: "Tithi", formula: "Padam × 6 ÷ 30" },
+      { label: "Vaaram", formula: "Padam × 9 ÷ 7" },
+      { label: "Nakshatram", formula: "Padam × 8 ÷ 27" },
+      { label: "Aayam", formula: "Padam × 9 ÷ 8" },
+      { label: "Ayurdayam", formula: "Padam × 9 ÷ 120" },
+      { label: "Amsam", formula: "Padam × 6 ÷ 9" },
+      { label: "Dikruthi", formula: "Padam × 9 ÷ 8" },
+    ],
+    bottomContent: [
+      { heading: "Calculation Result Determination", text: "" },
+      { heading: "1. Dhanam (Wealth)", text: "Total dhanams are 12. The remainder should be greater than the remainder in Runam." },
+      { heading: "2. Runam (Debt)", text: "Total runams are 8. The remainder should be less than the remainder in Dhanam." },
+      { heading: "3. Tithi", text: "Total tithis are 30. Remainders 1, 4, 9, 19, 24, 29, 30 are inauspicious. The rest are auspicious." },
+      { heading: "4. Vaaram (Day)", text: "Total days are 7. The 3rd day (Tuesday) is prohibited. 1,7 are average. 2,4,5,6 are auspicious." },
+      { heading: "5. Nakshatram (Star)", text: "Total nakshatras are 27. The resulting nakshatram must have Tarabalam for the owners." },
+      { heading: "6. Aayam", text: "Total aayams are 8. Here 2,4,6,8 give inauspicious results. 1,3,5,7 give auspicious results. According to Main Door: East 3,5,7; West 1,3,7; North 1,3,5; South 1,5,7." },
+      { heading: "7. Ayurdayam (Longevity)", text: "Out of 120 years, it should be at least 60 years or above." },
+      { heading: "8. Amsa", text: "Total amsas are 9. Excluding 1, 4, 5, 6; the numbers 2,3,7,8,9 give auspicious results." },
+      { heading: "9. Dikruthi", text: "There are 8 lords for directions. Here 2,4,6,8 should not come, and 1,3,5,7 should come." }
+    ],
+  },
 ];
 
 export const drawerItems = [

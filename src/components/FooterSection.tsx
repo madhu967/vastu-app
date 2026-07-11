@@ -1,22 +1,54 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Animated,
   Easing,
   StyleSheet,
   Text,
   View,
+  Linking,
+  Pressable,
+  Modal,
+  TouchableOpacity
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { spacing } from "@/constants/theme";
+import { useAppLanguage } from "@/context/AppLanguageContext";
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  Phone FAB  (floating action button – bottom right, separate from footer)
 // ─────────────────────────────────────────────────────────────────────────────
-import { Linking, Pressable } from "react-native";
 
-const PHONE_NUMBER = "tel:+919876543210"; // ← replace with your real number
+const getContacts = (lang: string) => {
+  if (lang === "English") {
+    return [
+      { title: "Almanac Maker", name: "Brahmasri Pedagadi Mohan Ravishankar Daivagna", location: "Andhra Pradesh", phone: "9949598627" },
+      { title: "Vastu Ratna", name: "Sri Namana Siddhanti", location: "Andhra Pradesh", phone: "9949250888" },
+      { title: "Yuva Ratna", name: "Sri Namana Pavan", location: "Andhra Pradesh", phone: "9949753939" },
+    ];
+  }
+  if (lang === "Hindi") {
+    return [
+      { title: "पंचांगकर्ता", name: "ब्रह्मश्री पेदगाडी मोहन रविशंकर दैवज्ञ", location: "आंध्र प्रदेश", phone: "9949598627" },
+      { title: "वास्तुरत्न", name: "श्री नामना सिद्धान्ती", location: "आंध्र प्रदेश", phone: "9949250888" },
+      { title: "युवरत्न", name: "श्रीनामना पवन", location: "आंध्र प्रदेश", phone: "9949753939" },
+    ];
+  }
+  return [
+    { title: "పంచాంగకర్త", name: "బ్రహ్మశ్రీ పెదగాడి మోహన్ రవిశంకర్ దైవజ్ఞ", location: "ఆంధ్రప్రదేశ్", phone: "9949598627" },
+    { title: "వాస్తురత్న", name: "శ్రీ నామన సిద్ధాంతి", location: "ఆంధ్ర ప్రదేశ్", phone: "9949250888" },
+    { title: "యువరత్న", name: "శ్రీనామన పవన్", location: "ఆంధ్ర ప్రదేశ్", phone: "9949753939" },
+  ];
+};
+
+const getHeader = (lang: string) => {
+  if (lang === "English") return "Contact Us";
+  if (lang === "Hindi") return "संपर्क करें";
+  return "సంప్రదించండి";
+};
 
 export const PhoneFAB = () => {
+  const { language } = useAppLanguage();
+  const [modalVisible, setModalVisible] = useState(false);
   const scale = useRef(new Animated.Value(1)).current;
   const ripple = useRef(new Animated.Value(0)).current;
   const rippleOpacity = useRef(new Animated.Value(0.65)).current;
@@ -43,27 +75,57 @@ export const PhoneFAB = () => {
   const rippleScale = ripple.interpolate({ inputRange: [0, 1], outputRange: [1, 2.2] });
 
   return (
-    <View style={fab.wrapper}>
-      <Animated.View
-        style={[fab.rippleRing, { transform: [{ scale: rippleScale }], opacity: rippleOpacity }]}
-      />
-      <Pressable
-        onPress={() => Linking.openURL(PHONE_NUMBER)}
-        style={({ pressed }) => [fab.btn, pressed && fab.pressed]}
-        hitSlop={12}
+    <>
+      <View style={fab.wrapper}>
+        <Animated.View
+          style={[fab.rippleRing, { transform: [{ scale: rippleScale }], opacity: rippleOpacity }]}
+        />
+        <Pressable
+          onPress={() => setModalVisible(true)}
+          style={({ pressed }) => [fab.btn, pressed && fab.pressed]}
+          hitSlop={12}
+        >
+          <Animated.View style={{ transform: [{ scale }] }}>
+            <LinearGradient
+              colors={["#F4C430", "#C9830A"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={fab.inner}
+            >
+              <Text style={fab.icon}>📞</Text>
+            </LinearGradient>
+          </Animated.View>
+        </Pressable>
+      </View>
+
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
       >
-        <Animated.View style={{ transform: [{ scale }] }}>
-          <LinearGradient
-            colors={["#F4C430", "#C9830A"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={fab.inner}
-          >
-            <Text style={fab.icon}>📞</Text>
-          </LinearGradient>
-        </Animated.View>
-      </Pressable>
-    </View>
+        <Pressable style={fab.modalOverlay} onPress={() => setModalVisible(false)}>
+          <Pressable style={fab.modalContent}>
+            <Text style={fab.modalHeader}>{getHeader(language)}</Text>
+            {getContacts(language).map((contact, i) => (
+              <View key={i} style={[fab.contactRow, i === getContacts(language).length - 1 && { borderBottomWidth: 0 }]}>
+                <View style={fab.contactInfo}>
+                  <Text style={fab.contactTitle}>{contact.title}</Text>
+                  <Text style={fab.contactName}>{contact.name}</Text>
+                  <Text style={fab.contactLoc}>{contact.location}</Text>
+                </View>
+                <TouchableOpacity
+                  style={fab.phoneBtn}
+                  onPress={() => Linking.openURL(`tel:${contact.phone}`)}
+                >
+                  <Text style={fab.phoneBtnIcon}>📞</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </>
   );
 };
 
@@ -239,6 +301,71 @@ const fab = StyleSheet.create({
     elevation: 10,
   },
   icon: { fontSize: 22, lineHeight: 28 },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "85%",
+    backgroundColor: "#FFFDF8",
+    borderRadius: 16,
+    padding: 24,
+    borderWidth: 2,
+    borderColor: "#D4AF37",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  modalHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#8B0000",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  contactRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E8D8B0",
+  },
+  contactInfo: {
+    flex: 1,
+  },
+  contactTitle: {
+    fontSize: 12,
+    color: "#D4AF37",
+    fontWeight: "bold",
+    marginBottom: 2,
+  },
+  contactName: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#2C1000",
+    marginBottom: 2,
+  },
+  contactLoc: {
+    fontSize: 12,
+    color: "#5A3000",
+  },
+  phoneBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#F4C430",
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 10,
+  },
+  phoneBtnIcon: {
+    fontSize: 18,
+  },
 });
 
 const ft = StyleSheet.create({
