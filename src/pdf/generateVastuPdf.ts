@@ -859,7 +859,7 @@ export const generateVastuPdf = async (
   if (Platform.OS === 'web') {
     const link = document.createElement('a');
     link.href = pdfUri;
-    link.download = `viswakarman vastu anayalsis.pdf`;
+    link.download = `viswakarma vastu analysis.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -871,7 +871,7 @@ export const generateVastuPdf = async (
     if (await Sharing.isAvailableAsync()) {
       await Sharing.shareAsync(pdfUri, {
         mimeType: "application/pdf",
-        dialogTitle: "viswakarman vastu anayalsis",
+        dialogTitle: "viswakarma vastu analysis",
         UTI: "com.adobe.pdf",
       });
     }
