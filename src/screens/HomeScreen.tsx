@@ -60,6 +60,8 @@ export const HomeScreen = () => {
   const [form, setForm] = useState<VastuFormValues>(initialForm);
 
   const [table1, setTable1] = useState<ResultTableType | null>(null);
+  const [table1a, setTable1a] = useState<ResultTableType | null>(null);
+  const [table1b, setTable1b] = useState<ResultTableType | null>(null);
   const [table2, setTable2] = useState<ResultTableType | null>(null);
   const [table3, setTable3] = useState<ResultTableType | null>(null);
 
@@ -74,11 +76,16 @@ export const HomeScreen = () => {
     setForm((current) => ({ ...current, [key]: value }));
   };
 
-  const handleCalc1 = () => { const r = calculateVastuReport(form); setTable1(r.summaryTables[0]); };
+  const handleCalc1 = () => { 
+    const r = calculateVastuReport(form); 
+    setTable1(r.summaryTables[0]); 
+    setTable1a(r.splitTable1a || null);
+    setTable1b(r.splitTable1b || null);
+  };
   const handleCalc2 = () => { const r = calculateVastuReport(form); setTable2(r.summaryTables[1]); };
   const handleCalc3 = () => { const r = calculateVastuReport(form); setTable3(r.summaryTables[2]); };
 
-  const handleClear1 = () => setTable1(null);
+  const handleClear1 = () => { setTable1(null); setTable1a(null); setTable1b(null); };
   const handleClear2 = () => setTable2(null);
   const handleClear3 = () => setTable3(null);
 
@@ -123,6 +130,34 @@ export const HomeScreen = () => {
       </Pressable>
     </View>
   );
+
+  const ResultBlock1 = () => {
+    if (!table1 || !table1a || !table1b) return null;
+    return (
+      <View style={styles.resultBlock}>
+        <ResultTable table={{ ...table1a, visible: true }} />
+        <ResultTable table={{ ...table1b, visible: true }} />
+        <Pressable
+          onPress={() => downloadPdf(table1, setPdfLoading1)}
+          style={({ pressed }) => [styles.pdfBtn, pressed && styles.btnPressed]}
+          disabled={pdfLoading1}
+        >
+          <LinearGradient
+            colors={["#B71C1C", "#8B000F"]} // Trigger fast refresh
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.pdfBtnGradient}
+          >
+            {pdfLoading1 ? (
+              <ActivityIndicator color="#FFD95C" />
+            ) : (
+              <Text style={styles.pdfBtnText}>⬇ {strings.home.downloadPdf}</Text>
+            )}
+          </LinearGradient>
+        </Pressable>
+      </View>
+    );
+  };
 
   const ResultBlock = ({
     table,
@@ -420,11 +455,7 @@ export const HomeScreen = () => {
           </SectionCard>
 
           <ActionRow onCalc={handleCalc1} onClear={handleClear1} />
-          <ResultBlock
-            table={table1}
-            loading={pdfLoading1}
-            onDownload={() => table1 && downloadPdf(table1, setPdfLoading1)}
-          />
+          <ResultBlock1 />
 
           {/* Suddha Padham */}
           <SectionCard

@@ -40,6 +40,8 @@ export type ResultTable = {
 
 export type VastuReport = {
   summaryTables: [ResultTable, ResultTable, ResultTable];
+  splitTable1a?: ResultTable;
+  splitTable1b?: ResultTable;
   status: "success" | "warning";
   notes: string[];
 };

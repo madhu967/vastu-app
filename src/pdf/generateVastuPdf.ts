@@ -158,26 +158,159 @@ const TELEGRAM_ICON = `<svg width="48" height="48" viewBox="0 0 48 48" xmlns="ht
 </svg>`;
 
 // Build the 9 main Vastu metric rows in 5 columns: S.No, Aspect, Formula, Result, Phala Analysis
-const buildRows = (table: ResultTable) => {
+
+const buildRows = (table: ResultTable, form: VastuFormValues) => {
   const findVal = (label: string) => {
     const row = table.rows.find(r => r.label === label);
     return { val: row ? row.value : "—", rounded: row?.roundedValue || "—" };
   };
 
+  const dhanamRaw = findVal("Dhanamu").rounded;
+  const runamRaw = findVal("Runamu").rounded;
+
+  const lang = form.language || "Telugu";
+  const isEN = lang === "English";
+  const isHI = lang === "Hindi";
+
+  const getLabel = (te: string, hi: string, en: string) => isEN ? en : isHI ? hi : te;
+
   const metrics = [
-    { label: "ధన సంఖ్య", formula: "(పదము * 8) / 12", ...findVal("Dhanamu"), phala: "అత్యుత్తమం" },
-    { label: "రుణ సంఖ్య", formula: "(పదము * 3) / 8", ...findVal("Runamu"), phala: "శుభప్రదం" },
-    { label: "తిథి సంఖ్య", formula: "(పదము * 6) / 30", ...findVal("Tithi"), phala: "శ్రేయస్సు" },
-    { label: "వార సంఖ్య", formula: "(పదము * 9) / 7", ...findVal("Vaaramu"), phala: "శుభం" },
-    { label: "నక్షత్ర సంఖ్య", formula: "(పదము * 8) / 27", ...findVal("Nakshatram"), phala: "శుభ ఫలితం" },
-    { label: "ఆయాది సంఖ్య", formula: "(పదము * 9) / 8", ...findVal("Aayamu"), phala: "శుభ ఫలితం" },
-    { label: "ఆయుర్దాయ సంఖ్య", formula: "(పదము * 9) / 120", ...findVal("Ayurdayamu"), phala: "దీర్ఘాయువు" },
-    { label: "అంశ సంఖ్య", formula: "(పదము * 6) / 9", ...findVal("Amsa"), phala: "శుభం" },
-    { label: "దిక్పతి సంఖ్య", formula: "(పదము * 9) / 8", ...findVal("Dikruti"), phala: "శ్రేయావయం" }
+    { key: "Dhanamu", label: getLabel("ధన సంఖ్య", "धन संख्या", "Dhanamu"), formula: "(Padamu * 8) / 12", ...findVal("Dhanamu") },
+    { key: "Runamu", label: getLabel("రుణ సంఖ్య", "ऋण संख्या", "Runamu"), formula: "(Padamu * 3) / 8", ...findVal("Runamu") },
+    { key: "Tithi", label: getLabel("తిథి సంఖ్య", "तिथि संख्या", "Tithi"), formula: "(Padamu * 6) / 30", ...findVal("Tithi") },
+    { key: "Vaaramu", label: getLabel("వార సంఖ్య", "वार संख्या", "Vaaramu"), formula: "(Padamu * 9) / 7", ...findVal("Vaaramu") },
+    { key: "Nakshatram", label: getLabel("నక్షత్ర సంఖ్య", "नक्षत्र संख्या", "Nakshatram"), formula: "(Padamu * 8) / 27", ...findVal("Nakshatram") },
+    { key: "Aayamu", label: getLabel("ఆయాది సంఖ్య", "आयादि संख्या", "Aayamu"), formula: "(Padamu * 9) / 8", ...findVal("Aayamu") },
+    { key: "Ayurdayamu", label: getLabel("ఆయుర్దాయ సంఖ్య", "आयुर्दाय संख्या", "Ayurdayamu"), formula: "(Padamu * 9) / 120", ...findVal("Ayurdayamu") },
+    { key: "Amsa", label: getLabel("అంశ సంఖ్య", "अंश संख्या", "Amsa"), formula: "(Padamu * 6) / 9", ...findVal("Amsa") },
+    { key: "Dikruti", label: getLabel("దిక్పతి సంఖ్య", "दिक्पति संख्या", "Dikruti"), formula: "(Padamu * 9) / 8", ...findVal("Dikruti") }
   ];
+
+  const getPhalaData = (key: string, roundedStr: string): [string, string, string] => {
+    const val = parseInt(roundedStr, 10);
+    const dhanam = parseInt(dhanamRaw, 10);
+    const runam = parseInt(runamRaw, 10);
+
+    if (isNaN(val)) return ["—", "", "#4A4A4A"];
+
+    const T_SHUBHAM = isEN ? "Auspicious" : isHI ? "शुभ" : "శుభం";
+    const T_ASHUBHAM = isEN ? "Inauspicious" : isHI ? "अशुभ" : "అశుభం";
+    const T_MADHYAMAM = isEN ? "Average" : isHI ? "मध्यम" : "మధ్యమం";
+    const T_AGNI = isEN ? "Fire Hazard" : isHI ? "अग्निभय" : "అగ్నిభయం";
+    const T_RAJA = isEN ? "Govt Trouble" : isHI ? "राजभय" : "రాజభయం";
+    const T_ROGA = isEN ? "Ill Health" : isHI ? "रोग" : "అనారోగ్యం";
+    const T_DEHA = isEN ? "Physical Pain" : isHI ? "देहपीड़ा" : "దేహపీడ";
+    const T_NASHTA = isEN ? "Loss" : isHI ? "हानि" : "నష్టం";
+    const T_CHORA = isEN ? "Theft Hazard" : isHI ? "चोरभय" : "చోరభయం";
+    const T_YEARS = isEN ? "Years" : isHI ? "वर्ष" : "సంవత్సరాలు";
+
+    const getColor = (status: string) => {
+      if ([T_SHUBHAM].includes(status)) return "#1B5E20";
+      if ([T_MADHYAMAM].includes(status)) return "#F57F17";
+      if ([T_ASHUBHAM, T_AGNI, T_RAJA, T_ROGA, T_DEHA, T_NASHTA, T_CHORA].includes(status)) return "#B71C1C";
+      return "#4A4A4A";
+    };
+
+    const getTithiPrefix = (v: number) => {
+      return v <= 15 ? (isEN ? "Su." : isHI ? "शु." : "శు.") : (isEN ? "Ba." : isHI ? "ब." : "బ.");
+    };
+
+    switch (key) {
+      case "Dhanamu": {
+        const s = dhanam > runam ? T_SHUBHAM : T_ASHUBHAM;
+        return [s, "", getColor(s)];
+      }
+      case "Runamu": {
+        const s = runam < dhanam ? T_SHUBHAM : T_ASHUBHAM;
+        return [s, "", getColor(s)];
+      }
+      case "Tithi": {
+        const enTithi = ["Padyami", "Vidiya", "Tadiya", "Chaviti", "Panchami", "Shashti", "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Purnima", "Padyami", "Vidiya", "Tadiya", "Chaviti", "Panchami", "Shashti", "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Amavasya"];
+        const hiTithi = ["प्रतिपदा", "द्वितीया", "तृतीया", "चतुर्थी", "पंचमी", "षष्ठी", "सप्तमी", "अष्टमी", "नवमी", "दशमी", "एकादशी", "द्वादशी", "त्रयोदशी", "चतुर्दशी", "पूर्णिमा", "प्रतिपदा", "द्वितीया", "तृतीया", "चतुर्थी", "पंचमी", "षष्ठी", "सप्तमी", "अष्टमी", "नवमी", "दशमी", "एकादशी", "द्वादशी", "त्रयोदशी", "चतुर्दशी", "अमावस्या"];
+        const teTithi = ["పాడ్యమి", "విదియ", "తదియ", "చవితి", "పంచమి", "షష్ఠి", "సప్తమి", "అష్టమి", "నవమి", "దశమి", "ఏకాదశి", "ద్వాదశి", "త్రయోదశి", "చతుర్దశి", "పౌర్ణమి", "పాడ్యమి", "విదియ", "తదియ", "చవితి", "పంచమి", "షష్ఠి", "సప్తమి", "అష్టమి", "నవమి", "దశమి", "ఏకాదశి", "ద్వాదశి", "త్రయోదశి", "చతుర్దశి", "అమావాస్య"];
+        const outTithi = isEN ? enTithi : isHI ? hiTithi : teTithi;
+        const outStatus = [
+          T_ASHUBHAM, T_SHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM,
+          T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_ASHUBHAM
+        ];
+        if (val < 1 || val > 30) return ["—", "", "#4A4A4A"];
+        const s = outStatus[val - 1];
+        return [`${getTithiPrefix(val)} ${outTithi[val - 1]}`, s, getColor(s)];
+      }
+      case "Vaaramu": {
+        const enVar = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const hiVar = ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"];
+        const teVar = ["ఆదివారం", "సోమవారం", "మంగళవారం", "బుధవారం", "గురువారం", "శుక్రవారం", "శనివారం"];
+        const outVar = isEN ? enVar : isHI ? hiVar : teVar;
+        const statuses = [T_MADHYAMAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM, T_MADHYAMAM];
+        if (val < 1 || val > 7) return ["—", "", "#4A4A4A"];
+        const s = statuses[val - 1];
+        return [outVar[val - 1], s, getColor(s)];
+      }
+      case "Nakshatram": {
+        const enNak = ["Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Arudra", "Punarvasu", "Pushyami", "Ashlesha", "Makha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Moola", "Purvashadha", "Uttarashadha", "Shravana", "Dhanishta", "Shatabhisha", "Purvabhadra", "Uttarabhadra", "Revati"];
+        const hiNak = ["अश्विनी", "भरणी", "कृत्तिका", "रोहिणी", "मृगशीर्षा", "आर्द्रा", "पुनर्वसु", "पुष्य", "आश्लेषा", "मघा", "पूर्वा फाल्गुनी", "उत्तरा फाल्गुनी", "हस्त", "चित्रा", "स्वाति", "विशाखा", "अनुराधा", "ज्येष्ठा", "मूल", "पूर्वाषाढ़ा", "उत्तराषाढ़ा", "श्रवण", "धनिष्ठा", "शतभिषा", "पूर्वा भाद्रपद", "उत्तरा भाद्रपद", "रेवती"];
+        const teNak = ["అశ్విని", "భరణి", "కృత్తిక", "రోహిణి", "మృగశిర", "ఆరుద్ర", "పునర్వసు", "పుష్యమి", "ఆశ్లేష", "మఖ", "పూర్వ ఫల్గుణి", "ఉత్తర ఫల్గుణి", "హస్త", "చిత్త", "స్వాతి", "విశాఖ", "అనూరాధ", "జ్యేష్ఠ", "మూల", "పూర్వాషాఢ", "ఉత్తరాషాఢ", "శ్రవణం", "ధనిష్ఠ", "శతభిషం", "పూర్వాభాద్ర", "ఉత్తరాభాద్ర", "రేవతి"];
+        const outNak = isEN ? enNak : isHI ? hiNak : teNak;
+        if (val < 1 || val > 27) return ["—", "", "#4A4A4A"];
+        return [outNak[val - 1], "", "#4A4A4A"];
+      }
+      case "Aayamu": {
+        const enAay = ["Dhwajayam", "Dhumayam", "Simhayam", "Shvanayam", "Vrishabhayam", "Kharayam", "Gajayam", "Kakayam"];
+        const hiAay = ["ध्वजायम", "धुमायम", "सिंहायम", "श्वानायम", "वृषभायम", "खरायम", "गजायम", "काकायम"];
+        const teAay = ["ధ్వజాయం", "ధూమాయం", "సింహాయం", "శ్వానాయం", "వృషభాయం", "ఖరాయం", "గజాయం", "కాకాయం"];
+        const outAay = isEN ? enAay : isHI ? hiAay : teAay;
+        const statuses = [T_SHUBHAM, T_AGNI, T_SHUBHAM, T_RAJA, T_SHUBHAM, T_ROGA, T_SHUBHAM, T_DEHA];
+        if (val < 1 || val > 8) return ["—", "", "#4A4A4A"];
+        const s = statuses[val - 1];
+        return [outAay[val - 1], s, getColor(s)];
+      }
+      case "Ayurdayamu": {
+        const s = val <= 59 ? T_ASHUBHAM : T_SHUBHAM;
+        return [`${val} ${T_YEARS}`, s, getColor(s)];
+      }
+      case "Amsa": {
+        const enAmsa = ["Nashtamsa", "Vruddhamsa", "Stree Amsa", "Mrutyamsa", "Dahanamsa", "Choramsa", "Putramsa", "Godhanamsa", "Keertyamsa"];
+        const hiAmsa = ["नष्टांश", "वृद्धांश", "स्त्री अंश", "मृत्यांश", "दहनांश", "चोरांश", "पुत्रांश", "गोधनांश", "कीर्त्यांश"];
+        const teAmsa = ["నష్టాంశ", "వృద్ధాంశ", "స్త్రీ అంశ", "మృత్యాంశ", "దహనాంశ", "చోరాంశ", "పుత్రాంశ", "గోధనాంశ", "కీర్త్యాంశ"];
+        const outAmsa = isEN ? enAmsa : isHI ? hiAmsa : teAmsa;
+        const statuses = [T_NASHTA, T_SHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_AGNI, T_CHORA, T_SHUBHAM, T_SHUBHAM, T_SHUBHAM];
+        if (val < 1 || val > 9) return ["—", "", "#4A4A4A"];
+        const s = statuses[val - 1];
+        return [outAmsa[val - 1], s, getColor(s)];
+      }
+      case "Dikruti": {
+        const enDik = ["Indra", "Agni", "Yama", "Nirruti", "Varuna", "Vayu", "Kubera", "Eeshana"];
+        const hiDik = ["इन्द्र", "अग्नि", "यम", "निरृति", "वरुण", "वायु", "कुबेर", "ईशान"];
+        const teDik = ["ఇంద్రుడు", "అగ్ని", "యముడు", "నిరృతి", "వరుణుడు", "వాయువు", "కుబేరుడు", "ఈశానుడు"];
+        const outDik = isEN ? enDik : isHI ? hiDik : teDik;
+        const statuses = [T_SHUBHAM, T_AGNI, T_SHUBHAM, T_RAJA, T_SHUBHAM, T_ROGA, T_SHUBHAM, T_DEHA];
+        if (val < 1 || val > 8) return ["—", "", "#4A4A4A"];
+        const s = statuses[val - 1];
+        return [outDik[val - 1], s, getColor(s)];
+      }
+      default:
+        return ["—", "", "#4A4A4A"];
+    }
+  };
 
   return metrics.map((row, i) => {
     const bg = i % 2 === 0 ? "#FFFFFF" : "#FFF9F0";
+    const phalaData = getPhalaData(row.key, row.rounded);
+    const colorCode = phalaData[2] || "#1B5E20";
+
+    let phalaHtml = "";
+    if (phalaData[1] && phalaData[1] !== "") {
+       phalaHtml = `
+         <div style="display:flex; width:100%; height:100%; align-items:stretch;">
+           <div style="flex:1; border-right:1px solid #D4B896; padding:11px 4px; text-align:center; color:#4A4A4A; font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center;">${phalaData[0]}</div>
+           <div style="flex:1; padding:11px 4px; text-align:center; color:${colorCode}; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;">${phalaData[1]}</div>
+         </div>
+       `;
+    } else {
+       phalaHtml = `<div style="padding:11px 8px; font-size:13px; font-weight:700; color:${colorCode}; display:flex; align-items:center; justify-content:center; height:100%;">${phalaData[0]}</div>`;
+    }
+
     return `
  <tr>
    <td style="background:#F5EDD8;text-align:center;font-size:14px;font-weight:700;
@@ -191,17 +324,114 @@ const buildRows = (table: ResultTable) => {
    <td style="background:${bg};text-align:center;font-size:14px;font-weight:700;
        color:#8B0000;border:1px solid #D4B896;width:55px;padding:11px 4px;">${row.rounded}</td>
    <td style="background:${bg};text-align:center;border:1px solid #D4B896;
-       width:130px;padding:11px 8px;font-size:14px;font-weight:600;color:#1B5E20;">
-     ${row.phala}&nbsp;&nbsp;<span style="color:#2E7D32;font-size:16px;font-weight:700;">↑</span>
-   </td>
+       width:130px;padding:0px;font-size:14px;font-weight:600;">${phalaHtml}</td>
  </tr>`;
   }).join("");
 };
 
+const getPdfTranslations = (lang: string) => {
+  if (lang === 'Telugu') {
+    return {
+      title: 'విశ్వకర్మ వాస్తు సర్వస్వం',
+      subtitle: '${T.subtitle}',
+      headerDesc: '${T.headerDesc}',
+      clientName: '${T.clientName}',
+      date: 'తేది',
+      direction: 'దిక్కు',
+      dimensions: '${T.dimensions}',
+      length: '${T.length}',
+      width: '${T.width}',
+      diagonal: '${T.diagonal}',
+      areaTitle: 'పరిమాణం',
+      areaUnit: 'విస్తీర్ణం (చ.అ.)',
+      col1: 'క్రమం',
+      col2: 'అంశం',
+      col3: 'సూత్రం (అడుగులు/అంగుళాలు)',
+      col4: 'ఫలితం (వాస్తవ)',
+      col5: 'సవరించిన (Rounded)',
+      phalaHeader: 'ఫల విశ్లేషణ',
+      phalaDetails: 'వివరాలు',
+      phalaResult: 'ఫలితం',
+      summary: '✦ సారాంశ ఫలితం ✦',
+      s1: '${T.s1}',
+      s2: '${T.s2}',
+      s3: '${T.s3}',
+      whatsapp: '${T.whatsapp}',
+      telegram: '${T.telegram}',
+      north: 'ఉత్తరం', south: 'దక్షిణం', east: 'తూర్పు', west: 'పడమర',
+      ne: 'ఈశాన్యం', nw: 'వాయువ్యం', se: 'ఆగ్నేయం', sw: 'నైరుతి'
+    };
+  }
+  if (lang === 'Hindi') {
+    return {
+      title: 'विश्वकर्मा वास्तु सर्वस्वम',
+      subtitle: 'देवो वास्तु प्रजापते',
+      headerDesc: 'वास्तु शास्त्र प्रामाणिक विश्लेषण विवरण',
+      clientName: 'क्लाइंट का नाम',
+      date: 'तारीख',
+      direction: 'दिशा',
+      dimensions: 'घर के आयाम (फीट-इंच)',
+      length: 'लंबाई (Length)',
+      width: 'चौड़ाई (Width)',
+      diagonal: 'विकर्ण (Diagonal)',
+      areaTitle: 'परिमाण',
+      areaUnit: 'क्षेत्रफल (वर्ग फीट)',
+      col1: 'क्रम',
+      col2: 'अंश',
+      col3: 'सूत्र (फीट/इंच)',
+      col4: 'परिणाम (वास्तविक)',
+      col5: 'संशोधित (Rounded)',
+      phalaHeader: 'फल विश्लेषण',
+      phalaDetails: 'विवरण',
+      phalaResult: 'परिणाम',
+      summary: '✦ सारांश परिणाम ✦',
+      s1: 'यह भवन वास्तु समन्वित है। शुभ परिणाम प्राप्त होंगे।',
+      s2: 'धन, स्वास्थ्य, सफलता, शांति और शुभता आपके साथ रहेगी।',
+      s3: 'श्री वास्तु देव की कृपा आपके परिवार पर बनी रहे।',
+      whatsapp: 'संपर्क करें (WhatsApp)',
+      telegram: 'अधिक जानकारी के लिए (Telegram)',
+      north: 'उत्तर', south: 'दक्षिण', east: 'पूर्व', west: 'पश्चिम',
+      ne: 'ईशान', nw: 'वायव्य', se: 'आग्नेय', sw: 'नैऋत्य'
+    };
+  }
+  return {
+    title: 'Viswakarma Vastu Sarvaswam',
+    subtitle: 'Devo Vastu Prajapate',
+    headerDesc: 'Vastu Shastra Standard Analysis Details',
+    clientName: 'Client Name',
+    date: 'Date',
+    direction: 'Direction',
+    dimensions: 'House Dimensions (Feet-Inches)',
+    length: 'Length',
+    width: 'Width',
+    diagonal: 'Diagonal',
+    areaTitle: 'Magnitude',
+    areaUnit: 'Area (Sq.Ft.)',
+    col1: 'S.No',
+    col2: 'Aspect',
+    col3: 'Formula (Feet/Inches)',
+    col4: 'Result (Actual)',
+    col5: 'Modified (Rounded)',
+    phalaHeader: 'Phala Analysis',
+    phalaDetails: 'Details',
+    phalaResult: 'Result',
+    summary: '✦ Summary Result ✦',
+    s1: 'This building is Vastu compliant. Auspicious results will follow.',
+    s2: 'Wealth, health, success, peace, and auspiciousness will be with you.',
+    s3: 'May the grace of Sri Vastu Deva be upon your family.',
+    whatsapp: 'Contact (WhatsApp)',
+    telegram: 'More Details (Telegram)',
+    north: 'North', south: 'South', east: 'East', west: 'West',
+    ne: 'North-East', nw: 'North-West', se: 'South-East', sw: 'South-West'
+  };
+};
+
 const buildHtml = (form: VastuFormValues, table: ResultTable): string => {
+  const T = getPdfTranslations(form.language || "Telugu");
   const owner  = form.ownerName || "—";
   const date   = todayFormatted();
-  const dir    = DIR_TE[form.direction] || form.direction || "ఉత్తరం";
+  const directionMap: Record<string, string> = { North: T.north, South: T.south, East: T.east, West: T.west, "North-East": T.ne, "North-West": T.nw, "South-East": T.se, "South-West": T.sw };
+  const dir = directionMap[form.direction] || form.direction || T.north;
 
   const lFt  = parseFloat(form.lengthFeet  || "0");
   const lIn  = parseFloat(form.lengthInch  || "0");
@@ -223,13 +453,13 @@ const buildHtml = (form: VastuFormValues, table: ResultTable): string => {
   };
   const diagonalStr = findDiagonal();
 
-  const dataRows = buildRows(table);
+  const dataRows = buildRows(table, form);
 
   return `<!DOCTYPE html>
 <html lang="te">
 <head>
 <meta charset="UTF-8"/>
-<title>శ్రీ వాస్తు ఫల విశ్లేషణం</title>
+<title>${T.title}</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 
@@ -467,13 +697,13 @@ body {
 
   <!-- Center: Title -->
   <div class="hdr-col hdr-center">
-    <div class="hdr-title">శ్రీ వాస్తు ఫల విశ్లేషణం</div>
+    <div class="hdr-title">${T.title}</div>
     <div class="hdr-divrow">
       <div class="hdr-divline"></div>
       <span class="hdr-divdot">✦</span>
       <div class="hdr-divline"></div>
     </div>
-    <div class="hdr-sub">దేవో వాస్తు ప్రజావతే</div>
+    <div class="hdr-sub">${T.subtitle}</div>
   </div>
 
   <!-- Right: Compass -->
@@ -484,7 +714,7 @@ body {
      RED TITLE BAR
 ═══════════════════════════════ -->
 <div class="redbar">
-  <span class="redbar-text">వాస్తు శాస్త్ర ప్రామాణిక విశ్లేషణ వివరాలు</span>
+  <span class="redbar-text">${T.headerDesc}</span>
 </div>
 
 <!-- ═══════════════════════════════
@@ -492,15 +722,15 @@ body {
 ═══════════════════════════════ -->
 <div class="client">
   <div class="client-col" style="border-right:2px solid #D4B080;">
-    <div class="client-lbl">క్లయింట్ పేరు</div>
+    <div class="client-lbl">${T.clientName}</div>
     <div class="client-val">${owner}</div>
   </div>
   <div class="client-col" style="border-right:2px solid #D4B080;">
-    <div class="client-lbl">తేది</div>
+    <div class="client-lbl">${T.date}</div>
     <div class="client-val">${date}</div>
   </div>
   <div class="client-col">
-    <div class="client-lbl">దిక్కు</div>
+    <div class="client-lbl">${T.direction}</div>
     <div class="client-val">${dir}</div>
   </div>
 </div>
@@ -509,22 +739,22 @@ body {
      BLUE SECTION HEADER
 ═══════════════════════════════ -->
 <div class="blue-hdr">
-  <span class="blue-hdr-text">ఇల్లు కొలతలు (అడుగులు-అంగుళాలు)</span>
+  <span class="blue-hdr-text">${T.dimensions}</span>
 </div>
 
 <!-- ═══════════════════════════════
      DIMENSION ROWS
 ═══════════════════════════════ -->
 <div class="dim-row">
-  <div class="dim-lbl">పొడవు (Length)</div>
+  <div class="dim-lbl">${T.length}</div>
   <div class="dim-val">${lengthStr}</div>
 </div>
 <div class="dim-row">
-  <div class="dim-lbl">వెడల్పు (Width)</div>
+  <div class="dim-lbl">${T.width}</div>
   <div class="dim-val">${widthStr}</div>
 </div>
 <div class="dim-row">
-  <div class="dim-lbl">కర్ణం (Diagonal)</div>
+  <div class="dim-lbl">${T.diagonal}</div>
   <div class="dim-val">${diagonalStr}</div>
 </div>
 
@@ -533,10 +763,10 @@ body {
 ═══════════════════════════════ -->
 <div class="area-row">
   <div class="area-col">
-    <div class="area-lbl">పరిమాణం</div>
+    <div class="area-lbl">${T.areaTitle}</div>
   </div>
   <div class="area-col">
-    <div class="area-lbl">విస్తీర్ణం (చ.అ.)</div>
+    <div class="area-lbl">${T.areaUnit}</div>
   </div>
   <div class="area-col">
     <div class="area-val">${area}</div>
@@ -549,11 +779,11 @@ body {
 <table class="main-table">
   <thead>
     <tr>
-      <th style="width:48px;">క్రమం</th>
-      <th style="width:140px;text-align:left;padding-left:12px;">అంశం</th>
-      <th style="text-align:left;padding-left:12px;">సూత్రం (అడుగులు/అంగుళాలు)</th>
-      <th style="width:60px;">ఫలితం (వాస్తవ)</th>
-      <th style="width:55px;">సవరించిన (Rounded)</th>
+      <th style="width:48px;">${T.col1}</th>
+      <th style="width:140px;text-align:left;padding-left:12px;">${T.col2}</th>
+      <th style="text-align:left;padding-left:12px;">${T.col3}</th>
+      <th style="width:60px;">${T.col4}</th>
+      <th style="width:55px;">${T.col5}</th>
       <th style="width:120px;">ఫల విశ్లేషణ</th>
     </tr>
   </thead>
@@ -568,15 +798,15 @@ body {
 <div class="rec">
   <div class="rec-title-row">
     <div class="rec-divline"></div>
-    <span class="rec-title-text">✦&nbsp;సారాంశ ఫలితం&nbsp;✦</span>
+    <span class="rec-title-text">${T.summary}</span>
     <div class="rec-divline-r"></div>
   </div>
   <div class="rec-body">
     <div class="rec-diya">${DIYA}</div>
     <div class="rec-text">
-      <p>ఈ భవన వాస్తు సమన్వయంగా ఉంది. శుభ ఫలితాలు కలుగును.</p>
-      <p>సంపద, ఆరోగ్యం, విజయం, శాంతి, శుభం మీ సహవాసం కలుగును.</p>
-      <p>శ్రీ వాస్తు దేవుని కృప మీ కుటుంబం పై ఉండగరా కలుగును.</p>
+      <p>${T.s1}</p>
+      <p>${T.s2}</p>
+      <p>${T.s3}</p>
     </div>
     <div class="rec-diya" style="transform:scaleX(-1);">${DIYA}</div>
   </div>
@@ -589,14 +819,14 @@ body {
   <div class="contact-left">
     ${WHATSAPP_ICON}
     <div class="contact-texts">
-      <div class="contact-lbl">సంప్రదించండి (WhatsApp)</div>
+      <div class="contact-lbl">${T.whatsapp}</div>
       <div class="contact-phone">9949598627</div>
     </div>
   </div>
   <div class="contact-right">
     ${TELEGRAM_ICON}
     <div class="contact-texts">
-      <div class="contact-lbl">మరిన్ని వివరాలకు (Telegram)</div>
+      <div class="contact-lbl">${T.telegram}</div>
       <div class="contact-app">@vastuapp</div>
     </div>
   </div>
@@ -622,7 +852,7 @@ export const generateVastuPdf = async (
   if (await Sharing.isAvailableAsync()) {
     await Sharing.shareAsync(uri, {
       mimeType: "application/pdf",
-      dialogTitle: "శ్రీ వాస్తు ఫల విశ్లేషణం",
+      dialogTitle: "${T.title}",
       UTI: "com.adobe.pdf",
     });
   }

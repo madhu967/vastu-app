@@ -138,8 +138,8 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
             <Text style={styles.divDot}>✦</Text>
             <View style={styles.divLine} />
           </View>
-          <Text style={styles.title}>వాస్తు సర్వస్వం</Text>
-          <Text style={styles.titleEn}>VASTU SARVASWAM</Text>
+          <Text style={styles.title}>విశ్వకర్మ వాస్తు సర్వస్వం</Text>
+          <Text style={styles.titleEn}>VISWAKARMA VASTU SARVASWAM</Text>
           <View style={[styles.divider, { marginTop: 15 }]}>
             <View style={styles.divLine} />
             <Text style={styles.divDot}>✦</Text>

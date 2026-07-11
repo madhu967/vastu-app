@@ -63,35 +63,51 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
     if (typeof val === "string") {
       const num = parseFloat(val);
       if (!isNaN(num)) {
-        return [formatDisplay(num) + suffix, Math.round(num) + suffix] as [string, string];
+        return [formatDisplay(num) + suffix, Math.ceil(num) + suffix] as [string, string];
       }
       return [val + suffix, val + suffix] as [string, string];
     }
-    return [formatDisplay(val) + suffix, Math.round(val) + suffix] as [string, string];
+    return [formatDisplay(val) + suffix, Math.ceil(val) + suffix] as [string, string];
   };
+
+  const table1aRows = [
+    ["Plot Length", exactAndRounded(length, " ft")[0]],
+    ["Plot Width", exactAndRounded(width, " ft")[0]],
+    ["Plot Area", exactAndRounded(plotAreaSqFeet, " sq ft")[0]],
+    ["Plot Area", exactAndRounded(plotAreaSqYards, " sq yds")[0]],
+    ["Plot Area", exactAndRounded(plotAreaCents, " cents")[0]],
+    ["Plot Perimeter", exactAndRounded(perimeter, " ft")[0]],
+    ["Padamu", exactAndRounded(padamu)[0]],
+    ["Diagonal", exactAndRounded(diagonal, " ft")[0]],
+  ] as Array<[string, string, string?]>;
+
+  const table1bRows = [
+    ["Dhanamu", ...exactAndRounded(dhanamu)],
+    ["Runamu", ...exactAndRounded(runamu)],
+    ["Tithi", ...exactAndRounded(tithi)],
+    ["Vaaramu", ...exactAndRounded(vaaramu)],
+    ["Nakshatram", ...exactAndRounded(nakshatram)],
+    ["Aayamu", ...exactAndRounded(aayamu)],
+    ["Ayurdayamu", ...exactAndRounded(ayurdayamu)],
+    ["Amsa", ...exactAndRounded(amsa)],
+    ["Dikruti", ...exactAndRounded(dikruti)],
+  ] as Array<[string, string, string?]>;
 
   const summaryTable: ResultTable = {
     title: "Result Table 1",
-    rows: createRows([
-      ["Plot Length", ...exactAndRounded(length, " ft")],
-      ["Plot Width", ...exactAndRounded(width, " ft")],
-      ["Padamu", ...exactAndRounded(padamu)],
-      ["Plot Area", ...exactAndRounded(plotAreaSqFeet, " sq ft")],
-      ["Plot Area", ...exactAndRounded(plotAreaSqYards, " sq yds")],
-      ["Plot Area", ...exactAndRounded(plotAreaCents, " cents")],
-      ["Plot Perimeter", ...exactAndRounded(perimeter, " ft")],
-      ["Padamu", ...exactAndRounded(padamu)],
-      ["Diagonal", ...exactAndRounded(diagonal, " ft")],
-      ["Dhanamu", ...exactAndRounded(dhanamu)],
-      ["Runamu", ...exactAndRounded(runamu)],
-      ["Tithi", ...exactAndRounded(tithi)],
-      ["Vaaramu", ...exactAndRounded(vaaramu)],
-      ["Nakshatram", ...exactAndRounded(nakshatram)],
-      ["Aayamu", ...exactAndRounded(aayamu)],
-      ["Ayurdayamu", ...exactAndRounded(ayurdayamu)],
-      ["Amsa", ...exactAndRounded(amsa)],
-      ["Dikruti", ...exactAndRounded(dikruti)],
-    ]),
+    rows: createRows([...table1aRows, ...table1bRows]),
+    visible: true,
+  };
+
+  const splitTable1a: ResultTable = {
+    title: "Result Table 1",
+    rows: createRows(table1aRows),
+    visible: true,
+  };
+
+  const splitTable1b: ResultTable = {
+    title: "Result Table 1",
+    rows: createRows(table1bRows),
     visible: true,
   };
 
@@ -116,7 +132,10 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
 
   return {
     summaryTables: [summaryTable, padamuTable, padamWithStarTable],
+    splitTable1a,
+    splitTable1b,
     status: "success",
+
     notes: [],
   };
 };
