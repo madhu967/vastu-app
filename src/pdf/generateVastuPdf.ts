@@ -4,6 +4,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import { Platform, Alert, Image } from "react-native";
 import { Asset } from 'expo-asset';
 import { VastuFormValues, VastuReport, ResultTable } from "@/types/vastu";
+import { yantraBase64, compassBase64 } from "./assetsBase64";
 
 // ──────────────────────────────────────────────────────────────
 //  Helpers
@@ -820,25 +821,6 @@ export const generateVastuPdf = async (
   form: VastuFormValues,
   report: VastuReport,
 ) => {
-  let yantraBase64 = '';
-  let compassBase64 = '';
-  try {
-    const asset1 = Asset.fromModule(require('../../assets/icon1.jpg'));
-    const asset2 = Asset.fromModule(require('../../assets/icon2.png'));
-    await Promise.all([asset1.downloadAsync(), asset2.downloadAsync()]);
-    
-    const b64Icon1 = await FileSystem.readAsStringAsync(asset1.localUri || asset1.uri, { encoding: 'base64' });
-    const b64Icon2 = await FileSystem.readAsStringAsync(asset2.localUri || asset2.uri, { encoding: 'base64' });
-    
-    yantraBase64 = `data:image/jpeg;base64,${b64Icon1}`;
-    compassBase64 = `data:image/png;base64,${b64Icon2}`;
-  } catch (e) {
-    console.log("Asset load error", e);
-    // fallback if file system read fails
-    yantraBase64 = Image.resolveAssetSource(require('../../assets/icon1.jpg')).uri;
-    compassBase64 = Image.resolveAssetSource(require('../../assets/icon2.png')).uri;
-  }
-
   const table = report.summaryTables[0];
   const html  = buildHtml(form, table, yantraBase64, compassBase64);
 
