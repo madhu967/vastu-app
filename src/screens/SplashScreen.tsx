@@ -99,10 +99,10 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
           {/* Outer Reverse Spinning Ring */}
           <Animated.View style={[styles.outerRing, { opacity: fade, transform: [{ scale: ringScale }, { rotate: spinReverse }] }]}>
             <View style={styles.dashedBorder} />
-            <View style={[styles.ringNode, { top: -4, left: 116 }]} />
-            <View style={[styles.ringNode, { bottom: -4, left: 116 }]} />
-            <View style={[styles.ringNode, { top: 116, left: -4 }]} />
-            <View style={[styles.ringNode, { top: 116, right: -4 }]} />
+            <View style={[styles.ringNode, { top: -4, left: '50%', marginLeft: -4 }]} />
+            <View style={[styles.ringNode, { bottom: -4, left: '50%', marginLeft: -4 }]} />
+            <View style={[styles.ringNode, { top: '50%', marginTop: -4, left: -4 }]} />
+            <View style={[styles.ringNode, { top: '50%', marginTop: -4, right: -4 }]} />
           </Animated.View>
 
           {/* Inner Spinning Direction Ring */}
@@ -138,8 +138,8 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
             <Text style={styles.divDot}>✦</Text>
             <View style={styles.divLine} />
           </View>
-          <Text style={styles.title}>విశ్వకర్మ వాస్తు సర్వస్వం</Text>
-          <Text style={styles.titleEn}>VISWAKARMA VASTU SARVASWAM</Text>
+          <Text style={styles.title} adjustsFontSizeToFit numberOfLines={1}>విశ్వకర్మ వాస్తు సర్వస్వం</Text>
+          <Text style={styles.titleEn} adjustsFontSizeToFit numberOfLines={1}>VISWAKARMA VASTU SARVASWAM</Text>
           <View style={[styles.divider, { marginTop: 15 }]}>
             <View style={styles.divLine} />
             <Text style={styles.divDot}>✦</Text>
@@ -278,7 +278,12 @@ const styles = StyleSheet.create({
     textShadowRadius: 8,
     textShadowOffset: { width: 0, height: 2 },
   },
-  textSection: { marginTop: 40, alignItems: "center" },
+  textSection: { 
+    marginTop: 40, 
+    alignItems: "center",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
   divider: { flexDirection: "row", alignItems: "center", gap: 8, width: 220, marginBottom: 12 },
   divLine: { flex: 1, height: 1, backgroundColor: "rgba(255, 217, 92, 0.6)" },
   divDot: { fontSize: 12, color: "#FFD95C" },
@@ -287,6 +292,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: "#FFF8F0",
     lineHeight: 38,
+    textAlign: "center",
     textShadowColor: "rgba(255,217,92,0.4)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 12,
@@ -295,8 +301,9 @@ const styles = StyleSheet.create({
     fontFamily: "Manrope_600SemiBold",
     fontSize: 14,
     color: "#FFD95C",
-    letterSpacing: 6,
+    letterSpacing: 4,
     marginTop: 4,
+    textAlign: "center",
     textShadowColor: "rgba(255,217,92,0.3)",
     textShadowRadius: 8,
   },
@@ -306,6 +313,7 @@ const styles = StyleSheet.create({
     color: "rgba(255, 248, 240, 0.7)",
     letterSpacing: 0.5,
     fontStyle: "italic",
+    textAlign: "center",
   },
   dots: { position: "absolute", bottom: 40, flexDirection: "row", gap: 8, alignItems: "center" },
   dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(255,217,92,0.4)" },

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "icon":"./assets/icon1.jpg",
+    "icon":"./assets/icon3.jpeg",
     "assetBundlePatterns": [
       "**/*"
     ],
