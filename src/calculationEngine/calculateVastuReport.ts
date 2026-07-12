@@ -175,13 +175,14 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   const start = parseInt(form.firstSuddhaPadham || "0", 10);
   const end = parseInt(form.secondSuddhaPadham || "0", 10);
 
-  const getVastuRemainder = (padamu: number, multiplier: number, modulus: number): number => {
+  const getVastuValues = (padamu: number, multiplier: number, modulus: number) => {
     // Use Math.round instead of toFixed+Number for massive performance gain in loops
     const product = Math.round(padamu * multiplier * 10000) / 10000;
     const remainder = product % modulus;
-    if (remainder === 0) return modulus;
+    const actual = remainder === 0 ? modulus : remainder;
     const ceilVal = Math.ceil(remainder);
-    return ceilVal === 0 ? modulus : ceilVal;
+    const rounded = ceilVal === 0 ? modulus : ceilVal;
+    return { actual, rounded };
   };
 
   const nakshatramList = [
@@ -204,42 +205,44 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
       for (let i = 1; i <= 15; i++) {
         const padamuVal = n + i / 16;
         
-        const dhanamuNum = getVastuRemainder(padamuVal, 8, 12);
-        const runamuNum = getVastuRemainder(padamuVal, 3, 8);
-        if (dhanamuNum <= runamuNum) continue;
+        const dhanamu = getVastuValues(padamuVal, 8, 12);
+        const runamu = getVastuValues(padamuVal, 3, 8);
+        if (dhanamu.rounded <= runamu.rounded) continue;
 
-        const tithiNum = getVastuRemainder(padamuVal, 6, 30);
-        if (badTithi.includes(tithiNum)) continue;
+        const tithi = getVastuValues(padamuVal, 6, 30);
+        if (badTithi.includes(tithi.rounded)) continue;
 
-        const vaaramuNum = getVastuRemainder(padamuVal, 9, 7);
-        if (!goodVaaramu.includes(vaaramuNum)) continue;
+        const vaaramu = getVastuValues(padamuVal, 9, 7);
+        if (!goodVaaramu.includes(vaaramu.rounded)) continue;
         
-        const aayamuNum = getVastuRemainder(padamuVal, 9, 8);
-        if (!goodAayamu.includes(aayamuNum)) continue;
+        const aayamu = getVastuValues(padamuVal, 9, 8);
+        if (!goodAayamu.includes(aayamu.rounded)) continue;
 
-        const ayurdayamuNum = getVastuRemainder(padamuVal, 9, 120);
-        if (ayurdayamuNum < 60) continue;
+        const ayurdayamu = getVastuValues(padamuVal, 9, 120);
+        if (ayurdayamu.rounded < 60) continue;
 
-        const amsaNum = getVastuRemainder(padamuVal, 6, 9);
-        if (!goodAmsa.includes(amsaNum)) continue;
+        const amsa = getVastuValues(padamuVal, 6, 9);
+        if (!goodAmsa.includes(amsa.rounded)) continue;
 
-        const dikrutiNum = getVastuRemainder(padamuVal, 9, 8);
-        if (!goodDikruti.includes(dikrutiNum)) continue;
+        const dikruti = getVastuValues(padamuVal, 9, 8);
+        if (!goodDikruti.includes(dikruti.rounded)) continue;
 
         // Nakshatram is always considered good for Table 3, calculate only if we reach here
-        const nakshatramNum = getVastuRemainder(padamuVal, 8, 27);
+        const nakshatram = getVastuValues(padamuVal, 8, 27);
+
+        const formatDisplay = (v: number) => Number.isInteger(v) ? String(v) : parseFloat(v.toFixed(3)).toString();
 
         const label = `${n} ${i}/16`;
         const columns = [
-          dhanamuNum.toFixed(2).replace(/\.00$/, ''),
-          runamuNum.toFixed(2).replace(/\.00$/, ''),
-          tithiNum.toFixed(2).replace(/\.00$/, ''),
-          vaaramuNum.toFixed(2).replace(/\.00$/, ''),
-          nakshatramNum.toFixed(2).replace(/\.00$/, ''),
-          aayamuNum.toFixed(2).replace(/\.00$/, ''),
-          ayurdayamuNum.toFixed(2).replace(/\.00$/, ''),
-          amsaNum.toFixed(2).replace(/\.00$/, ''),
-          dikrutiNum.toFixed(2).replace(/\.00$/, '')
+          formatDisplay(dhanamu.actual),
+          formatDisplay(runamu.actual),
+          formatDisplay(tithi.actual),
+          formatDisplay(vaaramu.actual),
+          formatDisplay(nakshatram.actual),
+          formatDisplay(aayamu.actual),
+          formatDisplay(ayurdayamu.actual),
+          formatDisplay(amsa.actual),
+          formatDisplay(dikruti.actual)
         ];
         table3RowsRaw.push({ label, columns });
       }
