@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { cornerRadius, palette, spacing, typography } from "@/constants/theme";
 import { ResultTable as ResultTableType } from "@/types/vastu";
 import { useAppLanguage } from "@/context/AppLanguageContext";
@@ -11,10 +12,20 @@ type ResultTableProps = {
 export const ResultTable = ({ table }: ResultTableProps) => {
   const { language } = useAppLanguage();
   const strings = getAppStrings(language);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 50;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [table]);
 
   if (!table.visible) {
     return null;
   }
+
+  const totalPages = Math.ceil((table.rows?.length || 0) / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentRows = table.rows?.slice(startIndex, startIndex + rowsPerPage) || [];
 
   return (
     <View style={styles.card}>
@@ -28,32 +39,91 @@ export const ResultTable = ({ table }: ResultTableProps) => {
         <Text style={styles.title}>{table.title}</Text>
       </View>
 
-      {/* Header for columns if rounded values exist */}
-      {table.rows.some((r) => r.roundedValue) && (
-        <View style={[styles.row, { backgroundColor: palette.surfaceWarm, paddingVertical: 8 }]}>
-          <Text style={[styles.label, { fontWeight: "bold" }]}>Field</Text>
-          <Text style={[styles.value, { flex: 1, textAlign: "center", fontWeight: "bold" }]}>Actual</Text>
-          <Text style={[styles.value, { fontWeight: "bold" }]}>Rounded</Text>
+      {/* Scrollable multi-column table if headers are present */}
+      {table.headers ? (
+        <View style={{ overflow: "scroll" }}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View>
+              {/* Header Row */}
+              <View style={[styles.row, { backgroundColor: palette.surfaceWarm, paddingVertical: 8, paddingHorizontal: spacing.sm }]}>
+                {table.headers.map((header, i) => (
+                  <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontWeight: "bold", fontSize: 12 }]}>
+                    {header}
+                  </Text>
+                ))}
+              </View>
+              
+              {/* Data Rows */}
+              {currentRows.map((row, index) => (
+                <View
+                  key={`${row.label}-${index}`}
+                  style={[
+                    styles.row,
+                    { paddingHorizontal: spacing.sm },
+                    index % 2 === 0 ? styles.rowEven : styles.rowOdd,
+                  ]}
+                >
+                  <Text style={[styles.label, { width: 80, textAlign: "center", fontSize: 12 }]}>{row.label}</Text>
+                  {row.columns?.map((col, i) => (
+                    <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontSize: 12 }]}>
+                      {col}
+                    </Text>
+                  ))}
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      ) : (
+        <View>
+          {/* Header for columns if rounded values exist */}
+          {table.rows.some((r) => r.roundedValue) && (
+            <View style={[styles.row, { backgroundColor: palette.surfaceWarm, paddingVertical: 8 }]}>
+              <Text style={[styles.label, { fontWeight: "bold" }]}>Field</Text>
+              <Text style={[styles.value, { flex: 1, textAlign: "center", fontWeight: "bold" }]}>Actual</Text>
+              <Text style={[styles.value, { fontWeight: "bold" }]}>Rounded</Text>
+            </View>
+          )}
+
+          {/* Rows */}
+          {currentRows.map((row, index) => {
+            const translatedLabel = strings.resultTableLabels?.[row.label] || row.label;
+            return (
+              <View
+                key={`${row.label}-${index}`}
+                style={[
+                  styles.row,
+                  index % 2 === 0 ? styles.rowEven : styles.rowOdd,
+                ]}
+              >
+                <Text style={styles.label}>{translatedLabel}</Text>
+                <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}]}>{row.value}</Text>
+                {row.roundedValue && <Text style={styles.value}>{row.roundedValue}</Text>}
+              </View>
+            );
+          })}
         </View>
       )}
 
-      {/* Rows */}
-      {table.rows.map((row, index) => {
-        const translatedLabel = strings.resultTableLabels[row.label] || row.label;
-        return (
-          <View
-            key={`${row.label}-${index}`}
-            style={[
-              styles.row,
-              index % 2 === 0 ? styles.rowEven : styles.rowOdd,
-            ]}
+      {totalPages > 1 && (
+        <View style={styles.paginationContainer}>
+          <TouchableOpacity 
+            style={[styles.pageButton, currentPage === 1 && styles.pageButtonDisabled]}
+            onPress={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
           >
-            <Text style={styles.label}>{translatedLabel}</Text>
-            <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}]}>{row.value}</Text>
-            {row.roundedValue && <Text style={styles.value}>{row.roundedValue}</Text>}
-          </View>
-        );
-      })}
+            <Text style={[styles.pageButtonText, currentPage === 1 && styles.pageButtonTextDisabled]}>Prev</Text>
+          </TouchableOpacity>
+          <Text style={styles.pageInfo}>Page {currentPage} of {totalPages}</Text>
+          <TouchableOpacity 
+            style={[styles.pageButton, currentPage === totalPages && styles.pageButtonDisabled]}
+            onPress={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+          >
+            <Text style={[styles.pageButtonText, currentPage === totalPages && styles.pageButtonTextDisabled]}>Next</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Footer gold divider */}
       <View style={styles.footer}>
@@ -153,4 +223,34 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: palette.gold,
   },
+  paginationContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: spacing.md,
+    backgroundColor: palette.surfaceWarm,
+    borderTopWidth: 1,
+    borderTopColor: palette.border,
+  },
+  pageButton: {
+    backgroundColor: palette.gold,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+    borderRadius: cornerRadius.sm,
+  },
+  pageButtonDisabled: {
+    backgroundColor: palette.border,
+  },
+  pageButtonText: {
+    color: "#3B1F00",
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  pageButtonTextDisabled: {
+    color: palette.textLight,
+  },
+  pageInfo: {
+    color: palette.textMedium,
+    fontSize: 14,
+  }
 });

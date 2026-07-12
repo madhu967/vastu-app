@@ -31,11 +31,13 @@ export type ResultRow = {
   label: string;
   value: string;
   roundedValue?: string;
+  columns?: string[];
 };
 
 export type ResultTable = {
   title: string;
   rows: ResultRow[];
+  headers?: string[];
   visible?: boolean;
 };
 

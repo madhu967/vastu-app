@@ -77,6 +77,8 @@ export const HomeScreen = () => {
     setForm((current) => ({ ...current, [key]: value }));
   };
 
+  const [isCalc3Loading, setIsCalc3Loading] = useState(false);
+
   const handleCalc1 = () => { 
     const r = calculateVastuReport(form); 
     setTable1(r.summaryTables[0]); 
@@ -84,7 +86,15 @@ export const HomeScreen = () => {
     setTable1b(r.splitTable1b || null);
   };
   const handleCalc2 = () => { const r = calculateVastuReport(form); setTable2(r.summaryTables[1]); };
-  const handleCalc3 = () => { const r = calculateVastuReport(form); setTable3(r.summaryTables[2]); };
+  
+  const handleCalc3 = () => { 
+    setIsCalc3Loading(true);
+    setTimeout(() => {
+      const r = calculateVastuReport(form); 
+      setTable3(r.summaryTables[2]); 
+      setIsCalc3Loading(false);
+    }, 100);
+  };
 
   const handleClear1 = () => { setTable1(null); setTable1a(null); setTable1b(null); };
   const handleClear2 = () => setTable2(null);
@@ -112,12 +122,13 @@ export const HomeScreen = () => {
     }
   };
 
-  const ActionRow = ({ onCalc, onClear }: { onCalc: () => void; onClear: () => void }) => (
+  const ActionRow = ({ onCalc, onClear, isLoading }: { onCalc: () => void; onClear: () => void; isLoading?: boolean }) => (
     <View style={styles.actionPair}>
       {/* Gold gradient calculate button */}
       <Pressable
         onPress={onCalc}
         style={({ pressed }) => [styles.calcBtn, pressed && styles.btnPressed]}
+        disabled={isLoading}
       >
         <LinearGradient
           colors={["#F4C430", "#C9830A"]}
@@ -125,7 +136,11 @@ export const HomeScreen = () => {
           end={{ x: 1, y: 1 }}
           style={styles.calcBtnGradient}
         >
-          <Text style={styles.calcBtnText}> {strings.home.calculate}</Text>
+          {isLoading ? (
+            <ActivityIndicator color="#3B1F00" />
+          ) : (
+            <Text style={styles.calcBtnText}> {strings.home.calculate}</Text>
+          )}
         </LinearGradient>
       </Pressable>
       <Pressable
@@ -550,27 +565,27 @@ export const HomeScreen = () => {
           >
             <View style={styles.row}>
               <View style={styles.col}>
-                <SearchableSelect
+                <PremiumInput
                   label={strings.home.firstSuddhaPadhamLabel}
                   value={form.firstSuddhaPadham}
-                  options={padhamOptions}
-                  placeholder="Select"
-                  onChange={(value) => updateField("firstSuddhaPadham", value)}
+                  placeholder="0"
+                  keyboardType="numeric"
+                  onChangeText={(t) => updateField("firstSuddhaPadham", t)}
                 />
               </View>
               <View style={styles.col}>
-                <SearchableSelect
+                <PremiumInput
                   label={strings.home.secondSuddhaPadhamLabel}
                   value={form.secondSuddhaPadham}
-                  options={padhamOptions}
-                  placeholder="Select"
-                  onChange={(value) => updateField("secondSuddhaPadham", value)}
+                  placeholder="0"
+                  keyboardType="numeric"
+                  onChangeText={(t) => updateField("secondSuddhaPadham", t)}
                 />
               </View>
             </View>
           </SectionCard>
 
-          <ActionRow onCalc={handleCalc3} onClear={handleClear3} />
+          <ActionRow onCalc={handleCalc3} onClear={handleClear3} isLoading={isCalc3Loading} />
           <ResultBlock
             table={table3}
             loading={pdfLoading3}

@@ -97,6 +97,46 @@ const TELEGRAM_ICON = `<svg width="48" height="48" viewBox="0 0 48 48" xmlns="ht
 // Build the 9 main Vastu metric rows in 5 columns: S.No, Aspect, Formula, Result, Phala Analysis
 
 const buildRows = (table: ResultTable, form: VastuFormValues) => {
+  if (table.headers && table.rows.some((r) => r.columns)) {
+    // Render multi-column Table 3
+    let rowsHtml = "";
+    table.rows.forEach((row, i) => {
+      const bg = i % 2 === 0 ? "#FFFFFF" : "#FFF9F0";
+      const colsHtml = row.columns
+        ?.map(
+          (col) =>
+            `<td style="background:${bg};text-align:center;font-size:12px;font-weight:700;color:#1A0A00;border:1px solid #D4B896;padding:8px 4px;">${col}</td>`
+        )
+        .join("");
+      rowsHtml += `
+        <tr>
+          <td style="background:${bg};font-size:13px;color:#2C1000;border:1px solid #D4B896;padding:8px;font-weight:700;">${row.label}</td>
+          ${colsHtml}
+        </tr>
+      `;
+    });
+
+    const headersHtml = table.headers
+      .map(
+        (header) =>
+          `<th style="padding: 10px 4px; font-size: 11px; font-weight: 700; color: #FFFDF8; text-align: center; border: 1px solid rgba(212,175,55,0.35);">${header}</th>`
+      )
+      .join("");
+
+    return `
+      <!-- We replace the main-table thead internally for this format -->
+      <script>
+         document.addEventListener("DOMContentLoaded", function() {
+           const thead = document.querySelector(".main-table thead tr");
+           if(thead) {
+             thead.innerHTML = '<th style="width:60px; padding: 10px 4px; font-size: 12px; font-weight: 700; color: #FFFDF8; text-align: center; border: 1px solid rgba(212,175,55,0.35);">Padamu</th>' + \`${headersHtml}\`;
+           }
+         });
+      </script>
+      ${rowsHtml}
+    `;
+  }
+
   const findVal = (label: string) => {
     const row = table.rows.find(r => r.label === label);
     return { val: row ? row.value : "—", rounded: row?.roundedValue || "—" };
