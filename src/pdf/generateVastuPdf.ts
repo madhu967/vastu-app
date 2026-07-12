@@ -389,11 +389,11 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
   const directionMap: Record<string, string> = { North: T.north, South: T.south, East: T.east, West: T.west, "North-East": T.ne, "North-West": T.nw, "South-East": T.se, "South-West": T.sw };
   const dir = directionMap[form.direction] || form.direction || T.north;
 
-  const lFt  = parseFloat(form.lengthFeet  || "0");
-  const lIn  = parseFloat(form.lengthInch  || "0");
-  const wFt  = parseFloat(form.widthFeet  || "0");
-  const wIn  = parseFloat(form.widthInch  || "0");
-  const area = ((lFt + lIn / 12) * (wFt + wIn / 12)).toFixed(2);
+  const isTable2 = table.title === "Result Table 2";
+
+  let lengthStr = "—";
+  let widthStr = "—";
+  let area = "0.00";
 
   const formatDim = (ft: string, inc: string, nul: string) => {
     if (!ft && !inc && !nul) return "—";
@@ -412,12 +412,34 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
     return `${feet}' ${inch}" ${nullu}"'`;
   };
 
-  const lengthStr = formatDim(form.lengthFeet, form.lengthInch, form.lengthNullu);
-  const widthStr = formatDim(form.widthFeet, form.widthInch, form.widthNullu);
+  if (isTable2) {
+    lengthStr = formatDim(form.suddhaFeet, form.suddhaInch, form.suddhaNullu);
+    const sp = parseFloat(form.suddhaPadham || "0");
+    const sLen = parseFloat(form.suddhaFeet || "0") + (parseFloat(form.suddhaInch || "0") + parseFloat(form.suddhaNullu || "0")/8)/12;
+    const sWidth = sLen > 0 ? (sp * 9) / sLen : 0;
+    widthStr = formatDecimalToFeet(sWidth.toString());
+    area = (sp * 9).toFixed(2);
+  } else {
+    lengthStr = formatDim(form.lengthFeet, form.lengthInch, form.lengthNullu);
+    widthStr = formatDim(form.widthFeet, form.widthInch, form.widthNullu);
+    const lFt  = parseFloat(form.lengthFeet  || "0");
+    const lIn  = parseFloat(form.lengthInch  || "0");
+    const wFt  = parseFloat(form.widthFeet  || "0");
+    const wIn  = parseFloat(form.widthInch  || "0");
+    area = ((lFt + lIn / 12) * (wFt + wIn / 12)).toFixed(2);
+  }
 
   const findDiagonal = () => {
-    const row = table.rows.find(r => r.label === "Diagonal" || r.label === "కర్ణం (Diagonal)" || r.label === "विकर्ण (Diagonal)");
-    return row ? formatDecimalToFeet(row.value) : "—";
+    if (isTable2) {
+      const sp = parseFloat(form.suddhaPadham || "0");
+      const sLen = parseFloat(form.suddhaFeet || "0") + (parseFloat(form.suddhaInch || "0") + parseFloat(form.suddhaNullu || "0")/8)/12;
+      const sWidth = sLen > 0 ? (sp * 9) / sLen : 0;
+      const sDiag = Math.sqrt(sLen * sLen + sWidth * sWidth);
+      return formatDecimalToFeet(sDiag.toString());
+    } else {
+      const row = table.rows.find(r => r.label === "Diagonal" || r.label === "కర్ణం (Diagonal)" || r.label === "विकर्ण (Diagonal)");
+      return row ? formatDecimalToFeet(row.value.replace(/[^0-9.]/g, '')) : "—";
+    }
   };
   const diagonalStr = findDiagonal();
 
@@ -797,7 +819,7 @@ body {
     ${WHATSAPP_ICON}
     <div class="contact-texts">
       <div class="contact-lbl">${T.whatsapp}</div>
-      <div class="contact-phone">9949598627</div>
+      <div class="contact-phone">${form.phoneNumber || "9949598627"}</div>
     </div>
   </div>
   <div class="contact-right">

@@ -35,6 +35,7 @@ const initialForm: VastuFormValues = {
   ownerName: "",
   nakshatram: "",
   vargu: "",
+  phoneNumber: "",
   wifeName: "",
   wifeNakshatram: "",
   wifeVargu: "",
@@ -313,6 +314,22 @@ export const HomeScreen = () => {
             </View>
           </SectionCard>
 
+          {/* Contact Information */}
+          <SectionCard
+            title={strings.home.phoneLabel || "Contact Information"}
+            subtitle="Enter WhatsApp number for the report"
+          >
+            <PremiumInput
+              label={strings.home.phoneLabel || "Phone Number"}
+              value={form.phoneNumber}
+              placeholder="e.g. 9949598627"
+              keyboardType="phone-pad"
+              onChangeText={(text) =>
+                updateField("phoneNumber", digitsOnly(text))
+              }
+            />
+          </SectionCard>
+
           {/* Wife Information (Yajamaniralu) */}
           <SectionCard
             title={strings.home.wifeInfoTitle}
@@ -469,12 +486,12 @@ export const HomeScreen = () => {
           >
             <View style={styles.row}>
               <View style={styles.colWide}>
-                <SearchableSelect
+                <PremiumInput
                   label={strings.home.suddhaPadhamLabel}
                   value={form.suddhaPadham}
-                  options={padhamOptions}
                   placeholder={strings.home.suddhaPadhamPlaceholder}
-                  onChange={(value) => updateField("suddhaPadham", value)}
+                  keyboardType="numeric"
+                  onChangeText={(t) => updateField("suddhaPadham", t)}
                 />
               </View>
               <View style={styles.col}>
@@ -487,22 +504,34 @@ export const HomeScreen = () => {
                 />
               </View>
               <View style={styles.col}>
-                <PremiumInput
-                  label={strings.home.inchLabel}
-                  value={form.suddhaInch}
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  onChangeText={(t) => updateField("suddhaInch", digitsOnly(t))}
-                />
+                <Text style={styles.inlinePickerLabel}>{strings.home.inchLabel}</Text>
+                <View style={styles.inlinePickerBox}>
+                  <Picker
+                    selectedValue={form.suddhaInch || "0"}
+                    onValueChange={(v) => updateField("suddhaInch", String(v))}
+                    style={styles.inlinePicker}
+                    dropdownIconColor="#8B000F"
+                  >
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <Picker.Item key={i} label={String(i)} value={String(i)} />
+                    ))}
+                  </Picker>
+                </View>
               </View>
               <View style={styles.col}>
-                <PremiumInput
-                  label={strings.home.nulluLabel}
-                  value={form.suddhaNullu}
-                  placeholder="0"
-                  keyboardType="number-pad"
-                  onChangeText={(t) => updateField("suddhaNullu", digitsOnly(t))}
-                />
+                <Text style={styles.inlinePickerLabel}>{strings.home.nulluLabel}</Text>
+                <View style={styles.inlinePickerBox}>
+                  <Picker
+                    selectedValue={form.suddhaNullu || "0"}
+                    onValueChange={(v) => updateField("suddhaNullu", String(v))}
+                    style={styles.inlinePicker}
+                    dropdownIconColor="#8B000F"
+                  >
+                    {Array.from({ length: 8 }, (_, i) => (
+                      <Picker.Item key={i} label={String(i)} value={String(i)} />
+                    ))}
+                  </Picker>
+                </View>
               </View>
             </View>
           </SectionCard>

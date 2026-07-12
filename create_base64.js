@@ -1,5 +1,5 @@
 const fs = require('fs');
-const icon1 = fs.readFileSync('assets/icon1.jpg', 'base64');
+const icon1 = fs.readFileSync('assets/icon3.jpeg', 'base64');
 const icon2 = fs.readFileSync('assets/icon2.png', 'base64');
 
 fs.writeFileSync('src/pdf/assetsBase64.ts', 

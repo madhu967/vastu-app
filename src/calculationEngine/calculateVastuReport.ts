@@ -112,11 +112,37 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   };
 
   // Keep existing Table 2 (Suddha Padham based)
+  const sp = toNumber(form.suddhaPadham || "0");
+  const sLen = toFeetValueCorrect(form.suddhaFeet || "0", form.suddhaInch || "0", form.suddhaNullu || "0");
+  const sWidth = sLen > 0 ? (sp * 9) / sLen : 0;
+  const sAreaSqFeet = sp * 9;
+  const sAreaSqYards = sp;
+  const sAreaCents = sp / 48.4;
+  const sPerimeter = 2 * (sLen + sWidth);
+  const sDiagonal = Math.sqrt(sLen * sLen + sWidth * sWidth);
+
+  let table2Rows: Array<[string, string, string?]> = [];
+
+  if (sp > 0) {
+    table2Rows = [
+      ["Padamu", exactAndRounded(sp)[0]],
+      ["Dhanamu", ...exactAndRounded(getRemainderLabel((sp * 8), 12))],
+      ["Runamu", ...exactAndRounded(getRemainderLabel((sp * 3), 8))],
+      ["Tithi", ...exactAndRounded(getRemainderLabel((sp * 6), 30))],
+      ["Vaaramu", ...exactAndRounded(getRemainderLabel((sp * 9), 7))],
+      ["Nakshatram", ...exactAndRounded(getRemainderLabel((sp * 8), 27))],
+      ["Aayamu", ...exactAndRounded(getRemainderLabel((sp * 9), 8))],
+      ["Ayurdayamu", ...exactAndRounded(getRemainderLabel((sp * 9), 120))],
+      ["Amsa", ...exactAndRounded(getRemainderLabel((sp * 6), 9))],
+      ["Dikruti", ...exactAndRounded(getRemainderLabel((sp * 9), 8))]
+    ];
+  } else {
+    table2Rows = [["Padamu", form.suddhaPadham || "-"]];
+  }
+
   const padamuTable: ResultTable = {
     title: "Result Table 2",
-    rows: createRows([
-      ["Padamu", form.suddhaPadham || "-"],
-    ]),
+    rows: createRows(table2Rows),
     visible: true,
   };
 
