@@ -48,13 +48,14 @@ export const ResultTable = ({ table }: ResultTableProps) => {
               <View style={[styles.row, { backgroundColor: palette.surfaceWarm, paddingVertical: 8, paddingHorizontal: spacing.sm }]}>
                 {table.headers.map((header, i) => (
                   <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontWeight: "bold", fontSize: 12 }]}>
-                    {header}
+                    {strings.resultTableLabels?.[header] || header}
                   </Text>
                 ))}
               </View>
               
-              {/* Data Rows */}
-              {currentRows.map((row, index) => (
+              {currentRows.map((row, index) => {
+                const translatedLabel = strings.resultTableLabels?.[row.label] || row.label;
+                return (
                 <View
                   key={`${row.label}-${index}`}
                   style={[
@@ -63,14 +64,14 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                     index % 2 === 0 ? styles.rowEven : styles.rowOdd,
                   ]}
                 >
-                  <Text style={[styles.label, { width: 80, textAlign: "center", fontSize: 12 }]}>{row.label}</Text>
+                  <Text style={[styles.label, { width: 80, textAlign: "center", fontSize: 12 }]}>{translatedLabel}</Text>
                   {row.columns?.map((col, i) => (
                     <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontSize: 12 }]}>
                       {col}
                     </Text>
                   ))}
                 </View>
-              ))}
+              )})}
             </View>
           </ScrollView>
         </View>

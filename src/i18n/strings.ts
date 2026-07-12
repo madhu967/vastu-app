@@ -148,10 +148,12 @@ const englishStrings: AppStrings = {
     "Nakshatram": "Nakshatram",
     "Aayamu": "Aayamu",
     "Ayurdayamu": "Ayurdayamu",
+    "Ayurdayam": "Ayurdayamu",
     "Amsa": "Amsa",
     "Dikruti": "Dikruti",
     "1st Suddha Padham": "1st Suddha Padham",
     "2nd Suddha Padham": "2nd Suddha Padham",
+    "No Subham Padamu found": "No Subham Padamu found",
   },
 };
 
@@ -245,10 +247,12 @@ const teluguStrings: AppStrings = {
     "Nakshatram": "నక్షత్ర సంఖ్య",
     "Aayamu": "ఆయాది సంఖ్య",
     "Ayurdayamu": "ఆయుర్దాయ సంఖ్య",
+    "Ayurdayam": "ఆయుర్దాయ సంఖ్య",
     "Amsa": "అంశ సంఖ్య",
     "Dikruti": "దిక్పతి సంఖ్య",
     "1st Suddha Padham": "1వ శుద్ధ పాదం",
     "2nd Suddha Padham": "2వ శుద్ధ పాదం",
+    "No Subham Padamu found": "శుభ పాదం లభించలేదు",
   },
 };
 
@@ -342,10 +346,12 @@ const hindiStrings: AppStrings = {
     "Nakshatram": "नक्षत्र संख्या",
     "Aayamu": "आयादि संख्या",
     "Ayurdayamu": "आयुर्दाय संख्या",
+    "Ayurdayam": "आयुर्दाय संख्या",
     "Amsa": "अंश संख्या",
     "Dikruti": "दिक्पति संख्या",
     "1st Suddha Padham": "1वां शुद्ध पादम",
     "2nd Suddha Padham": "2वां शुद्ध पादम",
+    "No Subham Padamu found": "कोई शुभ पादम नहीं मिला",
   },
 };
 

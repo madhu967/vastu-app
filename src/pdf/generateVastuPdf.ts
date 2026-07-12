@@ -9,12 +9,21 @@ import { yantraBase64, compassBase64 } from "./assetsBase64";
 // ──────────────────────────────────────────────────────────────
 //  Helpers
 // ──────────────────────────────────────────────────────────────
-const todayFormatted = () => {
+const todayFormatted = (lang?: string) => {
   const d = new Date();
   const dd   = String(d.getDate()).padStart(2, "0");
   const mm   = String(d.getMonth() + 1).padStart(2, "0");
   const yyyy = d.getFullYear();
-  return `${dd}-${mm}-${yyyy}`;
+  
+  const daysEN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const daysHI = ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"];
+  const daysTE = ["ఆదివారం", "సోమవారం", "మంగళవారం", "బుధవారం", "గురువారం", "శుక్రవారం", "శనివారం"];
+  
+  let dayStr = daysTE[d.getDay()];
+  if (lang === "English") dayStr = daysEN[d.getDay()];
+  if (lang === "Hindi") dayStr = daysHI[d.getDay()];
+
+  return { dateStr: `${dd}-${mm}-${yyyy}`, dayStr };
 };
 
 const DIR_TE: Record<string, string> = {
@@ -157,6 +166,8 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
     { key: "Tithi", label: getLabel("తిథి సంఖ్య", "तिथि संख्या", "Tithi"), formula: "(Padamu * 6) / 30", ...findVal("Tithi") },
     { key: "Vaaramu", label: getLabel("వార సంఖ్య", "वार संख्या", "Vaaramu"), formula: "(Padamu * 9) / 7", ...findVal("Vaaramu") },
     { key: "Nakshatram", label: getLabel("నక్షత్ర సంఖ్య", "नक्षत्र संख्या", "Nakshatram"), formula: "(Padamu * 8) / 27", ...findVal("Nakshatram") },
+    { key: "Owner Tara Phalam", label: getLabel("యజమాని తారా బలం", "मालिक तारा बल", "Owner Tara Phalam"), formula: "(Nakshatram - Owner) / 9", ...findVal("Owner Tara Phalam") },
+    { key: "Wife Tara Phalam", label: getLabel("భార్య తారా బలం", "पत्नी तारा बल", "Wife Tara Phalam"), formula: "(Nakshatram - Wife) / 9", ...findVal("Wife Tara Phalam") },
     { key: "Aayamu", label: getLabel("ఆయాది సంఖ్య", "आयादि संख्या", "Aayamu"), formula: "(Padamu * 9) / 8", ...findVal("Aayamu") },
     { key: "Ayurdayamu", label: getLabel("ఆయుర్దాయ సంఖ్య", "आयुर्दाय संख्या", "Ayurdayamu"), formula: "(Padamu * 9) / 120", ...findVal("Ayurdayamu") },
     { key: "Amsa", label: getLabel("అంశ సంఖ్య", "अंश संख्या", "Amsa"), formula: "(Padamu * 6) / 9", ...findVal("Amsa") },
@@ -231,6 +242,22 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
         const outNak = isEN ? enNak : isHI ? hiNak : teNak;
         if (val < 1 || val > 27) return ["—", "", "#4A4A4A"];
         return [outNak[val - 1], "", "#4A4A4A"];
+      }
+      case "Owner Tara Phalam":
+      case "Wife Tara Phalam": {
+        const tePhal = ["జన్మతార – దేహనాశనం", "సంపత్తార – సంపద", "విపత్తార – విపత్తు", "క్షేమతార – క్షేమం", "ప్రత్యక్తార – వ్యతిరేకత", "సాధనతార – శుభం", "నైధనతార – అశుభం", "మిత్రతార – శుభం", "పరమమిత్రతార – శుభం"];
+        const enPhal = ["1. Janma Tara", "2. Sampat Tara", "3. Vipat Tara", "4. Kshema Tara", "5. Pratyak Tara", "6. Sadhana Tara", "7. Naidhana Tara", "8. Mitra Tara", "9. Parama Mitra Tara"];
+        const hiPhal = ["1. जन्म तारा", "2. सम्पत तारा", "3. विपत तारा", "4. क्षेम तारा", "5. प्रत्यक तारा", "6. साधन तारा", "7. नैधन तारा", "8. मित्र तारा", "9. परम मित्र तारा"];
+        const idx = val - 1;
+        if (isNaN(val) || val < 1 || val > 9) return ["—", "", "#4A4A4A"];
+        
+        let displayStr = tePhal[idx];
+        if (isEN) displayStr = enPhal[idx];
+        if (isHI) displayStr = hiPhal[idx];
+        
+        const statuses = [T_ASHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_SHUBHAM];
+        const s = statuses[idx];
+        return [displayStr, s, getColor(s)];
       }
       case "Aayamu": {
         const enAay = ["Dhwajayam", "Dhumayam", "Simhayam", "Shvanayam", "Vrishabhayam", "Kharayam", "Gajayam", "Kakayam"];
@@ -321,7 +348,8 @@ const getPdfTranslations = (lang: string) => {
       length: 'పొడవు (Length)',
       width: 'వెడల్పు (Width)',
       diagonal: 'కర్ణం (Diagonal)',
-      areaTitle: 'పరిమాణం',
+      dayTitle: 'వారం',
+      areaTitle: 'పాదం',
       areaUnit: 'విస్తీర్ణం (చ.అ.)',
       col1: 'క్రమం',
       col2: 'అంశం',
@@ -358,7 +386,8 @@ const getPdfTranslations = (lang: string) => {
       length: 'लंबाई (Length)',
       width: 'चौड़ाई (Width)',
       diagonal: 'विकर्ण (Diagonal)',
-      areaTitle: 'परिमाण',
+      dayTitle: 'दिन',
+      areaTitle: 'पादम',
       areaUnit: 'क्षेत्रफल (वर्ग फीट)',
       col1: 'क्रम',
       col2: 'अंश',
@@ -389,12 +418,13 @@ const getPdfTranslations = (lang: string) => {
     headerDesc: 'Vastu Shastra Standard Analysis Details',
     clientName: 'Client Name',
     date: 'Date',
+    dayTitle: 'Day',
     direction: 'Direction',
     dimensions: 'House Dimensions (Feet-Inches)',
     length: 'Length',
     width: 'Width',
     diagonal: 'Diagonal',
-    areaTitle: 'Magnitude',
+    areaTitle: 'Padamu',
     areaUnit: 'Area (Sq.Ft.)',
     col1: 'S.No',
     col2: 'Aspect',
@@ -425,7 +455,7 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
   const COMPASS = `<img src="${compassBase64}" width="108" height="108" style="object-fit: cover; border-radius: 4px; border: 2px solid #D4AF37;" />`;
   const T = getPdfTranslations(form.language || "Telugu");
   const owner  = form.ownerName || "—";
-  const date   = todayFormatted();
+  const { dateStr, dayStr } = todayFormatted(form.language);
   const directionMap: Record<string, string> = { North: T.north, South: T.south, East: T.east, West: T.west, "North-East": T.ne, "North-West": T.nw, "South-East": T.se, "South-West": T.sw };
   const dir = directionMap[form.direction] || form.direction || T.north;
 
@@ -764,13 +794,13 @@ body {
     <div class="client-col"><div class="client-lbl">${T.clientName}</div><div class="client-val">${owner}</div></div>
     <div class="client-col"><div class="client-lbl">${T.nakshatram}</div><div class="client-val">${form.nakshatram || "—"}</div></div>
     <div class="client-col"><div class="client-lbl">${T.vargu}</div><div class="client-val">${form.vargu || "—"}</div></div>
-    <div class="client-col"><div class="client-lbl">${T.date}</div><div class="client-val">${date}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.date}</div><div class="client-val">${dateStr}</div></div>
   </div>
   <div class="client-row">
     <div class="client-col"><div class="client-lbl">${T.wifeName}</div><div class="client-val">${form.wifeName || "—"}</div></div>
     <div class="client-col"><div class="client-lbl">${T.wifeNakshatram}</div><div class="client-val">${form.wifeNakshatram || "—"}</div></div>
     <div class="client-col"><div class="client-lbl">${T.wifeVargu}</div><div class="client-val">${form.wifeVargu || "—"}</div></div>
-    <div class="client-col"><div class="client-lbl"></div><div class="client-val"></div></div>
+    <div class="client-col"><div class="client-lbl">${T.dayTitle}</div><div class="client-val">${dayStr}</div></div>
   </div>
 </div>
 
@@ -785,31 +815,16 @@ body {
      DIMENSION ROWS
 ═══════════════════════════════ -->
 <div class="dim-row">
-  <div class="dim-lbl">${T.length}</div>
-  <div class="dim-val">${lengthStr}</div>
+  <div class="dim-lbl" style="width: 25%;">${T.length}</div>
+  <div class="dim-val" style="width: 25%;">${lengthStr}</div>
+  <div class="dim-lbl" style="width: 25%; border-left: 2px solid #D4B080;">${T.width}</div>
+  <div class="dim-val" style="width: 25%;">${widthStr}</div>
 </div>
 <div class="dim-row">
-  <div class="dim-lbl">${T.width}</div>
-  <div class="dim-val">${widthStr}</div>
-</div>
-<div class="dim-row">
-  <div class="dim-lbl">${T.diagonal}</div>
-  <div class="dim-val">${diagonalStr}</div>
-</div>
-
-<!-- ═══════════════════════════════
-     AREA RESULT ROW
-═══════════════════════════════ -->
-<div class="area-row">
-  <div class="area-col">
-    <div class="area-lbl">${T.areaTitle}</div>
-  </div>
-  <div class="area-col">
-    <div class="area-lbl">${T.areaUnit}</div>
-  </div>
-  <div class="area-col">
-    <div class="area-val">${area}</div>
-  </div>
+  <div class="dim-lbl" style="width: 25%;">${T.diagonal}</div>
+  <div class="dim-val" style="width: 25%;">${diagonalStr}</div>
+  <div class="dim-lbl" style="width: 25%; border-left: 2px solid #D4B080;">${T.areaTitle}</div>
+  <div class="dim-val" style="width: 25%;">${area}</div>
 </div>
 
 <!-- ═══════════════════════════════
@@ -841,13 +856,13 @@ body {
     <div class="rec-divline-r"></div>
   </div>
   <div class="rec-body">
-    <div class="rec-diya">${DIYA}</div>
+    <div class="rec-diya">${COMPASS}</div>
     <div class="rec-text">
       <p>${T.s1}</p>
       <p>${T.s2}</p>
       <p>${T.s3}</p>
     </div>
-    <div class="rec-diya" style="transform:scaleX(-1);">${DIYA}</div>
+    <div class="rec-diya" style="transform:scaleX(-1);">${COMPASS}</div>
   </div>
 </div>
 

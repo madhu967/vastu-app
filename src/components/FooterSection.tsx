@@ -225,8 +225,8 @@ export const FooterSection = () => {
           </View>
 
           {/* Brand title */}
-          <Text style={ft.brandTe}>శ్రీ వాస్తు</Text>
-          <Text style={ft.brandEn}>SRI  VASTU</Text>
+          <Text style={ft.brandTe}>విశ్వకర్మ వాస్తు సర్వస్వం</Text>
+          <Text style={ft.brandEn}>VISWAKARMA VASTU SARVASWAM</Text>
 
           {/* Gold divider */}
           <View style={[ft.heroDivider, { marginTop: 10 }]}>
@@ -258,7 +258,7 @@ export const FooterSection = () => {
         <View style={ft.bottomStrip}>
           <View style={ft.bottomLine} />
         </View>
-        <Text style={ft.copyright}>© 2025 Sri Vastu · All Rights Reserved</Text>
+        <Text style={ft.copyright}>© 2025 Viswakarma Vastu Sarvaswam · All Rights Reserved</Text>
       </LinearGradient>
     </View>
   );
@@ -490,19 +490,21 @@ const ft = StyleSheet.create({
 
   brandTe: {
     fontFamily: "CormorantGaramond_700Bold",
-    fontSize: 36,
+    fontSize: 28,
     color: "#FFF8F0",
-    lineHeight: 44,
+    lineHeight: 36,
     textShadowColor: "rgba(255,217,92,0.4)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 10,
+    textAlign: "center",
   },
   brandEn: {
     fontFamily: "Manrope_500Medium",
-    fontSize: 11,
+    fontSize: 10,
     color: "rgba(255,217,92,0.95)",
-    letterSpacing: 6,
+    letterSpacing: 4,
     marginTop: 2,
+    textAlign: "center",
   },
   taglineTe: {
     fontFamily: "CormorantGaramond_600SemiBold",

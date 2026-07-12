@@ -130,7 +130,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           <View style={s.footerLine} />
         </View>
         <Text style={s.footerTagline}>దేవో వాస్తు ప్రజావతే</Text>
-        <Text style={s.footerCopy}>© 2025 Sri Vastu</Text>
+        <Text style={s.footerCopy}>© 2025 Viswakarma Vastu Sarvaswam</Text>
       </View>
     </DrawerContentScrollView>
   );

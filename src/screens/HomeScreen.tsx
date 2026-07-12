@@ -105,8 +105,7 @@ export const HomeScreen = () => {
     setLoading: (v: boolean) => void,
   ) => {
     setLoading(true);
-    // Allow UI to render loading spinner before heavy PDF task
-    await new Promise(r => setTimeout(r, 100));
+    // Removed deliberate timeout to make PDF download instant
     try {
       const fakeReport = {
         summaryTables: [table, table, table] as [ResultTableType, ResultTableType, ResultTableType],
@@ -241,7 +240,7 @@ export const HomeScreen = () => {
             style={styles.festivalBanner}
           >
             <Image 
-              source={require("../../assets/icon1.jpg")} 
+              source={require("../../assets/icon3.jpeg")} 
               style={styles.bannerIconImage} 
             />
             <View style={styles.bannerTextContainer}>
@@ -586,11 +585,11 @@ export const HomeScreen = () => {
           </SectionCard>
 
           <ActionRow onCalc={handleCalc3} onClear={handleClear3} isLoading={isCalc3Loading} />
-          <ResultBlock
-            table={table3}
-            loading={pdfLoading3}
-            onDownload={() => table3 && downloadPdf(table3, setPdfLoading3)}
-          />
+          {table3 && (
+            <View style={styles.resultBlock}>
+              <ResultTable table={{ ...table3, visible: true }} />
+            </View>
+          )}
 
           {/* Premium Footer */}
           <FooterSection />
@@ -688,9 +687,9 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   bannerIconImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 5,
     marginRight: 10,
   },
   bannerTextContainer: {

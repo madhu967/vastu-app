@@ -81,12 +81,36 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
     ["Diagonal", exactAndRounded(diagonal, " ft")[0]],
   ] as Array<[string, string, string?]>;
 
+  const getTaraPhalam = (plotNak: number, ownerNakStr?: string) => {
+    if (!ownerNakStr) return ["-", "-"];
+    const nakshatramList = [
+      "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra",
+      "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni",
+      "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha",
+      "Jyeshtha", "Moola", "Purva Ashadha", "Uttara Ashadha", "Shravana",
+      "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+    ];
+    const ownerNakIndex = nakshatramList.indexOf(ownerNakStr) + 1;
+    if (ownerNakIndex === 0) return ["-", "-"];
+    
+    let diff = plotNak - ownerNakIndex;
+    if (diff < 0) diff += 27;
+    let rem = diff % 9;
+    if (rem === 0) rem = 9;
+    
+    return [String(rem), String(rem)];
+  };
+
+  const plotNakshatraVal = Math.ceil(Number(nakshatram));
+
   const table1bRows = [
     ["Dhanamu", ...exactAndRounded(dhanamu)],
     ["Runamu", ...exactAndRounded(runamu)],
     ["Tithi", ...exactAndRounded(tithi)],
     ["Vaaramu", ...exactAndRounded(vaaramu)],
     ["Nakshatram", ...exactAndRounded(nakshatram)],
+    ["Owner Tara Phalam", ...getTaraPhalam(plotNakshatraVal, form.nakshatram)],
+    ["Wife Tara Phalam", ...getTaraPhalam(plotNakshatraVal, form.wifeNakshatram)],
     ["Aayamu", ...exactAndRounded(aayamu)],
     ["Ayurdayamu", ...exactAndRounded(ayurdayamu)],
     ["Amsa", ...exactAndRounded(amsa)],
