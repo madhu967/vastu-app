@@ -95,10 +95,22 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
     
     let diff = plotNak - ownerNakIndex;
     if (diff < 0) diff += 27;
-    let rem = diff % 9;
-    if (rem === 0) rem = 9;
     
-    return [String(rem), String(rem)];
+    let res = 0;
+    if (diff === 0) {
+      res = 9;
+    } else {
+      let val = diff + 1;
+      if (val >= 1 && val <= 9) {
+        res = val;
+      } else if (val >= 10 && val <= 18) {
+        res = val - 9;
+      } else if (val >= 19 && val <= 27) {
+        res = val - 18;
+      }
+    }
+    
+    return [String(res), String(res)];
   };
 
   const plotNakshatraVal = Math.ceil(Number(nakshatram));
@@ -150,6 +162,7 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   if (sp > 0) {
     table2Rows = [
       ["Padamu", exactAndRounded(sp)[0]],
+      ["Plot Width", exactAndRounded(sWidth, " ft")[0]],
       ["Dhanamu", ...exactAndRounded(getRemainderLabel((sp * 8), 12))],
       ["Runamu", ...exactAndRounded(getRemainderLabel((sp * 3), 8))],
       ["Tithi", ...exactAndRounded(getRemainderLabel((sp * 6), 30))],
@@ -202,7 +215,7 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
 
   if (!isNaN(start) && !isNaN(end) && start > 0 && end >= start) {
     for (let n = start; n <= end; n++) {
-      for (let i = 1; i <= 15; i++) {
+      for (let i = 0; i <= 15; i++) {
         const padamuVal = n + i / 16;
         
         const dhanamu = getVastuValues(padamuVal, 8, 12);
@@ -230,19 +243,19 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
         // Nakshatram is always considered good for Table 3, calculate only if we reach here
         const nakshatram = getVastuValues(padamuVal, 8, 27);
 
-        const formatDisplay = (v: number) => Number.isInteger(v) ? String(v) : parseFloat(v.toFixed(3)).toString();
+        const formatDisplayTable3 = (v: number) => Number.isInteger(v) ? String(v) : parseFloat(v.toFixed(3)).toString();
 
-        const label = `${n} ${i}/16`;
+        const label = i === 0 ? `${n}` : `${n} ${i}/16`;
         const columns = [
-          formatDisplay(dhanamu.actual),
-          formatDisplay(runamu.actual),
-          formatDisplay(tithi.actual),
-          formatDisplay(vaaramu.actual),
-          formatDisplay(nakshatram.actual),
-          formatDisplay(aayamu.actual),
-          formatDisplay(ayurdayamu.actual),
-          formatDisplay(amsa.actual),
-          formatDisplay(dikruti.actual)
+          formatDisplayTable3(dhanamu.actual),
+          formatDisplayTable3(runamu.actual),
+          formatDisplayTable3(tithi.actual),
+          formatDisplayTable3(vaaramu.actual),
+          formatDisplayTable3(nakshatram.actual),
+          formatDisplayTable3(aayamu.actual),
+          formatDisplayTable3(ayurdayamu.actual),
+          formatDisplayTable3(amsa.actual),
+          formatDisplayTable3(dikruti.actual)
         ];
         table3RowsRaw.push({ label, columns });
       }

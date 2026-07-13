@@ -5,6 +5,7 @@ export type OptionItem = {
 
 export type VastuFormValues = {
   language: string;
+  clientName: string;
   ownerName: string;
   nakshatram: string;
   vargu: string;

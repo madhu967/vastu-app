@@ -46,11 +46,15 @@ export const ResultTable = ({ table }: ResultTableProps) => {
             <View>
               {/* Header Row */}
               <View style={[styles.row, { backgroundColor: palette.surfaceWarm, paddingVertical: 8, paddingHorizontal: spacing.sm }]}>
-                {table.headers.map((header, i) => (
-                  <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontWeight: "bold", fontSize: 12 }]}>
-                    {strings.resultTableLabels?.[header] || header}
-                  </Text>
-                ))}
+                {table.headers.map((header, i) => {
+                  const translatedHeader = strings.resultTableLabels?.[header] || header;
+                  const isPadamu = header === "Padamu" || translatedHeader === "పదము" || translatedHeader === "पदम";
+                  return (
+                    <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontWeight: "bold", fontSize: 12 }, isPadamu && { color: "#8B0000" }]}>
+                      {translatedHeader}
+                    </Text>
+                  );
+                })}
               </View>
               
               {currentRows.map((row, index) => {
@@ -89,6 +93,7 @@ export const ResultTable = ({ table }: ResultTableProps) => {
           {/* Rows */}
           {currentRows.map((row, index) => {
             const translatedLabel = strings.resultTableLabels?.[row.label] || row.label;
+            const isPadamu = row.label === "Padamu" || translatedLabel === "పదము" || translatedLabel === "पदम";
             return (
               <View
                 key={`${row.label}-${index}`}
@@ -97,9 +102,9 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                   index % 2 === 0 ? styles.rowEven : styles.rowOdd,
                 ]}
               >
-                <Text style={styles.label}>{translatedLabel}</Text>
-                <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}]}>{row.value}</Text>
-                {row.roundedValue && <Text style={styles.value}>{row.roundedValue}</Text>}
+                <Text style={[styles.label, isPadamu && { color: "#8B0000", fontWeight: "bold" }]}>{translatedLabel}</Text>
+                <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}, isPadamu && { color: "#8B0000" }]}>{row.value}</Text>
+                {row.roundedValue && <Text style={[styles.value, isPadamu && { color: "#8B0000" }]}>{row.roundedValue}</Text>}
               </View>
             );
           })}

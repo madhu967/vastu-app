@@ -4,6 +4,32 @@ export const isEmpty = (value: string | null | undefined) =>
   !value || value.trim().length === 0;
 
 export const toNumber = (value: string) => {
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed.includes(" ")) {
+      const parts = trimmed.split(" ");
+      if (parts.length === 2 && parts[1].includes("/")) {
+        const whole = Number.parseFloat(parts[0]);
+        const frac = parts[1].split("/");
+        if (frac.length === 2) {
+          const num = Number.parseFloat(frac[0]);
+          const den = Number.parseFloat(frac[1]);
+          if (!isNaN(whole) && !isNaN(num) && !isNaN(den) && den !== 0) {
+            return whole + (num / den);
+          }
+        }
+      }
+    } else if (trimmed.includes("/")) {
+      const frac = trimmed.split("/");
+      if (frac.length === 2) {
+        const num = Number.parseFloat(frac[0]);
+        const den = Number.parseFloat(frac[1]);
+        if (!isNaN(num) && !isNaN(den) && den !== 0) {
+          return num / den;
+        }
+      }
+    }
+  }
   const parsed = Number.parseFloat(value);
   return Number.isFinite(parsed) ? parsed : 0;
 };

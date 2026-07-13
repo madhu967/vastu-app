@@ -32,6 +32,7 @@ import { digitsOnly } from "@/utils/number";
 
 const initialForm: VastuFormValues = {
   language: "English",
+  clientName: "",
   ownerName: "",
   nakshatram: "",
   vargu: "",
@@ -292,6 +293,31 @@ export const HomeScreen = () => {
             <View style={styles.divLine} />
           </View>
 
+          {/* Contact Information */}
+          <SectionCard
+            title={strings.home.phoneLabel || "Contact Information"}
+            subtitle="Enter WhatsApp number for the report"
+          >
+            <PremiumInput
+              label="Name"
+              value={form.clientName}
+              placeholder="e.g. John Doe"
+              autoCapitalize="words"
+              onChangeText={(text) =>
+                updateField("clientName", text)
+              }
+            />
+            <PremiumInput
+              label={strings.home.phoneLabel || "Phone Number"}
+              value={form.phoneNumber}
+              placeholder="e.g. 9949598627"
+              keyboardType="phone-pad"
+              onChangeText={(text) =>
+                updateField("phoneNumber", digitsOnly(text))
+              }
+            />
+          </SectionCard>
+
           {/* Owner Information (Yajamani) */}
           <SectionCard
             title={strings.home.ownerInfoTitle}
@@ -302,9 +328,7 @@ export const HomeScreen = () => {
               value={form.ownerName}
               placeholder={strings.home.ownerNamePlaceholder}
               autoCapitalize="words"
-              onChangeText={(text) =>
-                updateField("ownerName", text.replace(/[^A-Za-z\s]/g, ""))
-              }
+              onChangeText={(text) => updateField("ownerName", text)}
             />
             <View style={styles.rowEqual}>
               <View style={styles.col}>
@@ -328,21 +352,7 @@ export const HomeScreen = () => {
             </View>
           </SectionCard>
 
-          {/* Contact Information */}
-          <SectionCard
-            title={strings.home.phoneLabel || "Contact Information"}
-            subtitle="Enter WhatsApp number for the report"
-          >
-            <PremiumInput
-              label={strings.home.phoneLabel || "Phone Number"}
-              value={form.phoneNumber}
-              placeholder="e.g. 9949598627"
-              keyboardType="phone-pad"
-              onChangeText={(text) =>
-                updateField("phoneNumber", digitsOnly(text))
-              }
-            />
-          </SectionCard>
+
 
           {/* Wife Information (Yajamaniralu) */}
           <SectionCard
@@ -354,9 +364,7 @@ export const HomeScreen = () => {
               value={form.wifeName}
               placeholder={strings.home.wifeNamePlaceholder}
               autoCapitalize="words"
-              onChangeText={(text) =>
-                updateField("wifeName", text.replace(/[^A-Za-z\s]/g, ""))
-              }
+              onChangeText={(text) => updateField("wifeName", text)}
             />
             <View style={styles.rowEqual}>
               <View style={styles.col}>

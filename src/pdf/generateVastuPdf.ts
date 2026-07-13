@@ -86,6 +86,14 @@ const DIYA = `<svg width="68" height="85" viewBox="0 0 68 85" xmlns="http://www.
 </svg>`;
 
 // ──────────────────────────────────────────────────────────────
+//  Profile icon SVG
+// ──────────────────────────────────────────────────────────────
+const PROFILE_ICON = `<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="10" fill="#E89611"/>
+  <path d="M24 24C27.31 24 30 21.31 30 18C30 14.69 27.31 12 24 12C20.69 12 18 14.69 18 18C18 21.31 20.69 24 24 24ZM24 27C19.33 27 10 29.34 10 34V36H38V34C38 29.34 28.67 27 24 27Z" fill="white"/>
+</svg>`;
+
+// ──────────────────────────────────────────────────────────────
 //  WhatsApp icon SVG
 // ──────────────────────────────────────────────────────────────
 const WHATSAPP_ICON = `<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -119,7 +127,7 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
         .join("");
       rowsHtml += `
         <tr>
-          <td style="background:${bg};font-size:13px;color:#2C1000;border:1px solid #D4B896;padding:8px;font-weight:700;">${row.label}</td>
+          <td style="background:${bg};font-size:13px;color:#8B0000;border:1px solid #D4B896;padding:8px;font-weight:bold;">${row.label}</td>
           ${colsHtml}
         </tr>
       `;
@@ -137,9 +145,9 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
       <script>
          document.addEventListener("DOMContentLoaded", function() {
            const thead = document.querySelector(".main-table thead tr");
-           if(thead) {
-             thead.innerHTML = '<th style="width:60px; padding: 10px 4px; font-size: 12px; font-weight: 700; color: #FFFDF8; text-align: center; border: 1px solid rgba(212,175,55,0.35);">Padamu</th>' + \`${headersHtml}\`;
-           }
+             if(thead) {
+               thead.innerHTML = '<th style="width:60px; padding: 10px 4px; font-size: 12px; font-weight: bold; color: #FFCDD2; text-align: center; border: 1px solid rgba(212,175,55,0.35);">Padamu</th>' + \`${headersHtml}\`;
+             }
          });
       </script>
       ${rowsHtml}
@@ -161,17 +169,17 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
   const getLabel = (te: string, hi: string, en: string) => isEN ? en : isHI ? hi : te;
 
   const metrics = [
-    { key: "Dhanamu", label: getLabel("ధన సంఖ్య", "धन संख्या", "Dhanamu"), formula: "(Padamu * 8) / 12", ...findVal("Dhanamu") },
-    { key: "Runamu", label: getLabel("రుణ సంఖ్య", "ऋण संख्या", "Runamu"), formula: "(Padamu * 3) / 8", ...findVal("Runamu") },
-    { key: "Tithi", label: getLabel("తిథి సంఖ్య", "तिथि संख्या", "Tithi"), formula: "(Padamu * 6) / 30", ...findVal("Tithi") },
-    { key: "Vaaramu", label: getLabel("వార సంఖ్య", "वार संख्या", "Vaaramu"), formula: "(Padamu * 9) / 7", ...findVal("Vaaramu") },
-    { key: "Nakshatram", label: getLabel("నక్షత్ర సంఖ్య", "नक्षत्र संख्या", "Nakshatram"), formula: "(Padamu * 8) / 27", ...findVal("Nakshatram") },
+    { key: "Dhanamu", label: getLabel("ధన సంఖ్య", "धन संख्या", "Dhanamu"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 8) / 12", ...findVal("Dhanamu") },
+    { key: "Runamu", label: getLabel("రుణ సంఖ్య", "ऋण संख्या", "Runamu"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 3) / 8", ...findVal("Runamu") },
+    { key: "Tithi", label: getLabel("తిథి సంఖ్య", "तिथि संख्या", "Tithi"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 6) / 30", ...findVal("Tithi") },
+    { key: "Vaaramu", label: getLabel("వార సంఖ్య", "वार संख्या", "Vaaramu"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 9) / 7", ...findVal("Vaaramu") },
+    { key: "Nakshatram", label: getLabel("నక్షత్ర సంఖ్య", "नक्षत्र संख्या", "Nakshatram"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 8) / 27", ...findVal("Nakshatram") },
     { key: "Owner Tara Phalam", label: getLabel("యజమాని తారా బలం", "मालिक तारा बल", "Owner Tara Phalam"), formula: "(Nakshatram - Owner) / 9", ...findVal("Owner Tara Phalam") },
     { key: "Wife Tara Phalam", label: getLabel("భార్య తారా బలం", "पत्नी तारा बल", "Wife Tara Phalam"), formula: "(Nakshatram - Wife) / 9", ...findVal("Wife Tara Phalam") },
-    { key: "Aayamu", label: getLabel("ఆయాది సంఖ్య", "आयादि संख्या", "Aayamu"), formula: "(Padamu * 9) / 8", ...findVal("Aayamu") },
-    { key: "Ayurdayamu", label: getLabel("ఆయుర్దాయ సంఖ్య", "आयुर्दाय संख्या", "Ayurdayamu"), formula: "(Padamu * 9) / 120", ...findVal("Ayurdayamu") },
-    { key: "Amsa", label: getLabel("అంశ సంఖ్య", "अंश संख्या", "Amsa"), formula: "(Padamu * 6) / 9", ...findVal("Amsa") },
-    { key: "Dikruti", label: getLabel("దిక్పతి సంఖ్య", "दिक्पति संख्या", "Dikruti"), formula: "(Padamu * 9) / 8", ...findVal("Dikruti") }
+    { key: "Aayamu", label: getLabel("ఆయాది సంఖ్య", "आयादि संख्या", "Aayamu"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 9) / 8", ...findVal("Aayamu") },
+    { key: "Ayurdayamu", label: getLabel("ఆయుర్దాయ సంఖ్య", "आयुर्दाय संख्या", "Ayurdayamu"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 9) / 120", ...findVal("Ayurdayamu") },
+    { key: "Amsa", label: getLabel("అంశ సంఖ్య", "अंश संख्या", "Amsa"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 6) / 9", ...findVal("Amsa") },
+    { key: "Dikruti", label: getLabel("దిక్పతి సంఖ్య", "दिक्पति संख्या", "Dikruti"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 9) / 8", ...findVal("Dikruti") }
   ];
 
   const getPhalaData = (key: string, roundedStr: string): [string, string, string] => {
@@ -349,8 +357,8 @@ const getPdfTranslations = (lang: string) => {
       width: 'వెడల్పు (Width)',
       diagonal: 'కర్ణం (Diagonal)',
       dayTitle: 'వారం',
-      areaTitle: 'పరం',
-      areaUnit: 'విస్తీర్ణం (చ.అ.)',
+      areaTitle: 'పదము',
+      areaUnit: 'పదము',
       col1: 'క్రమం',
       col2: 'అంశం',
       col3: 'సూత్రం (అడుగులు/అంగుళాలు)',
@@ -387,8 +395,8 @@ const getPdfTranslations = (lang: string) => {
       width: 'चौड़ाई (Width)',
       diagonal: 'विकर्ण (Diagonal)',
       dayTitle: 'दिन',
-      areaTitle: 'परम',
-      areaUnit: 'क्षेत्रफल (वर्ग फीट)',
+      areaTitle: 'पदम',
+      areaUnit: 'पदम',
       col1: 'क्रम',
       col2: 'अंश',
       col3: 'सूत्र (फीट/इंच)',
@@ -424,8 +432,9 @@ const getPdfTranslations = (lang: string) => {
     length: 'Length',
     width: 'Width',
     diagonal: 'Diagonal',
-    areaTitle: 'Paramu',
-    areaUnit: 'Area (Sq.Ft.)',
+    diagonal: 'Diagonal',
+    areaTitle: 'Padamu',
+    areaUnit: 'Padamu',
     col1: 'S.No',
     col2: 'Aspect',
     col3: 'Formula (Feet/Inches)',
@@ -451,8 +460,8 @@ const getPdfTranslations = (lang: string) => {
 };
 
 const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: string, compassBase64: string): string => {
-  const YANTRA = `<img src="${yantraBase64}" width="108" height="108" style="object-fit: cover; border-radius: 4px; border: 2px solid #D4AF37;" />`;
-  const COMPASS = `<img src="${compassBase64}" width="108" height="108" style="object-fit: cover; border-radius: 4px; border: 2px solid #D4AF37;" />`;
+  const YANTRA = `<img src="${yantraBase64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />`;
+  const COMPASS = `<img src="${compassBase64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />`;
   const T = getPdfTranslations(form.language || "Telugu");
   const owner  = form.ownerName || "—";
   const { dateStr, dayStr } = todayFormatted(form.language);
@@ -461,10 +470,16 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
 
   const isTable2 = table.title === "Result Table 2";
 
+  const varguMapTE: Record<string, string> = { "1": "'అ' వర్గం", "2": "'క' వర్గం", "3": "'చ' వర్గం", "4": "'ట' వర్గం", "5": "'త' వర్గం", "6": "'ప' వర్గం", "7": "'య' వర్గం", "8": "'శ' వర్గం" };
+  const varguMapHI: Record<string, string> = { "1": "'अ' वर्ग", "2": "'क' वर्ग", "3": "'च' वर्ग", "4": "'ट' वर्ग", "5": "'त' वर्ग", "6": "'प' वर्ग", "7": "'य' वर्ग", "8": "'श' वर्ग" };
+  const varguMapEN: Record<string, string> = { "1": "A Vargu", "2": "Ka Vargu", "3": "Cha Vargu", "4": "Ta Vargu", "5": "Tha Vargu", "6": "Pa Vargu", "7": "Ya Vargu", "8": "Sha Vargu" };
+  
+  const varguMap = form.language === 'English' ? varguMapEN : form.language === 'Hindi' ? varguMapHI : varguMapTE;
+  const ownerVarguDisplay = form.vargu ? (varguMap[form.vargu] || form.vargu) : "—";
+  const wifeVarguDisplay = form.wifeVargu ? (varguMap[form.wifeVargu] || form.wifeVargu) : "—";
+
   let lengthStr = "—";
   let widthStr = "—";
-  let area = "0.00";
-
   const formatDim = (ft: string, inc: string, nul: string) => {
     if (!ft && !inc && !nul) return "—";
     return `${ft || "0"}' ${inc || "0"}" ${nul || "0"}"'`;
@@ -482,21 +497,21 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
     return `${feet}' ${inch}" ${nullu}"'`;
   };
 
+  let padamuValStr = "0.00";
+  const padamuRow = table.rows.find(r => r.label === "Padamu" || r.label === "పదము" || r.label === "पदम");
+  if (padamuRow) {
+    padamuValStr = padamuRow.value;
+  }
+
   if (isTable2) {
     lengthStr = formatDim(form.suddhaFeet, form.suddhaInch, form.suddhaNullu);
     const sp = parseFloat(form.suddhaPadham || "0");
     const sLen = parseFloat(form.suddhaFeet || "0") + (parseFloat(form.suddhaInch || "0") + parseFloat(form.suddhaNullu || "0")/8)/12;
     const sWidth = sLen > 0 ? (sp * 9) / sLen : 0;
     widthStr = formatDecimalToFeet(sWidth.toString());
-    area = (sp * 9).toFixed(2);
   } else {
     lengthStr = formatDim(form.lengthFeet, form.lengthInch, form.lengthNullu);
     widthStr = formatDim(form.widthFeet, form.widthInch, form.widthNullu);
-    const lFt  = parseFloat(form.lengthFeet  || "0");
-    const lIn  = parseFloat(form.lengthInch  || "0");
-    const wFt  = parseFloat(form.widthFeet  || "0");
-    const wIn  = parseFloat(form.widthInch  || "0");
-    area = ((lFt + lIn / 12) * (wFt + wIn / 12)).toFixed(2);
   }
 
   const findDiagonal = () => {
@@ -551,7 +566,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   HEADER  — Height ~120px, dark maroon
+   HEADER  — Height ~135px, dark maroon
    3 columns: [Yantra 108px] [Title flex] [Compass 108px]
 ═══════════════════════════════════════════ */
 .hdr {
@@ -559,12 +574,12 @@ body {
   width: 100%;
   background: linear-gradient(180deg, #7B0A10 0%, #9B1515 50%, #7B0A10 100%);
   border-bottom: 4px solid #D4AF37;
-  min-height: 100px;
+  min-height: 135px;
 }
 .hdr-col { display: table-cell; vertical-align: middle; }
 
-.hdr-left  { width: 100px; padding: 5px; }
-.hdr-right { width: 100px; padding: 5px; }
+.hdr-left  { width: 130px; padding: 10px; text-align: center; }
+.hdr-right { width: 130px; padding: 10px; text-align: center; }
 
 .hdr-center { text-align: center; padding: 5px; }
 .hdr-title {
@@ -793,13 +808,13 @@ body {
   <div class="client-row">
     <div class="client-col"><div class="client-lbl">${T.clientName}</div><div class="client-val">${owner}</div></div>
     <div class="client-col"><div class="client-lbl">${T.nakshatram}</div><div class="client-val">${form.nakshatram || "—"}</div></div>
-    <div class="client-col"><div class="client-lbl">${T.vargu}</div><div class="client-val">${form.vargu || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.vargu}</div><div class="client-val">${ownerVarguDisplay}</div></div>
     <div class="client-col"><div class="client-lbl">${T.date}</div><div class="client-val">${dateStr}</div></div>
   </div>
   <div class="client-row">
     <div class="client-col"><div class="client-lbl">${T.wifeName}</div><div class="client-val">${form.wifeName || "—"}</div></div>
     <div class="client-col"><div class="client-lbl">${T.wifeNakshatram}</div><div class="client-val">${form.wifeNakshatram || "—"}</div></div>
-    <div class="client-col"><div class="client-lbl">${T.wifeVargu}</div><div class="client-val">${form.wifeVargu || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.wifeVargu}</div><div class="client-val">${wifeVarguDisplay}</div></div>
     <div class="client-col"><div class="client-lbl">${T.dayTitle}</div><div class="client-val">${dayStr}</div></div>
   </div>
 </div>
@@ -823,8 +838,8 @@ body {
 <div class="dim-row">
   <div class="dim-lbl" style="width: 25%;">${T.diagonal}</div>
   <div class="dim-val" style="width: 25%;">${diagonalStr}</div>
-  <div class="dim-lbl" style="width: 25%; border-left: 2px solid #D4B080;">${T.areaTitle}</div>
-  <div class="dim-val" style="width: 25%;">${area}</div>
+  <div class="dim-lbl" style="width: 25%; border-left: 2px solid #D4B080; color: red; font-weight: 600;">${T.areaTitle}</div>
+  <div class="dim-val" style="width: 25%;">${padamuValStr}</div>
 </div>
 
 <!-- ═══════════════════════════════
@@ -871,17 +886,17 @@ body {
 ═══════════════════════════════ -->
 <div class="contact">
   <div class="contact-left">
+    ${PROFILE_ICON}
+    <div class="contact-texts">
+      <div class="contact-lbl">Name</div>
+      <div class="contact-phone">${form.clientName || "—"}</div>
+    </div>
+  </div>
+  <div class="contact-right">
     ${WHATSAPP_ICON}
     <div class="contact-texts">
       <div class="contact-lbl">${T.whatsapp}</div>
       <div class="contact-phone">${form.phoneNumber || "9949598627"}</div>
-    </div>
-  </div>
-  <div class="contact-right">
-    ${TELEGRAM_ICON}
-    <div class="contact-texts">
-      <div class="contact-lbl">${T.telegram}</div>
-      <div class="contact-app">@vastuapp</div>
     </div>
   </div>
 </div>
@@ -902,11 +917,10 @@ export const generateVastuPdf = async (
   const html  = buildHtml(form, table, yantraBase64, compassBase64);
 
   const { uri } = await Print.printToFileAsync({ html, width: 720, height: 1600 });
-  const finalUri = `${FileSystem.cacheDirectory}viswakarma vastu analysis.pdf`;
+  const finalUri = `${FileSystem.cacheDirectory}viswakarma_vastu_analysis_${Date.now()}.pdf`;
   
   if (Platform.OS !== 'web') {
     try {
-      await FileSystem.deleteAsync(finalUri, { idempotent: true });
       await FileSystem.moveAsync({ from: uri, to: finalUri });
     } catch (e) {
       console.log("Error renaming PDF", e);
