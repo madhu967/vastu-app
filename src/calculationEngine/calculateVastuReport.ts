@@ -83,14 +83,33 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
 
   const getTaraPhalam = (plotNak: number, ownerNakStr?: string) => {
     if (!ownerNakStr) return ["-", "-"];
-    const nakshatramList = [
+    
+    const enNak = [
       "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra",
       "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni",
       "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha",
       "Jyeshtha", "Moola", "Purva Ashadha", "Uttara Ashadha", "Shravana",
       "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
     ];
-    const ownerNakIndex = nakshatramList.indexOf(ownerNakStr) + 1;
+    const teNak = [
+      "అశ్విని", "భరణి", "కృత్తిక", "రోహిణి", "మృగశిర", "ఆరుద్ర",
+      "పునర్వసు", "పుష్యమి", "ఆశ్లేష", "మఖ", "పూర్వ ఫల్గుణి",
+      "ఉత్తర ఫల్గుణి", "హస్త", "చిత్త", "స్వాతి", "విశాఖ", "అనూరాధ",
+      "జ్యేష్ఠ", "మూల", "పూర్వాషాఢ", "ఉత్తరాషాఢ", "శ్రవణం",
+      "ధనిష్ఠ", "శతభిషం", "పూర్వాభాద్ర", "ఉత్తరాభాద్ర", "రేవతి"
+    ];
+    const hiNak = [
+      "अश्विनी", "भरणी", "कृत्तिका", "रोहिणी", "मृगशीर्षा", "आर्द्रा",
+      "पुनर्वसु", "पुष्य", "आश्लेषा", "मघा", "पूर्वा फाल्गुनी",
+      "उत्तरा फाल्गुनी", "हस्त", "चित्रा", "स्वाति", "विशाखा", "अनुराधा",
+      "ज्येष्ठा", "मूल", "पूर्वाषाढ़ा", "उत्तराषाढ़ा", "श्रवण",
+      "धनिष्ठा", "शतभिषा", "पूर्वा भाद्रपद", "उत्तरा भाद्रपद", "रेवती"
+    ];
+
+    let ownerNakIndex = enNak.indexOf(ownerNakStr) + 1;
+    if (ownerNakIndex === 0) ownerNakIndex = teNak.indexOf(ownerNakStr) + 1;
+    if (ownerNakIndex === 0) ownerNakIndex = hiNak.indexOf(ownerNakStr) + 1;
+
     if (ownerNakIndex === 0) return ["-", "-"];
     
     let diff = plotNak - ownerNakIndex;
@@ -160,6 +179,9 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   let table2Rows: Array<[string, string, string?]> = [];
 
   if (sp > 0) {
+    const spNakValStr = getRemainderLabel((sp * 8), 27);
+    const spNakshatraVal = Math.ceil(Number(spNakValStr));
+
     table2Rows = [
       ["Padamu", exactAndRounded(sp)[0]],
       ["Plot Width", exactAndRounded(sWidth, " ft")[0]],
@@ -167,7 +189,9 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
       ["Runamu", ...exactAndRounded(getRemainderLabel((sp * 3), 8))],
       ["Tithi", ...exactAndRounded(getRemainderLabel((sp * 6), 30))],
       ["Vaaramu", ...exactAndRounded(getRemainderLabel((sp * 9), 7))],
-      ["Nakshatram", ...exactAndRounded(getRemainderLabel((sp * 8), 27))],
+      ["Nakshatram", ...exactAndRounded(spNakValStr)],
+      ["Owner Tara Phalam", ...getTaraPhalam(spNakshatraVal, form.nakshatram)],
+      ["Wife Tara Phalam", ...getTaraPhalam(spNakshatraVal, form.wifeNakshatram)],
       ["Aayamu", ...exactAndRounded(getRemainderLabel((sp * 9), 8))],
       ["Ayurdayamu", ...exactAndRounded(getRemainderLabel((sp * 9), 120))],
       ["Amsa", ...exactAndRounded(getRemainderLabel((sp * 6), 9))],
