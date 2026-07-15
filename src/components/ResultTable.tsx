@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useMemo } from "react";
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import { cornerRadius, palette, spacing, typography } from "@/constants/theme";
 import { ResultTable as ResultTableType } from "@/types/vastu";
 import { useAppLanguage } from "@/context/AppLanguageContext";
@@ -9,38 +9,125 @@ type ResultTableProps = {
   table: ResultTableType;
 };
 
+const AayamuFilterDropdown = ({ initialSelected, onChange }: { initialSelected: string[], onChange: (s: string[]) => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [localSelected, setLocalSelected] = useState<string[]>(initialSelected);
+
+  const toggleVal = (val: string) => {
+    let newVal;
+    if (localSelected.includes(val)) {
+      newVal = localSelected.filter(item => item !== val);
+    } else {
+      newVal = [...localSelected, val].sort();
+    }
+    setLocalSelected(newVal);
+    
+    // Defer the heavy update to let the UI frame paint the checkbox immediately
+    setTimeout(() => {
+      onChange(newVal);
+    }, 10);
+  };
+
+  return (
+    <View style={{ marginTop: spacing.md, zIndex: 10 }}>
+      <TouchableOpacity 
+        style={{
+          backgroundColor: "#fff",
+          borderWidth: 1,
+          borderColor: palette.borderLight,
+          borderRadius: cornerRadius.md,
+          padding: spacing.sm,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+        onPress={() => setIsOpen(!isOpen)}
+      >
+        <Text style={{ fontSize: 14, color: palette.textPrimary }}>
+          Filter Aayamu: {localSelected.length > 0 ? localSelected.join(", ") : "None"}
+        </Text>
+        <Text style={{ color: palette.textSecondary }}>▼</Text>
+      </TouchableOpacity>
+      
+      {isOpen && (
+        <View style={{
+          backgroundColor: "#fff",
+          borderWidth: 1,
+          borderColor: palette.borderLight,
+          borderRadius: cornerRadius.md,
+          marginTop: 4,
+          padding: spacing.sm,
+        }}>
+          {['1', '3', '5', '7'].map((val) => {
+            const isSelected = localSelected.includes(val);
+            return (
+              <TouchableOpacity
+                key={val}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingVertical: 8,
+                }}
+                onPress={() => toggleVal(val)}
+              >
+                <View style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  borderColor: isSelected ? palette.primary : palette.borderLight,
+                  backgroundColor: isSelected ? palette.primary : "transparent",
+                  marginRight: 10,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}>
+                  {isSelected && <Text style={{ color: "#fff", fontSize: 12 }}>✓</Text>}
+                </View>
+                <Text style={{ fontSize: 14, color: palette.textPrimary }}>Aayamu {val}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
+    </View>
+  );
+};
+
 export const ResultTable = ({ table }: ResultTableProps) => {
   const { language } = useAppLanguage();
   const strings = getAppStrings(language);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedAayamu, setSelectedAayamu] = useState<string[]>(['1', '3', '5', '7']);
   const rowsPerPage = 50;
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [table]);
+  }, [table, selectedAayamu]);
 
   if (!table.visible) {
     return null;
   }
 
-  const totalPages = Math.ceil((table.rows?.length || 0) / rowsPerPage);
+  const filteredRows = useMemo(() => {
+    return table.rows?.filter((row) => {
+      if (table.title !== "Result Table 3") return true;
+      if (!row.columns || row.columns.length === 0) return true;
+      
+      // Aayamu Rounded is the last column (index 9)
+      const aayamuRounded = row.columns[row.columns.length - 1];
+      
+      // Check if the aayamuRounded value is exactly equal to one of the selected options
+      return selectedAayamu.includes(aayamuRounded.trim());
+    }) || [];
+  }, [table, selectedAayamu]);
+
+  const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const currentRows = table.rows?.slice(startIndex, startIndex + rowsPerPage) || [];
+  const currentRows = useMemo(() => filteredRows.slice(startIndex, startIndex + rowsPerPage), [filteredRows, startIndex, rowsPerPage]);
 
-  return (
-    <View style={styles.card}>
-      {/* Crimson header band — like the reference image */}
-      <View style={styles.headerSection}>
-        <View style={styles.badgeRow}>
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>ఫల విశ్లేషణ</Text>
-          </View>
-        </View>
-        <Text style={styles.title}>{table.title}</Text>
-      </View>
-
-      {/* Scrollable multi-column table if headers are present */}
-      {table.headers ? (
+  const renderedTableBody = useMemo(() => {
+    if (table.headers) {
+      return (
         <View style={{ overflow: "scroll" }}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View>
@@ -79,7 +166,9 @@ export const ResultTable = ({ table }: ResultTableProps) => {
             </View>
           </ScrollView>
         </View>
-      ) : (
+      );
+    } else {
+      return (
         <View>
           {/* Header for columns if rounded values exist */}
           {table.rows.some((r) => r.roundedValue) && (
@@ -109,7 +198,30 @@ export const ResultTable = ({ table }: ResultTableProps) => {
             );
           })}
         </View>
-      )}
+      );
+    }
+  }, [table.headers, table.rows, currentRows, strings]);
+
+  return (
+    <View style={styles.card}>
+      {/* Crimson header band — like the reference image */}
+      <View style={styles.headerSection}>
+        <View style={styles.badgeRow}>
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>ఫల విశ్లేషణ</Text>
+          </View>
+        </View>
+        <Text style={styles.title}>{table.title}</Text>
+        {table.title === "Result Table 3" && (
+          <AayamuFilterDropdown 
+            initialSelected={selectedAayamu} 
+            onChange={setSelectedAayamu} 
+          />
+        )}
+      </View>
+
+      {/* Memoized Table Body */}
+      {renderedTableBody}
 
       {totalPages > 1 && (
         <View style={styles.paginationContainer}>

@@ -4,7 +4,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import { Platform, Alert, Image } from "react-native";
 import { Asset } from 'expo-asset';
 import { VastuFormValues, VastuReport, ResultTable } from "@/types/vastu";
-import { yantraBase64, compassBase64 } from "./assetsBase64";
+import { yantraBase64, compassBase64, icon4Base64, icon5Base64 } from "./assetsBase64";
 
 // ──────────────────────────────────────────────────────────────
 //  Helpers
@@ -179,7 +179,7 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
     { key: "Aayamu", label: getLabel("ఆయాది సంఖ్య", "आयादि संख्या", "Aayamu"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 9) / 8", ...findVal("Aayamu") },
     { key: "Ayurdayamu", label: getLabel("ఆయుర్దాయ సంఖ్య", "आयुर्दाय संख्या", "Ayurdayamu"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 9) / 120", ...findVal("Ayurdayamu") },
     { key: "Amsa", label: getLabel("అంశ సంఖ్య", "अंश संख्या", "Amsa"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 6) / 9", ...findVal("Amsa") },
-    { key: "Dikruti", label: getLabel("దిక్పతి సంఖ్య", "दिक्पति संख्या", "Dikruti"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 9) / 8", ...findVal("Dikruti") }
+    { key: "Dikpati", label: getLabel("దిక్పతి సంఖ్య", "दिक्पति संख्या", "Dikpati"), formula: "(<span style='color:red;font-weight:600;'>Padamu</span> * 9) / 8", ...findVal("Dikpati") }
   ];
 
   const getPhalaData = (key: string, roundedStr: string): [string, string, string] => {
@@ -291,7 +291,7 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
         const s = statuses[val - 1];
         return [outAmsa[val - 1], s, getColor(s)];
       }
-      case "Dikruti": {
+      case "Dikpati": {
         const enDik = ["Indra", "Agni", "Yama", "Nirruti", "Varuna", "Vayu", "Kubera", "Eeshana"];
         const hiDik = ["इन्द्र", "अग्नि", "यम", "निरृति", "वरुण", "वायु", "कुबेर", "ईशान"];
         const teDik = ["ఇంద్రుడు", "అగ్ని", "యముడు", "నిరృతి", "వరుణుడు", "వాయువు", "కుబేరుడు", "ఈశానుడు"];
@@ -468,7 +468,11 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
   const directionMap: Record<string, string> = { North: T.north, South: T.south, East: T.east, West: T.west, "North-East": T.ne, "North-West": T.nw, "South-East": T.se, "South-West": T.sw };
   const dir = directionMap[form.direction] || form.direction || T.north;
 
+  const isTable1 = table.title === "Result Table 1";
   const isTable2 = table.title === "Result Table 2";
+
+  const LEFT_ICON = (isTable1 || isTable2) ? `<img src="${icon4Base64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />` : COMPASS;
+  const RIGHT_ICON = (isTable1 || isTable2) ? `<img src="${icon5Base64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />` : `<div style="transform:scaleX(-1);">${COMPASS}</div>`;
 
   const varguMapTE: Record<string, string> = { "1": "'అ' వర్గం", "2": "'క' వర్గం", "3": "'చ' వర్గం", "4": "'ట' వర్గం", "5": "'త' వర్గం", "6": "'ప' వర్గం", "7": "'య' వర్గం", "8": "'శ' వర్గం" };
   const varguMapHI: Record<string, string> = { "1": "'अ' वर्ग", "2": "'क' वर्ग", "3": "'च' वर्ग", "4": "'ट' वर्ग", "5": "'त' वर्ग", "6": "'प' वर्ग", "7": "'य' वर्ग", "8": "'श' वर्ग" };
@@ -871,13 +875,13 @@ body {
     <div class="rec-divline-r"></div>
   </div>
   <div class="rec-body">
-    <div class="rec-diya">${COMPASS}</div>
+    <div class="rec-diya">${LEFT_ICON}</div>
     <div class="rec-text">
       <p>${T.s1}</p>
       <p>${T.s2}</p>
       <p>${T.s3}</p>
     </div>
-    <div class="rec-diya" style="transform:scaleX(-1);">${COMPASS}</div>
+    <div class="rec-diya">${RIGHT_ICON}</div>
   </div>
 </div>
 

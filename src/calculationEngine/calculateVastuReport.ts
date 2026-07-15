@@ -55,7 +55,7 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   const aayamu = getRemainderLabel((padamu * 9), 8);
   const ayurdayamu = getRemainderLabel((padamu * 9), 120);
   const amsa = getRemainderLabel((padamu * 6), 9);
-  const dikruti = getRemainderLabel((padamu * 9), 8);
+  const dikpati = getRemainderLabel((padamu * 9), 8);
 
   const formatDisplay = (v: number) => Number.isInteger(v) ? String(v) : parseFloat(v.toFixed(3)).toString();
 
@@ -145,7 +145,7 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
     ["Aayamu", ...exactAndRounded(aayamu)],
     ["Ayurdayamu", ...exactAndRounded(ayurdayamu)],
     ["Amsa", ...exactAndRounded(amsa)],
-    ["Dikruti", ...exactAndRounded(dikruti)],
+    ["Dikpati", ...exactAndRounded(dikpati)],
   ] as Array<[string, string, string?]>;
 
   const summaryTable: ResultTable = {
@@ -195,7 +195,7 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
       ["Aayamu", ...exactAndRounded(getRemainderLabel((sp * 9), 8))],
       ["Ayurdayamu", ...exactAndRounded(getRemainderLabel((sp * 9), 120))],
       ["Amsa", ...exactAndRounded(getRemainderLabel((sp * 6), 9))],
-      ["Dikruti", ...exactAndRounded(getRemainderLabel((sp * 9), 8))]
+      ["Dikpati", ...exactAndRounded(getRemainderLabel((sp * 9), 8))]
     ];
   } else {
     table2Rows = [["Padamu", form.suddhaPadham || "-"]];
@@ -235,7 +235,7 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   const goodVaaramu = [2, 4, 5, 6];
   const goodAayamu = [1, 3, 5, 7];
   const goodAmsa = [2, 3, 7, 8, 9];
-  const goodDikruti = [1, 3, 5, 7];
+  const goodDikpati = [1, 3, 5, 7];
 
   if (!isNaN(start) && !isNaN(end) && start > 0 && end >= start) {
     for (let n = start; n <= end; n++) {
@@ -261,8 +261,8 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
         const amsa = getVastuValues(padamuVal, 6, 9);
         if (!goodAmsa.includes(amsa.rounded)) continue;
 
-        const dikruti = getVastuValues(padamuVal, 9, 8);
-        if (!goodDikruti.includes(dikruti.rounded)) continue;
+        const dikpati = getVastuValues(padamuVal, 9, 8);
+        if (!goodDikpati.includes(dikpati.rounded)) continue;
 
         // Nakshatram is always considered good for Table 3, calculate only if we reach here
         const nakshatram = getVastuValues(padamuVal, 8, 27);
@@ -276,10 +276,11 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
           formatDisplayTable3(tithi.actual),
           formatDisplayTable3(vaaramu.actual),
           formatDisplayTable3(nakshatram.actual),
-          formatDisplayTable3(aayamu.actual),
           formatDisplayTable3(ayurdayamu.actual),
           formatDisplayTable3(amsa.actual),
-          formatDisplayTable3(dikruti.actual)
+          formatDisplayTable3(dikpati.actual),
+          formatDisplayTable3(aayamu.actual),
+          formatDisplayTable3(aayamu.rounded)
         ];
         table3RowsRaw.push({ label, columns });
       }
@@ -298,7 +299,7 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
 
   const padamWithStarTable: ResultTable = {
     title: "Result Table 3",
-    headers: ["Padamu", "Dhanamu", "Runamu", "Tithi", "Vaaramu", "Nakshatram", "Aayamu", "Ayurdayam", "Amsa", "Dikruti"],
+    headers: ["Padamu", "Dhanamu", "Runamu", "Tithi", "Vaaramu", "Nakshatram", "Ayurdayam", "Amsa", "Dikpati", "Aayamu Actual", "Aayamu Rounded"],
     rows: table3ResultRows,
     visible: true,
   };
