@@ -21,6 +21,7 @@ export default function AdminApprovalsScreen() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('pending');
+  const [limit, setLimit] = useState(50);
 
   useEffect(() => {
     const q = query(collection(db, 'users'));
@@ -78,80 +79,101 @@ export default function AdminApprovalsScreen() {
     return false;
   });
 
-  const renderItem = ({ item }: { item: UserData }) => (
-    <View style={styles.userCard}>
-      <View style={styles.userInfo}>
-        <Text style={styles.userName}>{item.name || 'Unknown User'}</Text>
-        <Text style={styles.userEmail}>{item.email}</Text>
-        <Text style={styles.userPhone}>{item.phone || 'No Phone'}</Text>
+  const displayedUsers = filteredUsers.slice(0, limit);
+
+  const handleLoadMore = () => {
+    if (limit < filteredUsers.length) {
+      setLimit(prev => prev + 50);
+    }
+  };
+
+  const renderItem = ({ item }: { item: UserData }) => {
+    const initial = item.name ? item.name.charAt(0).toUpperCase() : '?';
+
+    return (
+      <View style={styles.userCard}>
+        <View style={styles.cardHeaderRow}>
+          <View style={styles.avatarCircle}>
+            <Text style={styles.avatarText}>{initial}</Text>
+          </View>
+          <View style={styles.userInfoCol}>
+            <Text style={styles.userName} numberOfLines={1}>{item.name || 'Unknown User'}</Text>
+            <Text style={styles.userEmail} numberOfLines={1}>{item.email}</Text>
+            {item.phone && <Text style={styles.userPhone}>{item.phone}</Text>}
+          </View>
+        </View>
         
         <View style={styles.metaRow}>
           <Text style={styles.userDate}>
-            Registered: {new Date(item.requestDate).toLocaleDateString()}
+            Joined: {new Date(item.requestDate).toLocaleDateString()}
           </Text>
-          {item.status === 'suspended' && (
-            <Text style={styles.suspendedBadge}>SUSPENDED</Text>
+          <View style={styles.badgesRow}>
+            {item.status === 'suspended' && (
+              <View style={styles.badgeSuspended}><Text style={styles.badgeSuspendedText}>SUSPENDED</Text></View>
+            )}
+            {item.status === 'rejected' && (
+              <View style={styles.badgeRejected}><Text style={styles.badgeRejectedText}>REJECTED</Text></View>
+            )}
+          </View>
+        </View>
+        
+        <View style={styles.actionsDivider} />
+        
+        <View style={styles.actions}>
+          {activeTab === 'pending' && (
+            <>
+              <TouchableOpacity 
+                style={[styles.button, styles.approveBtn]}
+                onPress={() => handleUpdateStatus(item.id, 'approved')}
+              >
+                <Text style={styles.successButtonText}>Approve</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.button, styles.rejectBtn]}
+                onPress={() => handleUpdateStatus(item.id, 'rejected')}
+              >
+                <Text style={styles.secondaryDangerButtonText}>Reject</Text>
+              </TouchableOpacity>
+            </>
           )}
-          {item.status === 'rejected' && (
-            <Text style={styles.rejectedBadge}>REJECTED</Text>
+
+          {activeTab === 'active' && (
+            <>
+              <TouchableOpacity 
+                style={[styles.button, styles.suspendBtn]}
+                onPress={() => handleUpdateStatus(item.id, 'suspended')}
+              >
+                <Text style={styles.warningSolidButtonText}>Suspend</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.button, styles.deleteBtn]}
+                onPress={() => handleDeleteUser(item.id)}
+              >
+                <Text style={styles.dangerSolidButtonText}>Delete</Text>
+              </TouchableOpacity>
+            </>
+          )}
+
+          {activeTab === 'blocked' && (
+            <>
+              <TouchableOpacity 
+                style={[styles.button, styles.restoreBtn]}
+                onPress={() => handleUpdateStatus(item.id, 'approved')}
+              >
+                <Text style={styles.successButtonText}>Restore</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.button, styles.deleteBtn]}
+                onPress={() => handleDeleteUser(item.id)}
+              >
+                <Text style={styles.dangerSolidButtonText}>Delete</Text>
+              </TouchableOpacity>
+            </>
           )}
         </View>
       </View>
-      
-      <View style={styles.actions}>
-        {activeTab === 'pending' && (
-          <>
-            <TouchableOpacity 
-              style={[styles.button, styles.approveBtn]}
-              onPress={() => handleUpdateStatus(item.id, 'approved')}
-            >
-              <Text style={styles.buttonText}>Approve</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, styles.rejectBtn]}
-              onPress={() => handleUpdateStatus(item.id, 'rejected')}
-            >
-              <Text style={styles.buttonText}>Reject</Text>
-            </TouchableOpacity>
-          </>
-        )}
-
-        {activeTab === 'active' && (
-          <>
-            <TouchableOpacity 
-              style={[styles.button, styles.suspendBtn]}
-              onPress={() => handleUpdateStatus(item.id, 'suspended')}
-            >
-              <Text style={styles.buttonText}>Suspend</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, styles.deleteBtn]}
-              onPress={() => handleDeleteUser(item.id)}
-            >
-              <Text style={styles.buttonText}>Delete</Text>
-            </TouchableOpacity>
-          </>
-        )}
-
-        {activeTab === 'blocked' && (
-          <>
-            <TouchableOpacity 
-              style={[styles.button, styles.approveBtn]}
-              onPress={() => handleUpdateStatus(item.id, 'approved')}
-            >
-              <Text style={styles.buttonText}>Restore</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, styles.deleteBtn]}
-              onPress={() => handleDeleteUser(item.id)}
-            >
-              <Text style={styles.buttonText}>Delete</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -171,21 +193,21 @@ export default function AdminApprovalsScreen() {
         <View style={styles.tabsContainer}>
           <TouchableOpacity 
             style={[styles.tab, activeTab === 'pending' && styles.activeTab]}
-            onPress={() => setActiveTab('pending')}
+            onPress={() => { setActiveTab('pending'); setLimit(50); }}
           >
             <Text style={[styles.tabText, activeTab === 'pending' && styles.activeTabText]}>Pending</Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={[styles.tab, activeTab === 'active' && styles.activeTab]}
-            onPress={() => setActiveTab('active')}
+            onPress={() => { setActiveTab('active'); setLimit(50); }}
           >
             <Text style={[styles.tabText, activeTab === 'active' && styles.activeTabText]}>Active</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={[styles.tab, activeTab === 'blocked' && styles.activeTab]}
-            onPress={() => setActiveTab('blocked')}
+            onPress={() => { setActiveTab('blocked'); setLimit(50); }}
           >
             <Text style={[styles.tabText, activeTab === 'blocked' && styles.activeTabText]}>Blocked</Text>
           </TouchableOpacity>
@@ -199,11 +221,16 @@ export default function AdminApprovalsScreen() {
           </View>
         ) : (
           <FlatList
-            data={filteredUsers}
+            data={displayedUsers}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
             contentContainerStyle={styles.listContainer}
             showsVerticalScrollIndicator={false}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            initialNumToRender={50}
+            maxToRenderPerBatch={50}
+            windowSize={11}
           />
         )}
       </View>
@@ -247,67 +274,92 @@ const styles = StyleSheet.create({
   },
   tabsContainer: {
     flexDirection: 'row',
-    backgroundColor: palette.surface,
-    borderRadius: cornerRadius.md,
-    padding: 4,
+    backgroundColor: 'rgba(139, 0, 15, 0.05)',
+    borderRadius: cornerRadius.lg,
+    padding: 6,
     marginBottom: spacing.lg,
-    borderWidth: 1,
-    borderColor: palette.border,
   },
   tab: {
     flex: 1,
-    paddingVertical: 8,
+    paddingVertical: 12,
     alignItems: 'center',
-    borderRadius: cornerRadius.sm,
+    borderRadius: cornerRadius.md,
   },
   activeTab: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: '#FFFFFF',
+    shadowColor: "#8B000F",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
   tabText: {
     fontFamily: 'Manrope_600SemiBold',
-    fontSize: 13,
-    color: palette.secondaryText,
+    fontSize: 14,
+    color: '#6B7280',
   },
   activeTabText: {
-    color: '#92400E',
+    color: '#8B000F',
     fontFamily: 'Manrope_700Bold',
   },
   listContainer: {
     paddingBottom: spacing.xxl,
   },
   userCard: {
-    backgroundColor: palette.surface,
+    backgroundColor: '#FFFFFF',
     padding: spacing.lg,
     borderRadius: cornerRadius.lg,
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
     borderWidth: 1,
-    borderColor: palette.border,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    borderColor: 'rgba(139, 0, 15, 0.05)',
+    shadowColor: "#8B000F",
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
   },
-  userInfo: {
+  cardHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: spacing.md,
+  },
+  avatarCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#FFF8F0',
+    borderWidth: 1,
+    borderColor: 'rgba(244, 196, 48, 0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: spacing.md,
+  },
+  avatarText: {
+    fontFamily: 'CormorantGaramond_700Bold',
+    fontSize: 24,
+    color: '#8B000F',
+    marginTop: 2,
+  },
+  userInfoCol: {
+    flex: 1,
   },
   userName: {
     fontFamily: 'CormorantGaramond_700Bold',
-    fontSize: 18,
-    color: palette.text,
+    fontSize: 22,
+    color: '#3B1F00',
     marginBottom: 2,
   },
   userEmail: {
     fontFamily: 'Manrope_500Medium',
-    fontSize: 14,
-    color: palette.secondaryText,
+    fontSize: 13,
+    color: '#6B7280',
     marginBottom: 2,
   },
   userPhone: {
-    fontFamily: 'Manrope_500Medium',
-    fontSize: 13,
-    color: palette.text,
-    marginBottom: 6,
+    fontFamily: 'Manrope_600SemiBold',
+    fontSize: 12,
+    color: '#8B000F',
+    opacity: 0.8,
   },
   metaRow: {
     flexDirection: 'row',
@@ -315,29 +367,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userDate: {
-    fontFamily: 'Manrope_400Regular',
+    fontFamily: 'Manrope_500Medium',
     fontSize: 12,
-    color: palette.secondaryText,
+    color: '#9CA3AF',
   },
-  suspendedBadge: {
+  badgesRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  badgeSuspended: {
+    backgroundColor: '#FFF7ED',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#FED7AA',
+  },
+  badgeSuspendedText: {
     fontFamily: 'Manrope_700Bold',
     fontSize: 10,
-    color: '#9A3412',
-    backgroundColor: '#FFEDD5',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    overflow: 'hidden',
+    color: '#C2410C',
+    letterSpacing: 0.5,
   },
-  rejectedBadge: {
+  badgeRejected: {
+    backgroundColor: '#FEF2F2',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#FECACA',
+  },
+  badgeRejectedText: {
     fontFamily: 'Manrope_700Bold',
     fontSize: 10,
-    color: '#991B1B',
-    backgroundColor: '#FEE2E2',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    overflow: 'hidden',
+    color: '#B91C1C',
+    letterSpacing: 0.5,
+  },
+  actionsDivider: {
+    height: 1,
+    backgroundColor: '#F3F4F6',
+    marginVertical: spacing.md,
   },
   actions: {
     flexDirection: 'row',
@@ -345,27 +414,83 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: cornerRadius.md,
     alignItems: 'center',
     justifyContent: 'center',
   },
   approveBtn: {
-    backgroundColor: '#059669',
+    backgroundColor: '#047857',
+    shadowColor: "#047857",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  restoreBtn: {
+    backgroundColor: '#047857',
+    shadowColor: "#047857",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
   rejectBtn: {
-    backgroundColor: '#DC2626',
+    backgroundColor: '#FEF2F2',
   },
   suspendBtn: {
-    backgroundColor: '#D97706',
+    backgroundColor: '#F4C430',
+    shadowColor: "#F4C430",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
   deleteBtn: {
-    backgroundColor: '#991B1B',
+    backgroundColor: '#8B000F',
+    shadowColor: "#8B000F",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
-  buttonText: {
+  primaryButtonText: {
+    fontFamily: 'Manrope_700Bold',
+    color: '#5A0008',
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+  successButtonText: {
     fontFamily: 'Manrope_700Bold',
     color: '#FFFFFF',
     fontSize: 14,
+    letterSpacing: 0.5,
+  },
+  dangerSolidButtonText: {
+    fontFamily: 'Manrope_700Bold',
+    color: '#FFFFFF',
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+  warningSolidButtonText: {
+    fontFamily: 'Manrope_700Bold',
+    color: '#3B1F00',
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+  dangerButtonText: {
+    fontFamily: 'Manrope_700Bold',
+    color: '#B91C1C',
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+  secondaryDangerButtonText: {
+    fontFamily: 'Manrope_700Bold',
+    color: '#B91C1C',
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+  secondaryWarningButtonText: {
+    fontFamily: 'Manrope_700Bold',
+    color: '#C2410C',
+    fontSize: 14,
+    letterSpacing: 0.5,
   },
   emptyContainer: {
     flex: 1,

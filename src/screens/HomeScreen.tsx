@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 import {
   ActivityIndicator,
@@ -64,49 +64,50 @@ export const HomeScreen = () => {
   const strings = getAppStrings(language);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
 
   // Check admin and approved status in real-time
-  import("react").then((React) => {
-    React.useEffect(() => {
-      let unsubscribeSnapshot: () => void;
+  useEffect(() => {
+    let unsubscribeSnapshot: () => void;
 
-      const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-        if (user) {
-          if (user.email === 'admin@vastuapp.com') {
-            setIsAdmin(true);
-            setIsApproved(true);
-            setUserName('Administrator');
-          } else {
-            setIsAdmin(false);
-            // Listen to their approval status in real-time
-            unsubscribeSnapshot = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
-              if (docSnap.exists()) {
-                const data = docSnap.data();
-                setUserName(data.name || 'User');
-                if (data.status === 'approved') {
-                  setIsApproved(true);
-                } else {
-                  // If they become suspended, rejected, or deleted, instantly revoke access
-                  setIsApproved(false);
-                }
-              } else {
-                setIsApproved(false);
-              }
-            });
-          }
+    const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        if (user.email === 'admin@vastuapp.com') {
+          setIsAdmin(true);
+          setIsApproved(true);
+          setUserName('Administrator');
         } else {
           setIsAdmin(false);
-          setIsApproved(false);
-          if (unsubscribeSnapshot) unsubscribeSnapshot();
+          // Listen to their approval status in real-time
+          unsubscribeSnapshot = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              setUserName(data.name || 'User');
+              if (data.status === 'approved') {
+                setIsApproved(true);
+              } else {
+                // If they become suspended, rejected, or deleted, instantly revoke access
+                setIsApproved(false);
+              }
+            } else {
+              setIsApproved(false);
+            }
+          });
         }
-      });
-      return () => {
-        unsubscribeAuth();
+      } else {
+        setIsLoggedIn(false);
+        setIsAdmin(false);
+        setIsApproved(false);
         if (unsubscribeSnapshot) unsubscribeSnapshot();
-      };
-    }, []);
-  });
+      }
+    });
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeSnapshot) unsubscribeSnapshot();
+    };
+  }, []);
 
   const [form, setForm] = useState<VastuFormValues>(initialForm);
 
@@ -297,11 +298,6 @@ export const HomeScreen = () => {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          {isAdmin && (
-            <View style={styles.adminGreetingBox}>
-              <Text style={styles.adminGreetingText}>Welcome back, Admin! 👋</Text>
-            </View>
-          )}
 
           {/* Festival-style banner below header */}
           <LinearGradient
@@ -358,18 +354,19 @@ export const HomeScreen = () => {
               </View>
             </View>
           </LinearGradient>
-
           {(isAdmin || isApproved) && (
             <View style={styles.premiumGreetingCard}>
-              <View style={styles.greetingIconBg}>
-                <Text style={styles.greetingEmoji}>{isAdmin ? '👑' : '✨'}</Text>
+              <View style={styles.avatarCircle}>
+                <Text style={styles.avatarText}>{isAdmin ? 'A' : (userName ? userName.charAt(0).toUpperCase() : '?')}</Text>
               </View>
               <View style={styles.greetingTextCol}>
-                <Text style={styles.greetingTime}>Good to see you,</Text>
-                <Text style={styles.greetingNameText}>{userName}</Text>
+                <Text style={styles.greetingTime}>WELCOME BACK,</Text>
+                <Text style={styles.greetingNameText}>{isAdmin ? 'Administrator' : userName}</Text>
               </View>
+              <Text style={styles.greetingDeco}>✦</Text>
             </View>
           )}
+
 
           <View style={styles.sectionDivider}>
             <View style={styles.divLine} />
@@ -743,48 +740,57 @@ const styles = StyleSheet.create({
   premiumGreetingCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF3C7', // subtle gold/cream tint
-    padding: spacing.md,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     borderRadius: cornerRadius.lg,
     marginBottom: spacing.xl,
     borderWidth: 1,
-    borderColor: '#FDE68A',
-    shadowColor: "#F59E0B",
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
+    borderColor: 'rgba(139, 0, 15, 0.05)',
+    shadowColor: "#8B000F",
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
-  greetingIconBg: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#FFFFFF',
+  avatarCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FFF8F0',
+    borderWidth: 1,
+    borderColor: 'rgba(244, 196, 48, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.md,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
   },
-  greetingEmoji: {
-    fontSize: 24,
+  avatarText: {
+    fontFamily: 'CormorantGaramond_700Bold',
+    fontSize: 22,
+    color: '#8B000F',
+    marginTop: 2,
   },
   greetingTextCol: {
     flex: 1,
+    justifyContent: 'center',
   },
   greetingTime: {
     fontFamily: "Manrope_600SemiBold",
-    fontSize: 13,
-    color: '#92400E',
+    fontSize: 11,
+    color: '#9CA3AF',
+    letterSpacing: 2,
     marginBottom: 2,
   },
   greetingNameText: {
     fontFamily: "CormorantGaramond_700Bold",
     fontSize: 24,
-    color: '#78350F',
+    color: '#3B1F00',
+    lineHeight: 28,
+  },
+  greetingDeco: {
+    fontSize: 24,
+    color: "rgba(244, 196, 48, 0.4)",
+    marginLeft: spacing.md,
   },
   divider: {
     width: "100%",

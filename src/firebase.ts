@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { initializeAuth, getReactNativePersistence, getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import * as FileSystem from 'expo-file-system/legacy';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -12,12 +15,54 @@ const firebaseConfig = {
   measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+
+const getSafeKey = (key: string) => encodeURIComponent(key);
+
+const fileSystemStorage = {
+  getItem: async (key: string) => {
+    try {
+      const uri = FileSystem.documentDirectory + getSafeKey(key) + '.txt';
+      const fileInfo = await FileSystem.getInfoAsync(uri);
+      if (fileInfo.exists) {
+        return await FileSystem.readAsStringAsync(uri);
+      }
+      return null;
+    } catch (e) {
+      console.error("Firebase persistence getItem error:", e);
+      return null;
+    }
+  },
+  setItem: async (key: string, value: string) => {
+    try {
+      const uri = FileSystem.documentDirectory + getSafeKey(key) + '.txt';
+      await FileSystem.writeAsStringAsync(uri, value);
+    } catch (e) {
+      console.error("Firebase persistence setItem error:", e);
+    }
+  },
+  removeItem: async (key: string) => {
+    try {
+      const uri = FileSystem.documentDirectory + getSafeKey(key) + '.txt';
+      await FileSystem.deleteAsync(uri, { idempotent: true });
+    } catch (e) {
+      console.error("Firebase persistence removeItem error:", e);
+    }
+  }
+};
+
+let auth: any;
+try {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(fileSystemStorage)
+  });
+} catch (error: any) {
+  auth = getAuth(app);
+}
+
 const db = getFirestore(app);
 
 let analytics;
