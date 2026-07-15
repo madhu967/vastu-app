@@ -1,7 +1,9 @@
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { HomeScreen } from "@/screens/HomeScreen";
+import MainScreen from "@/screens/MainScreen";
 import { GuideScreen } from "@/screens/GuideScreen";
+import AdminLoginScreen from "@/screens/AdminLoginScreen";
+import AdminApprovalsScreen from "@/screens/AdminApprovalsScreen";
 import { CustomDrawerContent } from "@/components/CustomDrawerContent";
 import { guidePages } from "@/constants/content";
 import { palette } from "@/constants/theme";
@@ -42,8 +44,18 @@ export const RootNavigator = () => {
       >
         <Drawer.Screen
           name="Home"
-          component={HomeScreen}
+          component={MainScreen}
           options={{ title: "Home" }}
+        />
+        <Drawer.Screen
+          name="AdminLogin"
+          component={AdminLoginScreen}
+          options={{ title: "Admin Login" }}
+        />
+        <Drawer.Screen
+          name="AdminApprovals"
+          component={AdminApprovalsScreen}
+          options={{ title: "Admin Approvals" }}
         />
         {localizedPages.map((page) => (
           <Drawer.Screen

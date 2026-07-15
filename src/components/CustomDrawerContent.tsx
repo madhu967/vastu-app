@@ -86,7 +86,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
       {/* ══════════ NAV ITEMS ══════════ */}
       <View style={s.navList}>
-        {props.state.routes.map((route, index) => {
+        {props.state.routes.filter(route => route.name !== 'AdminLogin' && route.name !== 'AdminApprovals').map((route, index) => {
           const label =
             route.name === "Home"
               ? strings.homeRoute

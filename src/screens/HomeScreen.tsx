@@ -10,6 +10,7 @@ import {
   Text,
   View,
   Image,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SectionCard } from "@/components/SectionCard";
@@ -29,6 +30,9 @@ import {
 import { cornerRadius, palette, spacing, typography } from "@/constants/theme";
 import { ResultTable as ResultTableType, VastuFormValues } from "@/types/vastu";
 import { digitsOnly } from "@/utils/number";
+
+import { auth, db } from "../firebase";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 
 const initialForm: VastuFormValues = {
   language: "English",
@@ -58,6 +62,51 @@ const initialForm: VastuFormValues = {
 export const HomeScreen = () => {
   const { language, setLanguage } = useAppLanguage();
   const strings = getAppStrings(language);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  // Check admin and approved status in real-time
+  import("react").then((React) => {
+    React.useEffect(() => {
+      let unsubscribeSnapshot: () => void;
+
+      const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+        if (user) {
+          if (user.email === 'admin@vastuapp.com') {
+            setIsAdmin(true);
+            setIsApproved(true);
+            setUserName('Administrator');
+          } else {
+            setIsAdmin(false);
+            // Listen to their approval status in real-time
+            unsubscribeSnapshot = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
+              if (docSnap.exists()) {
+                const data = docSnap.data();
+                setUserName(data.name || 'User');
+                if (data.status === 'approved') {
+                  setIsApproved(true);
+                } else {
+                  // If they become suspended, rejected, or deleted, instantly revoke access
+                  setIsApproved(false);
+                }
+              } else {
+                setIsApproved(false);
+              }
+            });
+          }
+        } else {
+          setIsAdmin(false);
+          setIsApproved(false);
+          if (unsubscribeSnapshot) unsubscribeSnapshot();
+        }
+      });
+      return () => {
+        unsubscribeAuth();
+        if (unsubscribeSnapshot) unsubscribeSnapshot();
+      };
+    }, []);
+  });
 
   const [form, setForm] = useState<VastuFormValues>(initialForm);
 
@@ -81,14 +130,29 @@ export const HomeScreen = () => {
   const [isCalc3Loading, setIsCalc3Loading] = useState(false);
 
   const handleCalc1 = () => { 
+    if (!isApproved) {
+      Alert.alert("Access Denied", "Please login with an approved account to calculate results.");
+      return;
+    }
     const r = calculateVastuReport(form); 
     setTable1(r.summaryTables[0]); 
     setTable1a(r.splitTable1a || null);
     setTable1b(r.splitTable1b || null);
   };
-  const handleCalc2 = () => { const r = calculateVastuReport(form); setTable2(r.summaryTables[1]); };
+  const handleCalc2 = () => { 
+    if (!isApproved) {
+      Alert.alert("Access Denied", "Please login with an approved account to calculate results.");
+      return;
+    }
+    const r = calculateVastuReport(form); 
+    setTable2(r.summaryTables[1]); 
+  };
   
   const handleCalc3 = () => { 
+    if (!isApproved) {
+      Alert.alert("Access Denied", "Please login with an approved account to calculate results.");
+      return;
+    }
     setIsCalc3Loading(true);
     setTimeout(() => {
       const r = calculateVastuReport(form); 
@@ -233,6 +297,12 @@ export const HomeScreen = () => {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
+          {isAdmin && (
+            <View style={styles.adminGreetingBox}>
+              <Text style={styles.adminGreetingText}>Welcome back, Admin! 👋</Text>
+            </View>
+          )}
+
           {/* Festival-style banner below header */}
           <LinearGradient
             colors={["#F4C430", "#FFD95C"]}
@@ -261,7 +331,9 @@ export const HomeScreen = () => {
             <View style={styles.appTitleRow}>
               <View style={styles.appTitleLeft}>
                 <Text style={styles.appTitleText}>{strings.home.title}</Text>
-                <Text style={styles.appTitleSub}>Viswakarma Vastu Sarvaswam</Text>
+                <Text style={styles.appTitleSub}>
+                  {strings.appSubtitle}
+                </Text>
               </View>
               
               <View style={styles.appTitleRight}>
@@ -287,6 +359,18 @@ export const HomeScreen = () => {
             </View>
           </LinearGradient>
 
+          {(isAdmin || isApproved) && (
+            <View style={styles.premiumGreetingCard}>
+              <View style={styles.greetingIconBg}>
+                <Text style={styles.greetingEmoji}>{isAdmin ? '👑' : '✨'}</Text>
+              </View>
+              <View style={styles.greetingTextCol}>
+                <Text style={styles.greetingTime}>Good to see you,</Text>
+                <Text style={styles.greetingNameText}>{userName}</Text>
+              </View>
+            </View>
+          )}
+
           <View style={styles.sectionDivider}>
             <View style={styles.divLine} />
             <Text style={styles.divText}>{strings.home.introSubtitle}</Text>
@@ -301,7 +385,7 @@ export const HomeScreen = () => {
             <PremiumInput
               label="Name"
               value={form.clientName}
-              placeholder="e.g. John Doe"
+              placeholder="e.g. Name"
               autoCapitalize="words"
               onChangeText={(text) =>
                 updateField("clientName", text)
@@ -652,9 +736,58 @@ const styles = StyleSheet.create({
   },
   appTitleSub: {
     fontFamily: "Manrope_400Regular",
-    fontSize: 10,
+    fontSize: 12,
     color: "#FFF8F0",
     opacity: 0.8,
+  },
+  premiumGreetingCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF3C7', // subtle gold/cream tint
+    padding: spacing.md,
+    borderRadius: cornerRadius.lg,
+    marginBottom: spacing.xl,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+    shadowColor: "#F59E0B",
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  greetingIconBg: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: spacing.md,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  greetingEmoji: {
+    fontSize: 24,
+  },
+  greetingTextCol: {
+    flex: 1,
+  },
+  greetingTime: {
+    fontFamily: "Manrope_600SemiBold",
+    fontSize: 13,
+    color: '#92400E',
+    marginBottom: 2,
+  },
+  greetingNameText: {
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 24,
+    color: '#78350F',
+  },
+  divider: {
+    width: "100%",
   },
   appTitleRight: {
     flexShrink: 0,
