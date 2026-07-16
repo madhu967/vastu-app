@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import { getAuth, initializeAuth, getReactNativePersistence } from "firebase/auth";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { getFirestore } from "firebase/firestore";
 import * as FileSystem from 'expo-file-system/legacy';
 
@@ -56,9 +57,17 @@ const fileSystemStorage = {
 
 let auth: any;
 try {
-  auth = getAuth(app);
+  const persistence = getReactNativePersistence(ReactNativeAsyncStorage);
+  auth = initializeAuth(app, {
+    persistence
+  });
 } catch (error: any) {
-  console.error("Firebase auth initialization error", error);
+  // If initializeAuth fails (e.g. already initialized), fallback to getAuth
+  try {
+    auth = getAuth(app);
+  } catch (e) {
+    console.error("Firebase auth initialization error", error);
+  }
 }
 
 const db = getFirestore(app);
