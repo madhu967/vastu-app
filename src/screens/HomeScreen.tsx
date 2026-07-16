@@ -328,7 +328,7 @@ export const HomeScreen = () => {
               <View style={styles.appTitleLeft}>
                 <Text style={styles.appTitleText}>{strings.home.title}</Text>
                 <Text style={styles.appTitleSub}>
-                  {strings.appSubtitle}
+                  {strings.home.subtitle}
                 </Text>
               </View>
               
@@ -360,8 +360,8 @@ export const HomeScreen = () => {
                 <Text style={styles.avatarText}>{isAdmin ? 'A' : (userName ? userName.charAt(0).toUpperCase() : '?')}</Text>
               </View>
               <View style={styles.greetingTextCol}>
-                <Text style={styles.greetingTime}>WELCOME BACK,</Text>
-                <Text style={styles.greetingNameText}>{isAdmin ? 'Administrator' : userName}</Text>
+                <Text style={styles.greetingTime}>{strings.home.welcomeBack}</Text>
+                <Text style={styles.greetingNameText}>{isAdmin ? strings.home.administrator : userName}</Text>
               </View>
               <Text style={styles.greetingDeco}>✦</Text>
             </View>
@@ -376,11 +376,11 @@ export const HomeScreen = () => {
 
           {/* Contact Information */}
           <SectionCard
-            title={strings.home.phoneLabel || "Contact Information"}
-            subtitle="Enter WhatsApp number for the report"
+            title={strings.home.contactInfoTitle}
+            subtitle={strings.home.contactInfoSubtitle}
           >
             <PremiumInput
-              label="Name"
+              label={strings.home.nameLabel}
               value={form.clientName}
               placeholder="e.g. Name"
               autoCapitalize="words"
@@ -782,10 +782,10 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   greetingNameText: {
-    fontFamily: "CormorantGaramond_700Bold",
-    fontSize: 24,
+    fontFamily: "CormorantGaramond_600SemiBold",
+    fontSize: 20,
     color: '#3B1F00',
-    lineHeight: 28,
+    lineHeight: 24,
   },
   greetingDeco: {
     fontSize: 24,

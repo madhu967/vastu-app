@@ -55,10 +55,21 @@ type HomeStrings = {
   calculate: string;
   results: string;
   downloadPdf: string;
+  welcomeBack: string;
+  administrator: string;
+  contactInfoTitle: string;
+  contactInfoSubtitle: string;
+  nameLabel: string;
+  phoneLabel: string;
 };
 
 type AppStrings = {
   homeRoute: string;
+  homeTab: string;
+  approvalsTab: string;
+  statusTab: string;
+  profileTab: string;
+  loginTab: string;
   home: HomeStrings;
   directions: OptionItem[];
   nakshatrams: OptionItem[];
@@ -68,6 +79,11 @@ type AppStrings = {
 
 const englishStrings: AppStrings = {
   homeRoute: "Home",
+  homeTab: "Home",
+  approvalsTab: "Approvals",
+  statusTab: "Status",
+  profileTab: "Profile",
+  loginTab: "Login",
   home: {
     festivalTitle: "Vastu Shastra Analysis",
     festivalSub: "Know your home's Vastu today",
@@ -121,6 +137,12 @@ const englishStrings: AppStrings = {
     calculate: "Calculate",
     results: "Results",
     downloadPdf: "Download PDF Report",
+    welcomeBack: "WELCOME BACK,",
+    administrator: "Administrator",
+    contactInfoTitle: "Contact Information",
+    contactInfoSubtitle: "Enter WhatsApp number for the report",
+    nameLabel: "Name",
+    phoneLabel: "Phone Number",
   },
   directions: directionOptions,
   nakshatrams: nakshatramOptions,
@@ -161,6 +183,11 @@ const englishStrings: AppStrings = {
 
 const teluguStrings: AppStrings = {
   homeRoute: "హోమ్",
+  homeTab: "హోమ్",
+  approvalsTab: "ఆమోదాలు",
+  statusTab: "స్థితి",
+  profileTab: "ప్రొఫైల్",
+  loginTab: "లాగిన్",
   home: {
     festivalTitle: "వాస్తు శాస్త్ర విశ్లేషణ",
     festivalSub: "ఈ రోజు మీ ఇంటి వాస్తు తెలుసుకోండి",
@@ -214,6 +241,12 @@ const teluguStrings: AppStrings = {
     calculate: "లెక్కించండి",
     results: "ఫలితాలు",
     downloadPdf: "PDF రిపోర్ట్ డౌన్‌లోడ్ చేయండి",
+    welcomeBack: "తిరిగి స్వాగతం,",
+    administrator: "అడ్మినిస్ట్రేటర్",
+    contactInfoTitle: "సంప్రదింపు సమాచారం",
+    contactInfoSubtitle: "రిపోర్ట్ కోసం వాట్సాప్ నంబర్ నమోదు చేయండి",
+    nameLabel: "పేరు",
+    phoneLabel: "ఫోన్ నంబర్",
   },
   directions: [
     "ఉత్తరం", "ఈశాన్యం", "తూర్పు", "ఆగ్నేయం", "దక్షిణం", "నైరుతి", "పడమర", "వాయువ్యం"
@@ -262,6 +295,11 @@ const teluguStrings: AppStrings = {
 
 const hindiStrings: AppStrings = {
   homeRoute: "होम",
+  homeTab: "होम",
+  approvalsTab: "स्वीकृतियां",
+  statusTab: "स्थिति",
+  profileTab: "प्रोफ़ाइल",
+  loginTab: "लॉगिन",
   home: {
     festivalTitle: "वास्तु शास्त्र विश्लेषण",
     festivalSub: "आज अपने घर का वास्तु जानें",
@@ -315,6 +353,12 @@ const hindiStrings: AppStrings = {
     calculate: "गणना करें",
     results: "परिणाम",
     downloadPdf: "PDF रिपोर्ट डाउनलोड करें",
+    welcomeBack: "वापसी पर स्वागत है,",
+    administrator: "प्रशासक",
+    contactInfoTitle: "संपर्क जानकारी",
+    contactInfoSubtitle: "रिपोर्ट के लिए व्हाट्सएप नंबर दर्ज करें",
+    nameLabel: "नाम",
+    phoneLabel: "फ़ोन नंबर",
   },
   directions: [
     "उत्तर", "ईशान", "पूर्व", "आग्नेय", "दक्षिण", "नैऋत्य", "पश्चिम", "वायव्य"

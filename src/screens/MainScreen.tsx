@@ -9,8 +9,12 @@ import SignupScreen from './SignupScreen';
 import { auth, db } from '../firebase';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { palette } from '@/constants/theme';
+import { useAppLanguage } from '@/context/AppLanguageContext';
+import { getAppStrings } from '@/i18n/strings';
 
 export default function MainScreen() {
+  const { language } = useAppLanguage();
+  const strings = getAppStrings(language);
   const [activeTab, setActiveTab] = useState<'home' | 'auth' | 'approvals' | 'status'>('home');
   const [user, setUser] = useState<any>(auth.currentUser);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
@@ -80,7 +84,7 @@ export default function MainScreen() {
           onPress={() => setActiveTab('home')}
         >
           <Text style={[styles.tabIcon, activeTab === 'home' && styles.activeTabIcon]}>🏠</Text>
-          <Text style={[styles.tabLabel, activeTab === 'home' && styles.activeTabLabel]}>Home</Text>
+          <Text style={[styles.tabLabel, activeTab === 'home' && styles.activeTabLabel]}>{strings.homeTab}</Text>
         </TouchableOpacity>
         
         {isAdmin && (
@@ -89,7 +93,7 @@ export default function MainScreen() {
             onPress={() => setActiveTab('approvals')}
           >
             <Text style={[styles.tabIcon, activeTab === 'approvals' && styles.activeTabIcon]}>✓</Text>
-            <Text style={[styles.tabLabel, activeTab === 'approvals' && styles.activeTabLabel]}>Approvals</Text>
+            <Text style={[styles.tabLabel, activeTab === 'approvals' && styles.activeTabLabel]}>{strings.approvalsTab}</Text>
           </TouchableOpacity>
         )}
 
@@ -99,7 +103,7 @@ export default function MainScreen() {
             onPress={() => setActiveTab('status')}
           >
             <Text style={[styles.tabIcon, activeTab === 'status' && styles.activeTabIcon]}>ℹ️</Text>
-            <Text style={[styles.tabLabel, activeTab === 'status' && styles.activeTabLabel]}>Status</Text>
+            <Text style={[styles.tabLabel, activeTab === 'status' && styles.activeTabLabel]}>{strings.statusTab}</Text>
           </TouchableOpacity>
         )}
         
@@ -112,7 +116,7 @@ export default function MainScreen() {
               {user ? '👤' : '🔑'}
             </Text>
             <Text style={[styles.tabLabel, activeTab === 'auth' && styles.activeTabLabel]}>
-              {user ? 'Profile' : 'Login'}
+              {user ? strings.profileTab : strings.loginTab}
             </Text>
           </TouchableOpacity>
         )}
