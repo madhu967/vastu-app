@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { initializeAuth, getReactNativePersistence, getAuth } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import * as FileSystem from 'expo-file-system/legacy';
 
@@ -56,18 +56,18 @@ const fileSystemStorage = {
 
 let auth: any;
 try {
-  auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(fileSystemStorage)
-  });
-} catch (error: any) {
   auth = getAuth(app);
+} catch (error: any) {
+  console.error("Firebase auth initialization error", error);
 }
 
 const db = getFirestore(app);
 
-let analytics;
-// Initialize analytics only if in a browser environment to prevent issues on native platforms
-if (typeof window !== 'undefined') {
+import { Platform } from 'react-native';
+
+let analytics: any;
+// Initialize analytics only if in a web browser environment to prevent issues on native platforms
+if (Platform.OS === 'web') {
   analytics = getAnalytics(app);
 }
 
