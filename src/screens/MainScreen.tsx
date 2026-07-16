@@ -6,6 +6,7 @@ import ProfileScreen from './ProfileScreen';
 import AdminApprovalsScreen from './AdminApprovalsScreen';
 import StatusScreen from './StatusScreen';
 import SignupScreen from './SignupScreen';
+import CompassScreen from './CompassScreen';
 import { auth, db } from '../firebase';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { palette } from '@/constants/theme';
@@ -15,7 +16,7 @@ import { getAppStrings } from '@/i18n/strings';
 export default function MainScreen() {
   const { language } = useAppLanguage();
   const strings = getAppStrings(language);
-  const [activeTab, setActiveTab] = useState<'home' | 'auth' | 'approvals' | 'status'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'compass' | 'auth' | 'approvals' | 'status'>('home');
   const [user, setUser] = useState<any>(auth.currentUser);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [userStatus, setUserStatus] = useState<string>('pending');
@@ -67,6 +68,7 @@ export default function MainScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         {activeTab === 'home' && <HomeScreen />}
+        {activeTab === 'compass' && <CompassScreen />}
         {activeTab === 'approvals' && <AdminApprovalsScreen />}
         {activeTab === 'status' && <StatusScreen status={userStatus} />}
         {activeTab === 'auth' && (
@@ -85,6 +87,14 @@ export default function MainScreen() {
         >
           <Text style={[styles.tabIcon, activeTab === 'home' && styles.activeTabIcon]}>🏠</Text>
           <Text style={[styles.tabLabel, activeTab === 'home' && styles.activeTabLabel]}>{strings.homeTab}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.tabItem} 
+          onPress={() => setActiveTab('compass')}
+        >
+          <Text style={[styles.tabIcon, activeTab === 'compass' && styles.activeTabIcon]}>🧭</Text>
+          <Text style={[styles.tabLabel, activeTab === 'compass' && styles.activeTabLabel]}>Compass</Text>
         </TouchableOpacity>
         
         {isAdmin && (

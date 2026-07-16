@@ -343,7 +343,7 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
   }).join("");
 };
 
-const getPdfTranslations = (lang: string) => {
+const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
   if (lang === 'Telugu') {
     return {
       title: 'విశ్వకర్మ వాస్తు సర్వస్వం',
@@ -368,9 +368,10 @@ const getPdfTranslations = (lang: string) => {
       phalaDetails: 'వివరాలు',
       phalaResult: 'ఫలితం',
       summary: '✦ సారాంశ ఫలితం ✦',
-      s1: 'ఈ భవన వాస్తు సమన్వయంగా ఉంది. శుభ ఫలితాలు కలుగును.',
-      s2: 'సంపద, ఆరోగ్యం, విజయం, శాంతి, శుభం మీ సహవాసం కలుగును.',
-      s3: 'శ్రీ వాస్తు దేవుని కృప మీ కుటుంబం పై ఉండగరా కలుగును.',
+      s1: isAllGood ? 'ఈ నవవర్గ గణిత సాధిత భవన వాస్తు అనుకూలంగా ఉంది.' : 'ఈ నవవర్గ గణిత ఫలితాల ప్రకారం భవన వాస్తు పూర్తిగా అనుకూలంగా లేదు.',
+      s2: isAllGood ? 'వాస్తు పురుషుని ఆశీస్సులు లభిస్తాయి.' : 'మరింత అనుకూల ఫలితాల కోసం మళ్లీ ప్రయత్నించండి లేదా సిద్ధాంతి గారిని సంప్రదించండి.',
+      s3: isAllGood ? 'పంచభూతాలు, అష్టదిక్పాలకులు, నవగ్రహాల అనుగ్రహంతో సంపద, ఆరోగ్యం, విజయం, శాంతి, కుటుంబ వృద్ధి కలుగుతుంది.' : '',
+      s4: isAllGood ? 'సృష్టి, స్థితి, లయ అనుగ్రహకర్త అయిన విశ్వకర్మ కరుణా కటాక్షాలతో మీరు వర్ధిల్లుతారు.' : '',
       whatsapp: 'సంప్రదించండి (WhatsApp)',
       telegram: 'మరిన్ని వివరాలకు (Telegram)',
       nakshatram: 'నక్షత్రం',
@@ -406,9 +407,10 @@ const getPdfTranslations = (lang: string) => {
       phalaDetails: 'विवरण',
       phalaResult: 'परिणाम',
       summary: '✦ सारांश परिणाम ✦',
-      s1: 'यह भवन वास्तु समन्वित है। शुभ परिणाम प्राप्त होंगे।',
-      s2: 'धन, स्वास्थ्य, सफलता, शांति और शुभता आपके साथ रहेगी।',
-      s3: 'श्री वास्तु देव की कृपा आपके परिवार पर बनी रहे।',
+      s1: isAllGood ? 'यह नववर्ग गणित आधारित भवन वास्तु अनुकूल है।' : 'नववर्ग गणित के परिणामों के अनुसार इस भवन का वास्तु पूरी तरह अनुकूल नहीं है।',
+      s2: isAllGood ? 'आपको वास्तु पुरुष के आशीर्वाद प्राप्त होंगे।' : 'अधिक अनुकूल परिणामों के लिए पुनः प्रयास करें या किसी सिद्धांती जी से परामर्श करें।',
+      s3: isAllGood ? 'पंचमहाभूतों, अष्टदिक्पालों तथा नवग्रहों की कृपा से धन, स्वास्थ्य, सफलता, शांति और परिवार की उन्नति प्राप्त होगी।' : '',
+      s4: isAllGood ? 'सृष्टि, स्थिति और लय के अनुग्रहकर्ता भगवान विश्वकर्मा की कृपा-दृष्टि से आप निरंतर उन्नति करेंगे।' : '',
       whatsapp: 'संपर्क करें (WhatsApp)',
       telegram: 'अधिक जानकारी के लिए (Telegram)',
       nakshatram: 'नक्षत्र',
@@ -432,7 +434,6 @@ const getPdfTranslations = (lang: string) => {
     length: 'Length',
     width: 'Width',
     diagonal: 'Diagonal',
-    diagonal: 'Diagonal',
     areaTitle: 'Padamu',
     areaUnit: 'Padamu',
     col1: 'S.No',
@@ -444,9 +445,10 @@ const getPdfTranslations = (lang: string) => {
     phalaDetails: 'Details',
     phalaResult: 'Result',
     summary: '✦ Summary Result ✦',
-    s1: 'This building is Vastu compliant. Auspicious results will follow.',
-    s2: 'Wealth, health, success, peace, and auspiciousness will be with you.',
-    s3: 'May the grace of Sri Vastu Deva be upon your family.',
+    s1: isAllGood ? 'This house Vastu, based on the Navavarga mathematical calculation, is favorable.' : 'According to the Navavarga calculation results, the Vastu of this house is not completely favorable.',
+    s2: isAllGood ? 'You will receive the blessings of Vastu Purusha.' : 'For more favorable results, please try again or consult a Siddhanthi (Vastu expert).',
+    s3: isAllGood ? 'With the blessings of the Five Elements, the Guardians of the Eight Directions, and the Navagrahas, you will be blessed with prosperity, good health, success, peace, and family growth.' : '',
+    s4: isAllGood ? 'By the gracious blessings of Lord Vishwakarma, the divine creator, sustainer, and transformer, may you continue to prosper and flourish.' : '',
     whatsapp: 'Contact (WhatsApp)',
     telegram: 'More Details (Telegram)',
     nakshatram: 'Nakshatram',
@@ -460,16 +462,20 @@ const getPdfTranslations = (lang: string) => {
 };
 
 const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: string, compassBase64: string): string => {
+  const isTable1 = table.title === "Result Table 1";
+  const isTable2 = table.title === "Result Table 2";
+
+  const dataRows = buildRows(table, form);
+  const isAllGood = (isTable1 || isTable2) ? !dataRows.includes("#B71C1C") : true;
+
   const YANTRA = `<img src="${yantraBase64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />`;
   const COMPASS = `<img src="${compassBase64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />`;
-  const T = getPdfTranslations(form.language || "Telugu");
+  const T = getPdfTranslations(form.language || "Telugu", isAllGood);
   const owner  = form.ownerName || "—";
   const { dateStr, dayStr } = todayFormatted(form.language);
   const directionMap: Record<string, string> = { North: T.north, South: T.south, East: T.east, West: T.west, "North-East": T.ne, "North-West": T.nw, "South-East": T.se, "South-West": T.sw };
   const dir = directionMap[form.direction] || form.direction || T.north;
 
-  const isTable1 = table.title === "Result Table 1";
-  const isTable2 = table.title === "Result Table 2";
 
   const LEFT_ICON = (isTable1 || isTable2) ? `<img src="${icon4Base64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />` : COMPASS;
   const RIGHT_ICON = (isTable1 || isTable2) ? `<img src="${icon5Base64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />` : `<div style="transform:scaleX(-1);">${COMPASS}</div>`;
@@ -532,12 +538,13 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
   };
   const diagonalStr = findDiagonal();
 
-  const dataRows = buildRows(table, form);
+
 
   return `<!DOCTYPE html>
 <html lang="te">
 <head>
 <meta charset="UTF-8"/>
+<meta name="viewport" content="width=720, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>${T.title}</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -879,7 +886,8 @@ body {
     <div class="rec-text">
       <p>${T.s1}</p>
       <p>${T.s2}</p>
-      <p>${T.s3}</p>
+      ${T.s3 ? `<p>${T.s3}</p>` : ''}
+      ${T.s4 ? `<p>${T.s4}</p>` : ''}
     </div>
     <div class="rec-diya">${RIGHT_ICON}</div>
   </div>
