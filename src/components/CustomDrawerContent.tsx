@@ -86,12 +86,12 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
       {/* ══════════ NAV ITEMS ══════════ */}
       <View style={s.navList}>
-        {props.state.routes.filter(route => route.name !== 'AdminLogin' && route.name !== 'AdminApprovals').map((route, index) => {
+        {props.state.routes.filter(route => route.name !== 'AdminLogin' && route.name !== 'AdminApprovals').map((route) => {
           const label =
             route.name === "Home"
               ? strings.homeRoute
               : (localizedPages.find((page) => page.key === route.name)?.title ?? route.name);
-          const focused = props.state.index === index;
+          const focused = props.state.routes[props.state.index].key === route.key;
 
           return (
             <Pressable
@@ -105,7 +105,7 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             >
               {focused && (
                 <LinearGradient
-                  colors={["rgba(183,28,28,0.12)", "rgba(183,28,28,0.04)"]}
+                  colors={["#B71C1C", "#8B000F"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={s.navItemGradient}
@@ -276,7 +276,7 @@ const s = StyleSheet.create({
   },
   navItemLabelActive: {
     fontFamily: "Manrope_700Bold",
-    color: palette.primary,
+    color: "#FFFFFF",
   },
 
   // ══ DRAWER FOOTER ══

@@ -55,16 +55,16 @@ export const guidePages: GuidePage[] = [
     ],
     multiColumnTables: [
       {
-        headers: ["పేరులోని మొదటి అక్షరం", "వర్గు", "దిక్కు", "సరిపోవు సింహద్వారం", "సరిపడని సింహద్వారం"],
+                                headers: ["పేరులోని మొదటి అక్షరం", "వర్గు", "దిక్కు", "సరిపోవు సింహద్వారం", "సరిపడని సింహద్వారం"],
         rows: [
-          ["1. అ నుండి అ: వరకు", "అ", "తూర్పు", "పడమర, ఉత్తరం, దక్షిణం", "తూర్పు"],
-          ["2. క,,,,", "క", "ఆగ్నేయం", "పడమర, ఉత్తరం, దక్షిణం", "తూర్పు"],
-          ["3. చ,ఛ,జ,ఝ,ఇ", "చ", "దక్షిణం", "ఉత్తరం, తూర్పు, పడమర", "దక్షిణం"],
-          ["4. ,", "ట", "నైఋతి", "ఉత్తరం, తూర్పు, పడమర", "దక్షిణం"],
-          ["5. ....", "త", "పడమర", "తూర్పు, ఉత్తరం, దక్షిణం", "పడమర"],
-          ["6. ,, ,,", "ప", "వాయువ్యం", "తూర్పు, ఉత్తరం, దక్షిణం", "పడమర"],
-          ["7. య,ర,ల,వ", "య", "ఉత్తరం", "దక్షిణం, తూర్పు, పడమర", "ఉత్తరం"],
-          ["8. శ,ష,స,హ", "శ", "ఈశాన్యం", "దక్షిణం, తూర్పు, పడమర", "ఉత్తరం"]
+          ["1. అ నుండి అః వరకు", "అ", "తూర్పు", "పడమర, ఉత్తరం, దక్షిణం", "తూర్పు"],
+          ["2. క, ఖ, గ, ఘ, ఙ", "క", "ఆగ్నేయం", "పడమర, ఉత్తరం, దక్షిణం", "తూర్పు"],
+          ["3. చ, ఛ, జ, ఝ, ఞ", "చ", "దక్షిణం", "ఉత్తరం, తూర్పు, పడమర", "దక్షిణం"],
+          ["4. ట, ఠ, డ, ఢ, ణ", "ట", "నైరుతి", "ఉత్తరం, తూర్పు, పడమర", "దక్షిణం"],
+          ["5. త, థ, ద, ధ, న", "త", "పడమర", "తూర్పు, ఉత్తరం, దక్షిణం", "పడమర"],
+          ["6. ప, ఫ, బ, భ, మ", "ప", "వాయువ్యం", "తూర్పు, ఉత్తరం, దక్షిణం", "పడమర"],
+          ["7. య, ర, ల, వ", "య", "ఉత్తరం", "దక్షిణం, తూర్పు, పడమర", "ఉత్తరం"],
+          ["8. శ, ష, స, హ", "శ", "ఈశాన్యం", "దక్షిణం, తూర్పు, పడమర", "ఉత్తరం"]
         ]
       }
     ]
@@ -210,7 +210,7 @@ export const guidePages: GuidePage[] = [
     subtitle: "Common questions about the Sri Vastu app, how it works, and how to get the most from your Vastu analysis.",
     sections: [],
     paragraphs: [
-      "ఆ విశ్వకర్మ శాస్త్ర సర్వస్వం ఒక ప్రొఫెషనల్ వాస్తు శాస్త్ర విశ్లేషణ అప్లికేషన్ 9949753939"
+      "ఆ విశ్వకర్మ శాస్త్ర సర్వస్వం ఒక ప్రొఫెషనల్ వాస్తు శాస్త్ర విశ్లేషణ అప్లికేషన్."
     ],
   },
   {
@@ -282,7 +282,7 @@ export const guidePages: GuidePage[] = [
       { heading: "", text: "Such lands should be avoided for all constructions.\n\nFor complete details, please consult a Siddhanti (Vastu expert)." }
     ]
   },
-  {
+        {
     key: "vargu",
     title: "Vargu",
     subtitle: "Determine your Vargu based on the first letter of your name to check compatibility with directions.",
@@ -290,19 +290,24 @@ export const guidePages: GuidePage[] = [
     paragraphs: [
       "The Vargu should be determined based on the first letter of the name (Namadyaksharam)."
     ],
-    tableData: [
-      { label: "1", formula: "a, aa, i, ee...", value: "East" },
-      { label: "2", formula: "ka, kha, ga, gha...", value: "South-East" },
-      { label: "3", formula: "cha, chha, ja, jha...", value: "South" },
-      { label: "4", formula: "ta, tha, da, dha...", value: "South-West" },
-      { label: "5", formula: "ta, tha, da, dha, na...", value: "West" },
-      { label: "6", formula: "pa, pha, ba, bha, ma...", value: "North-West" },
-      { label: "7", formula: "ya, ra, la, va...", value: "North" },
-      { label: "8", formula: "sha, sha, sa, ha...", value: "North-East" }
+    multiColumnTables: [
+      {
+        headers: ["S.No", "Direction", "Vargu", "Starting Letters"],
+        rows: [
+          ["1", "East", "'a'", "a, aa, i, ee, u, oo, ru, roo, e, ae, ai, o, oa, au"],
+          ["2", "South-East", "'ka'", "ka, kha, ga, gha, nga"],
+          ["3", "South", "'cha'", "cha, chha, ja, jha, nya"],
+          ["4", "South-West", "'ta'", "ta, tha, da, dha, na (retroflex)"],
+          ["5", "West", "'ta'", "ta, tha, da, dha, na (dental)"],
+          ["6", "North-West", "'pa'", "pa, pha, ba, bha, ma"],
+          ["7", "North", "'ya'", "ya, ra, la, va"],
+          ["8", "North-East", "'sha'", "sha, sha, sa, ha"]
+        ]
+      }
     ],
     bottomContent: [
-      { heading: "Important Rules", text: "The Vargu containing the first letter of the name is called 'Swavargu' and is highly favorable, strong, and excellent.\n\nIn the case of conjunct consonants, the last consonant should be considered.\n\nThe 5th Vargu from the Swavargu is the enemy vargu (Shatruvargu). It causes enemy troubles, ill health, court losses, and financial difficulties. It must be avoided.\n\nThe remaining vargus are friendly (Mitra Vargu) and yield positive results, bringing friendship and financial gain." },
-      { heading: "Direction Groupings", text: "• South, South-East - Considered as South direction\n• West, South-West - Considered as West direction\n• North, North-West - Considered as North direction\n• East, North-East - Considered as East direction" },
+      { heading: "Important Rules", text: "The Vargu containing the first letter of the name is called 'Swavargu' and is highly favorable, strong, and excellent.\n\nIn the case of conjunct consonants, the last consonant should be considered. Ex: Sri - S + r + i - 'ya' vargu.\n\nThe 5th Vargu from the Swavargu is the enemy vargu (Shatruvargu). It causes deathly suffering, ill health, losses, and financial difficulties. It must be avoided.\n\n③ The remaining friendly vargus (Mitra Vargu) yield positive results, bringing friendship and financial gain." },
+      { heading: "Direction Groupings", text: "East, South-East — Considered as East direction\nSouth, South-West — Considered as South direction\nWest, North-West — Considered as West direction\nNorth, North-East — Considered as North direction" },
       { heading: "", text: "For complete details, please consult a Siddhanti (Vastu expert)." }
     ]
   },

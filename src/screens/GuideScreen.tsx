@@ -6,12 +6,15 @@ import {
   StyleSheet,
   Text,
   View,
+  Pressable,
+  Linking,
 } from "react-native";
+import { PhoneFAB } from "@/components/FooterSection";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRoute } from "@react-navigation/native";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { guidePages } from "@/constants/content";
-import { palette, spacing, cornerRadius } from "@/constants/theme";
+import { palette, spacing, cornerRadius, typography } from "@/constants/theme";
 import { useAppLanguage } from "@/context/AppLanguageContext";
 import { getLocalizedGuidePages } from "@/i18n/strings";
 
@@ -126,13 +129,28 @@ export const GuideScreen = () => {
         <View style={s.content}>
           {page.paragraphs && page.paragraphs.length > 0 && (
             <View style={s.paraCard}>
-              {page.paragraphs.map((paragraph, pIdx) => (
-                <View key={pIdx} style={s.paraRow}>
-                  {/* Slim gold left accent line */}
-                  <View style={s.accentBar} />
-                  <Text style={s.paraText}>{paragraph}</Text>
-                </View>
-              ))}
+              {page.paragraphs.map((paragraph: any, pIdx: number) => {
+                const isObject = typeof paragraph === 'object' && paragraph !== null;
+                const textContent = isObject ? paragraph.text : paragraph;
+                const headingContent = isObject ? paragraph.heading : null;
+
+                return (
+                  <View key={pIdx} style={s.paraRow}>
+                    {/* Slim gold left accent line */}
+                    <View style={s.accentBar} />
+                    <View style={{ flex: 1 }}>
+                      {headingContent ? (
+                        <Text style={[s.paraText, { fontFamily: typography.bold, marginBottom: 4 }]}>
+                          {headingContent}
+                        </Text>
+                      ) : null}
+                      {textContent ? (
+                        <Text style={s.paraText}>{textContent}</Text>
+                      ) : null}
+                    </View>
+                  </View>
+                );
+              })}
             </View>
           )}
 
@@ -195,6 +213,45 @@ export const GuideScreen = () => {
           )}
         </View>
 
+        
+        {/* ══════════ PREMIUM CONTACT CARD ══════════ */}
+        {(page.key === "faq" || page.key === "contact") && (
+          <View style={s.premiumContactWrap}>
+            <LinearGradient
+              colors={["#F8E7CD", "#FFF8F0"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={s.premiumContactCard}
+            >
+              <View style={s.contactIconCircle}>
+                <Text style={s.contactIcon}>📞</Text>
+              </View>
+              <View style={s.contactTextWrap}>
+                <Text style={s.premiumContactTitle}>Expert Vastu Consultation</Text>
+                <Text style={s.premiumContactSub}>Speak directly with our Siddhanti</Text>
+              </View>
+              <Pressable
+                style={({ pressed }) => [s.premiumContactBtn, pressed && s.premiumContactBtnPressed]}
+                onPress={() => Linking.openURL('tel:9949753939')}
+              >
+                <LinearGradient
+                  colors={["#B71C1C", "#8B000F"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={s.premiumContactBtnGrad}
+                >
+                  <Text style={s.premiumContactNumber}>Call Now: +91 99497 53939</Text>
+                </LinearGradient>
+              </Pressable>
+            </LinearGradient>
+          </View>
+        )}
+
+        {/* ══════════ GLOBAL CONTACT INFO ══════════ */}
+        <View style={s.globalContactWrap}>
+          <Text style={s.globalContactText}>For more information contact Vastu Siddhanti</Text>
+        </View>
+
         {/* ══════════ BOTTOM ORNAMENT ══════════ */}
         <View style={s.footerOrnament}>
           <View style={s.footerLine} />
@@ -206,6 +263,7 @@ export const GuideScreen = () => {
         <Text style={s.footerShanti}>ॐ शान्तिः शान्तिः शान्तिः</Text>
 
       </ScrollView>
+      <PhoneFAB />
     </View>
   );
 };
@@ -219,6 +277,77 @@ const s = StyleSheet.create({
   scrollContent: {
     paddingBottom: 60,
     backgroundColor: palette.background,
+  },
+
+  // ══ PREMIUM CONTACT ══
+  premiumContactWrap: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xl,
+    shadowColor: "#8B000F",
+    shadowOpacity: 0.15,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
+  },
+  premiumContactCard: {
+    padding: spacing.xl,
+    borderRadius: cornerRadius.xl,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255,217,92,0.6)",
+  },
+  contactIconCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#FFF",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: spacing.md,
+    shadowColor: "#F4C430",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  contactIcon: {
+    fontSize: 28,
+  },
+  contactTextWrap: {
+    alignItems: "center",
+    marginBottom: spacing.lg,
+  },
+  premiumContactTitle: {
+    fontFamily: typography.bold,
+    fontSize: 18,
+    color: "#5A0008",
+    marginBottom: 4,
+  },
+  premiumContactSub: {
+    fontFamily: typography.medium,
+    fontSize: 14,
+    color: "#8B000F",
+    opacity: 0.8,
+  },
+  premiumContactBtn: {
+    width: "100%",
+    borderRadius: cornerRadius.pill,
+    overflow: "hidden",
+  },
+  premiumContactBtnPressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.98 }],
+  },
+  premiumContactBtnGrad: {
+    paddingVertical: spacing.md + 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  premiumContactNumber: {
+    fontFamily: typography.bold,
+    fontSize: 16,
+    color: "#FFFFFF",
+    letterSpacing: 0.5,
   },
 
   // ══ HERO ══
@@ -475,6 +604,24 @@ const s = StyleSheet.create({
     color: palette.textMedium,
     lineHeight: 26,
     letterSpacing: 0.2,
+  },
+
+  // ══ GLOBAL CONTACT ══
+  globalContactWrap: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xl,
+    padding: spacing.md,
+    backgroundColor: "rgba(255, 217, 92, 0.1)",
+    borderRadius: cornerRadius.md,
+    borderWidth: 1,
+    borderColor: "rgba(255,217,92,0.3)",
+    alignItems: "center",
+  },
+  globalContactText: {
+    fontFamily: typography.medium,
+    fontSize: 14,
+    color: "#8B000F",
+    textAlign: "center",
   },
 
   // ══ FOOTER ORNAMENT ══

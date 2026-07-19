@@ -21,22 +21,22 @@ import { useAppLanguage } from "@/context/AppLanguageContext";
 const getContacts = (lang: string) => {
   if (lang === "English") {
     return [
-      { title: "Almanac Maker", name: "Brahmasri Pedagadi Mohan Ravishankar Daivagna", location: "Andhra Pradesh", phone: "9949598627" },
-      { title: "Vastu Ratna", name: "Sri Namana Siddhanti", location: "Andhra Pradesh", phone: "9949250888" },
-      { title: "Yuva Ratna", name: "Sri Namana Pavan", location: "Andhra Pradesh", phone: "9949753939" },
+      { title: "Almanac Maker", name: "Brahmasri Pedagadi Venkataravishankar Daivagna", location: "Bhimavaram", phone: "9949598627" },
+      { title: "Vastu Ratna", name: "Srinivasa Siddhanti", location: "Amalapuram", phone: "9949250888" },
+      { title: "Vastu Pandit", name: "Srinivasa Pavan B.Tech Civil", location: "Amalapuram", phone: "9949753939" },
     ];
   }
   if (lang === "Hindi") {
     return [
-      { title: "पंचांगकर्ता", name: "ब्रह्मश्री पेदगाडी मोहन रविशंकर दैवज्ञ", location: "आंध्र प्रदेश", phone: "9949598627" },
-      { title: "वास्तुरत्न", name: "श्री नामना सिद्धान्ती", location: "आंध्र प्रदेश", phone: "9949250888" },
-      { title: "युवरत्न", name: "श्रीनामना पवन", location: "आंध्र प्रदेश", phone: "9949753939" },
+      { title: "पंचांगकर्ता", name: "ब्रह्मश्री पेदगाडी वेंकटरविशंकर दैवज्ञ", location: "भीमावरम", phone: "9949598627" },
+      { title: "वास्तुरत्न", name: "श्रीनिवास सिद्धान्ती", location: "अमलापुरम", phone: "9949250888" },
+      { title: "वास्तु पंडित", name: "श्रीनिवास पवन B.Tech Civil", location: "अमलापुरम", phone: "9949753939" },
     ];
   }
   return [
-    { title: "పంచాంగకర్త", name: "బ్రహ్మశ్రీ పెదగాడి మోహన్ రవిశంకర్ దైవజ్ఞ", location: "ఆంధ్రప్రదేశ్", phone: "9949598627" },
-    { title: "వాస్తురత్న", name: "శ్రీ నామన సిద్ధాంతి", location: "ఆంధ్ర ప్రదేశ్", phone: "9949250888" },
-    { title: "యువరత్న", name: "శ్రీనామన పవన్", location: "ఆంధ్ర ప్రదేశ్", phone: "9949753939" },
+    { title: "పంచాంగకర్త", name: "బ్రహ్మశ్రీ పెదగాడి వెంకటరవిశంకర్ దైవజ్ఞ", location: "భీమవరం", phone: "9949598627" },
+    { title: "వాస్తురత్న", name: "శ్రీనివాస సిద్ధాంతి", location: "అమలాపురం", phone: "9949250888" },
+    { title: "వాస్తు పండిత", name: "శ్రీనివాస పవన్ B.Tech Civil", location: "అమలాపురం", phone: "9949753939" },
   ];
 };
 

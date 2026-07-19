@@ -442,10 +442,157 @@ const guideTranslations: Record<
         { heading: "9. Dikruthi", text: "There are 8 lords for directions. Here 2,4,6,8 should not come, and 1,3,5,7 should come." }
       ]
     },
+    "main-entrance": {
+      title: "Main Entrance",
+      subtitle: "The main entrance is the primary door for owners to come and go.",
+      paragraphs: [
+        "The main entrance is the face of the house, like a lion's face. It is the primary door for the owners to come and go, facing the royal street, reflecting a royal life. It welcomes virtuous people, great gurus, and relatives, adding more glory to the house.",
+        "It should be larger in height and width than all other doors in the construction, bringing all auspiciousness to all owners."
+      ],
+      multiColumnTables: [
+        {
+                    headers: ["First Letter of Name", "Varga", "Direction", "Suitable Main Entrance", "Unsuitable Main Entrance"],
+          rows: [
+            ["1. a to ah", "a", "East", "West, North, South", "East"],
+            ["2. ka, kha, ga, gha, nga", "ka", "South-East", "West, North, South", "East"],
+            ["3. cha, chha, ja, jha, nya", "cha", "South", "North, East, West", "South"],
+            ["4. ta, tha, da, dha, na (retroflex)", "ta", "South-West", "North, East, West", "South"],
+            ["5. ta, tha, da, dha, na (dental)", "ta", "West", "East, North, South", "West"],
+            ["6. pa, pha, ba, bha, ma", "pa", "North-West", "East, North, South", "West"],
+            ["7. ya, ra, la, va", "ya", "North", "South, East, West", "North"],
+            ["8. sha, sha, sa, ha", "sha", "North-East", "South, East, West", "North"]
+          ]
+        }
+      ]
+    },
+    "plot-shapes": {
+      title: "Plot Shapes",
+      subtitle: "The shape of the plot is essential for construction.",
+      paragraphs: [
+        "'Chaturashre Dhanagamam', Aayatham Siddhidam, Vruthaakshe: 'Krutham pushti ruchyathe'. According to Vishwakarma.",
+        "Squares, rectangles, and circular plots should be selected for all house and building constructions."
+      ],
+      multiColumnTables: [
+        {
+          headers: ["Number - Letter", "Plot Name / Direction", "Road Details"],
+          rows: [
+            ["1. A", "East Plot", "Having West Road"],
+            ["2. Ka", "South-East Plot", "Having South-East Road"],
+            ["3. Cha", "Rakshikastham", "Having South Road"],
+            ["4. Ta", "-", "Having South-West Road"],
+            ["5. Tha", "Vaadammasanam", "Having West Road"],
+            ["6. Pa", "North-West Plot", "Having North-West Road"],
+            ["7. Ya", "North Plot", "Having North Road"],
+            ["8. Sha", "North-East Plot", "Having North-East Road"]
+          ]
+        }
+      ],
+      bottomContent: [
+        { text: "People of those respective vargas should select plots of their own varga and friendly vargas for construction. Enemy varga plots must be avoided. For complete details, consult a Siddhanti." }
+      ]
+    },
+    "shanku-sthapana": {
+      title: "Shanku Sthapana",
+      subtitle: "Important ritual done at the navel of Vastu Purusha",
+      paragraphs: [
+        "According to Vishwakarma Prakashika and other Vastu shastras, 'Shanku Sthapana' should be done at the navel of the Vastu Purusha. Currently it is being done in the North-East. Establishing the Shanku is Shanku Sthapana. Doing Prathamestika nyasam with bricks alone is not Shanku Sthapana.",
+        "Shanku Construction: For all house constructions, the Shanku should be made according to Shilpa Shastra. It should be made of wood, 6x6 inches square and 12 inches high. Bottom 4 sides 4 inches high, above it 8 sides 4 inches high, above it 4 inches high. The tip of the Shanku points to the navel of Vastu Purusha.",
+        "Shanku Sthapana Procedure: The house owner with his wife, wearing clothes and ornaments, should perform Swasti Punyahavachanam, worship Ashta Dikpalakas and Navagrahas according to shastras, apply turmeric and kumkum to the Shanku, offer sandalwood and flowers, place it on a heap of grains, perform Shodasopachara pooja, bathe it with panchamrutas, fruit juices and water, decorate with new clothes, and while auspicious instruments are played, establish the Shanku along with navaratnas and panchalohas in the pit determined at the navel of Vastu Purusha, worship with Vastu Purusha dhyanam, and offer dhupa, deepa, naivedyam. The owner who performs Shanku Sthapana in this scriptural way will become the recipient of Vastu Purusha's grace."
+      ],
+      multiColumnTables: [
+        {
+          title: "Months for House Construction",
+          headers: ["S.No", "Month", "Result"],
+          rows: [
+            ["1", "Chaitra", "~~Loss of Wealth~~ Wealth"],
+            ["2", "Vaishakha", "Prosperity"],
+            ["3", "Jyeshtha", "Fatal"],
+            ["4", "Ashadha", "Loss of Wealth"],
+            ["5", "Shravana", "Wealth"],
+            ["6", "Bhadrapada", "Fear of Disease"],
+            ["7", "Ashwayuja", "Conflicts"],
+            ["8", "Karthika", "Financial Gain"],
+            ["9", "Margashira", "Grains"],
+            ["10", "Pushya", "Loss of Cattle"],
+            ["11", "Magha", "Lineage Growth"],
+            ["12", "Phalguna", "Financial Gain"]
+          ]
+        },
+        {
+          title: "Month Determination for Shanku Sthapana",
+          headers: ["No", "Month", "Monthly Result", "Doors to Do", "Doors Not to Do"],
+          rows: [
+            ["1", "Phalguna", "Growth of Lakshmi", "East, North", "West, South"],
+            ["2", "Chaitra", "Fear of Disease", "East, North", "West, South"],
+            ["3", "Vaishakha", "Gain of Wealth", "East, North", "West, South"],
+            ["4", "Jyeshtha", "Death", "East, South", "West, North"],
+            ["5", "Ashadha", "Servant Gain", "East, South", "West, North"],
+            ["6", "Shravana", "Friend Gain", "East, South", "West, North"],
+            ["7", "Bhadrapada", "Harm", "West, South", "East, North"],
+            ["8", "Ashwayuja", "Fear of War", "West, South", "East, North"],
+            ["9", "Karthika", "Gain of Wealth", "West, South", "East, North"],
+            ["10", "Margashira", "Wealth Growth", "West, North", "East, South"],
+            ["11", "Pushya", "Fear of Thieves", "West, North", "East, South"],
+            ["12", "Magha", "Fear of Fire", "West, North", "East, South"]
+          ]
+        }
+      ]
+    },
   },
   Telugu: {
+
+    "main-entrance": {
+      title: "సింహద్వారము",
+      subtitle: "యజమానులు రాక పోకలు చేయు ప్రధాన ద్వారము.",
+    },
+    "plot-shapes": {
+      title: "స్థలాల ఆకారాలు",
+      subtitle: "నిర్మాణానికి స్థలం ఆకారం చాలా ముఖ్యం.",
+    },
+    "shanku-sthapana": {
+      title: "శంఖుస్థాపన",
+      subtitle: "వాస్తు పురుషుని నాభి ప్రదేశమందు చేయు ముఖ్యమైన విధి",
+    },
+    "soil-testing": {
+      title: "మట్టి పరీక్ష",
+      subtitle: "నిర్మాణానికి నేల అనుకూలంగా ఉందో లేదో తెలుసుకోవడానికి మట్టి పరీక్ష చేయాలి.",
+      paragraphs: ["మట్టి పరీక్షను 4 విధాలుగా చేయాలి:"],
+      bottomContent: [
+        { heading: "1. రంగు పరీక్ష", text: "తెలుపు, ఎరుపు, పసుపు, నలుపు రంగుల నేల అన్ని రకాల నిర్మాణాలకు అనుకూలం." },
+        { heading: "2. వాసన పరీక్ష", text: "ఆహ్లాదకరమైన సువాసన మరియు వాతావరణం కలిగిన నేల శుభప్రదం." },
+        { heading: "3. రుచి పరీక్ష", text: "తీపి, పులుపు, లేదా వగరు రుచి కలిగిన నేల అనుకూలం." },
+                { heading: "4. స్పర్శ పరీక్ష", text: "నేలను తాకినప్పుడు మృదువుగా, తేలికగా లేదా బరువుగా అనిపిస్తే ఆ నేల శుభప్రదం." },
+        { heading: "నిషిద్ధ స్థలాలు", text: "1. శ్మశాన భూమి\n2. దేవాలయం ఉండిన స్థలం (తొలగించబడినది)\n3. పుట్టలు ఉన్న స్థలం\n4. నీరు ఎల్లప్పుడూ నిలిచి ఉండే (బురద) స్థలం\n5. చౌడు / పనికిరాని భూమి\n6. ఎముకలు, బొగ్గు, లేదా బూడిద ఉన్న స్థలం\n7. కుమ్మరి బట్టీలు ఉన్న స్థలం\n8. గానుగలు ఉన్న స్థలం\n9. చెరువులు/కుంటలు పూడ్చిన స్థలం" },
+        { heading: "", text: "అన్ని నిర్మాణాలకు ఇటువంటి స్థలాలను నివారించాలి.\n\nపూర్తి వివరాల కోసం, దయచేసి సిద్ధాంతిని సంప్రదించండి." }
+      ]
+    },
+            "vargu": {
+      title: "వర్గు",
+      subtitle: "నామాద్యక్షరం (పేరులోని మొదటి అక్షరం) అనుసరించి వర్గు నిర్ణయం చేసుకొనవలెను.",
+      paragraphs: ["నామాద్యక్షరం (పేరులోని మొదటి అక్షరం) అనుసరించి వర్గు నిర్ణయం చేసుకొనవలెను."],
+      multiColumnTables: [
+        {
+          headers: ["వ.నెం", "దిశ", "వర్గు", "నామాద్యక్షరం"],
+          rows: [
+            ["1", "తూర్పు", "‘అ’", "అ, ఆ, ఇ, ఈ, ఉ, ఊ, ఋ, ౠ, ఎ, ఏ, ఐ, ఒ, ఓ, ఔ"],
+            ["2", "ఆగ్నేయం", "‘క’", "క, ఖ, గ, ఘ, ఙ"],
+            ["3", "దక్షిణం", "‘చ’", "చ, ఛ, జ, ఝ, ఞ"],
+            ["4", "నైరుతి", "‘ట’", "ట, ఠ, డ, ఢ, ణ"],
+            ["5", "పడమర", "‘త’", "త, థ, ద, ధ, న"],
+            ["6", "వాయువ్యం", "‘ప’", "ప, ఫ, బ, భ, మ"],
+            ["7", "ఉత్తరం", "‘య’", "య, ర, ల, వ"],
+            ["8", "ఈశాన్యం", "‘శ’", "శ, ష, స, హ"]
+          ]
+        }
+      ],
+      bottomContent: [
+        { heading: "", text: "పేరులోని మొదటి అక్షరం కలవర్గు స్వవర్గు అత్యంత అనుకూలమైనది, బలీయమైనది (శ్రేష్టమైనది).\n\nసంయుక్తాక్షరములు వచ్చినప్పుడు చివరి అక్షరమును గ్రహించ వలెను. ఉదా: శ్రీ - శ్ + ర్ + ఈ - 'య' వర్గు\n\nస్వవర్గు నుండి 5 వ వర్గు శత్రువర్గు మృత్యు బాధలు, అనారోగ్యము, కష్ట నష్టములు, ఆర్థిక బాధలు తెచ్చిపెట్టును దీనిని వదిలి పెట్టవలెను.\n\n③ మిగిలిన మిత్ర వర్గులు సానుకూల ఫలితాన్ని కలుగజేస్తాయి, మిత్ర లాభం ఆర్థిక లాభం చేకూరుస్తాయి." },
+        { heading: "", text: "తూర్పు, ఆగ్నేయం — తూర్పు దిక్కు\nదక్షిణం, నైరుతి — దక్షిణం దిక్కు\nపడమర, వాయువ్యం — పడమర దిక్కు\nఉత్తరం, ఈశాన్యం — ఉత్తరం దిక్కు\nగా పరిగణించాలి." },
+        { heading: "", text: "పూర్తి వివరములకు సిద్ధాంతిగారిని సంప్రదించండి." }
+      ]
+    },
     "kitchen": {
-      title: "వంటగది (Kitchen)",
+      title: "వంటగది",
       subtitle: "Kitchen layout",
       paragraphs: [
         "సర్వ నిర్మాణముల యందు వంటగది అగ్ని స్థానమైన ఆగ్నేయ మూలలో ఏర్పాటు చేయవలెను.",
@@ -454,7 +601,7 @@ const guideTranslations: Record<
       ],
     },
     "bedroom": {
-      title: "పడక గదులు (Bed rooms)",
+      title: "పడక గదులు",
       subtitle: "Bed room layout",
       paragraphs: [
         "గృహము నందు పడక గదులు దక్షిణ, నైరుతి, పడమర, వాయువ్య దిశల యందు ఉండవలెను. యజమాని పడక గది (Master Bed room) సర్వదా నైరుతి దిశ యందు ఉండవలెను.",
@@ -463,7 +610,7 @@ const guideTranslations: Record<
       ],
     },
     "bathroom": {
-      title: "వాస్తు శాస్త్ర రీత్యా స్నానపు గదులు (Bathrooms & Toilets)",
+      title: "వాస్తు శాస్త్ర రీత్యా స్నానపు గదులు",
       subtitle: "స్నానపు గదులు మరియు మరుగుదొడ్లు",
       paragraphs: [
         "Toilets నైరుతి, వాయువ్య, పడమర, దక్షిణ దిశలలో ఉండవలెనని నియమము. కాని Attached Bathrooms ఏర్పాటు తప్పనిసరి అయినందున దక్షిణ, నైరుతి, పడమర, వాయువ్య దిశలలో Bed rooms కు Attached Bathrooms ఏర్పాటు చేసుకొనవచ్చును.",
@@ -471,7 +618,7 @@ const guideTranslations: Record<
       ],
     },
     "pooja-room": {
-      title: "పూజ గది (Pooja Room)",
+      title: "పూజ గది",
       subtitle: "పూజ గది layout",
       paragraphs: [
         "పూజ గది, పూజ మందిరం ఇంటికి ఈశాన్యములో ఏర్పాటు చేసుకొనవలెను. తూర్పు, ఉత్తర దిశల యందు కూడా పూజ మందిరము ఏర్పాటు చేసుకొనవచ్చును.",
@@ -480,7 +627,7 @@ const guideTranslations: Record<
       ],
     },
     "dining-room": {
-      title: "భోజనాల గది (Dining Room)",
+      title: "భోజనాల గది",
       subtitle: "Dining table layout",
       paragraphs: [
         "భోజనశాల పడమర లో ఏర్పాటు చేయవలెనని విశ్వకర్మ ప్రకాశికాది వాస్తు శాస్త్ర నిర్ణయము. కావున భోజనశాల పడమర దిశ యందు ఏర్పాటు చేసుకొనుట ఉత్తమము.",
@@ -488,7 +635,7 @@ const guideTranslations: Record<
       ],
     },
     "staircase": {
-      title: "మెట్లు మరియు లిఫ్ట్‌లు (Staircase & Lifts)",
+      title: "మెట్లు మరియు లిఫ్ట్‌లు",
       subtitle: "Stair case layout",
       paragraphs: [
         "పై అంతస్తు లోనికి వెళ్ళుటకు సోపానములు (Stair case) ఏర్పాటు తప్పనిసరి. ఆ సోపానములు ఎక్కుచూ వెళ్ళునట్లు ప్రదక్షిణ క్రమముగా పైకి వెళ్ళుట శ్రేయోదాయకము.",
@@ -497,7 +644,7 @@ const guideTranslations: Record<
       ],
     },
     "parking": {
-      title: "పార్కింగ్ (Parking)",
+      title: "పార్కింగ్",
       subtitle: "Parking layout",
       paragraphs: [
         "వాహనములు నిలుపుటకు అత్యంత ఆవశ్యక ప్రదేశము Parking. ప్రతి నిర్మాణమునకు, తూర్పు, ఉత్తర భాగముల యందు Parking ఏర్పాటు చేసుకొనవలయును.",
@@ -505,7 +652,7 @@ const guideTranslations: Record<
       ],
     },
     "borewell": {
-      title: "నీటి ట్యాంక్ మరియు బోర్‌వెల్ (Water Tank & Borewell)",
+      title: "నీటి ట్యాంక్ మరియు బోర్‌వెల్",
       subtitle: "Water tank & Borewell",
       paragraphs: [
         "సర్వసాధారణముగా Borewell, Tap ఈశాన్య భాగములో ఏర్పాటు చేసుకొనవలయును.",
@@ -514,7 +661,7 @@ const guideTranslations: Record<
       ],
     },
     "septic-tank": {
-      title: "సెప్టిక్ ట్యాంక్ (Septic Tank)",
+      title: "సెప్టిక్ ట్యాంక్",
       subtitle: "Septic tank layout",
       paragraphs: [
         "సెప్టిక్ ట్యాంకు అనారోగ్య హేతువు, నేటి ఆధునిక యుగంలో వాస్తులో చేర్చబడినది. ఇది గొయ్యి వేయు విశేషము గనుకనే ఉత్తర వాయువ్య భాగం అన్ని విధాలా అనుకూలమైనది. ఉత్తరం, తూర్పు, ఆగ్నేయ ఆగ్నేయంలో కూడా అవసరాన్ని బట్టి ఏర్పాటు చేసుకొనవచ్చును.",
@@ -531,10 +678,10 @@ const guideTranslations: Record<
       ],
     },
     "faq": {
-      title: "తరచుగా అడిగే ప్రశ్నలు (FAQ)",
+      title: "తరచుగా అడిగే ప్రశ్నలు",
       subtitle: "శ్రీ వాస్తు యాప్ గురించి, అది ఎలా పనిచేస్తుందో సాధారణ ప్రశ్నలు.",
       paragraphs: [
-        "ఆ విశ్వకర్మ శాస్త్ర సర్వస్వం ఒక ప్రొఫెషనల్ వాస్తు శాస్త్ర విశ్లేషణ అప్లికేషన్ 9949753939"
+        "ఆ విశ్వకర్మ శాస్త్ర సర్వస్వం ఒక ప్రొఫెషనల్ వాస్తు శాస్త్ర విశ్లేషణ అప్లికేషన్."
       ],
     },
     "contact": {
@@ -587,7 +734,7 @@ const guideTranslations: Record<
   },
   Hindi: {
     "kitchen": {
-      title: "रसोईघर (Kitchen)",
+      title: "रसोईघर",
       subtitle: "रसोईघर लेआउट",
       paragraphs: [
         "सभी निर्माणों में, रसोईघर को दक्षिण-पूर्व कोने में स्थापित किया जाना चाहिए, जो अग्नि (आग्नेय) का स्थान है।",
@@ -596,24 +743,156 @@ const guideTranslations: Record<
       ],
     },
     "bedroom": {
-      title: "बेडरूम (Bed rooms)",
+      title: "बेडरूम",
       subtitle: "बेडरूम लेआउट",
       paragraphs: [
         "घर में बेडरूम दक्षिण, दक्षिण-पश्चिम, पश्चिम और उत्तर-पश्चिम दिशाओं में होने चाहिए। मास्टर बेडरूम हमेशा दक्षिण-पश्चिम दिशा में होना चाहिए।",
         "बच्चों के बेडरूम पश्चिम, दक्षिण और उत्तर-पश्चिम दिशाओं में होने चाहिए। गेस्ट बेडरूम दक्षिण-पूर्व में भी हो सकते हैं।",
-        "उत्तर-पूर्व में बेडरूम कभी नहीं होने चाहिए।"
+        { heading: "6. मिट्टी का परीक्षण", text: "मकान बनाने से पहले मिट्टी का परीक्षण करना चाहिए।" }
+      ]
+    },
+    "soil-testing": {
+      title: "मట్టి పరీక్ష",
+      subtitle: "నిర్మాణానికి నేల అనుకూలంగా ఉందో లేదో తెలుసుకోవడానికి మట్టి పరీక్ష చేయాలి.",
+      paragraphs: ["మట్టి పరీక్షను 4 విధాలుగా చేయాలి:"],
+      bottomContent: [
+        { heading: "1. రంగు పరీక్ష", text: "తెలుపు, ఎరుపు, పసుపు, నలుపు రంగుల నేల అన్ని రకాల నిర్మాణాలకు అనుకూలం." },
+        { heading: "2. వాసన పరీక్ష", text: "ఆహ్లాదకరమైన సువాసన మరియు వాతావరణం కలిగిన నేల శుభప్రదం." },
+        { heading: "3. రుచి పరీక్ష", text: "తీపి, పులుపు, లేదా వగరు రుచి కలిగిన నేల అనుకూలం." },
+        { heading: "4. స్పర్శ పరీక్ష", text: "నేలను తాకినప్పుడు మృదువుగా, తేలికగా లేదా బరువుగా అనిపిస్తే ఆ నేల శుభప్రదం." }
+      ]
+    },
+        "vargu": {
+      title: "वर्ग",
+      subtitle: "नाम के पहले अक्षर के अनुसार वर्ग का निर्धारण किया जाना चाहिए।",
+      paragraphs: ["नाम के पहले अक्षर के अनुसार वर्ग का निर्धारण किया जाना चाहिए।"],
+      multiColumnTables: [
+        {
+          headers: ["क्र.सं.", "दिशा", "वर्ग", "नाम का पहला अक्षर"],
+          rows: [
+            ["1", "पूर्व", "'अ'", "अ, आ, इ, ई, उ, ऊ, ऋ, ॠ, ए, ऐ, ओ, औ"],
+            ["2", "दक्षिण-पूर्व", "'क'", "क, ख, ग, घ, ङ"],
+            ["3", "दक्षिण", "'च'", "च, छ, ज, झ, ञ"],
+            ["4", "दक्षिण-पश्चिम", "'ट'", "ट, ठ, ड, ढ, ण"],
+            ["5", "पश्चिम", "'त'", "त, थ, द, ध, न"],
+            ["6", "उत्तर-पश्चिम", "'प'", "प, फ, ब, भ, म"],
+            ["7", "उत्तर", "'य'", "य, र, ल, व"],
+            ["8", "उत्तर-पूर्व", "'श'", "श, ष, स, ह"]
+          ]
+        }
       ],
+      bottomContent: [
+        { heading: "", text: "नाम के पहले अक्षर वाले वर्ग को 'स्ववर्ग' कहा जाता है जो अत्यधिक अनुकूल, मजबूत और उत्कृष्ट होता है।\n\nसंयुक्ताक्षरों के मामले में, अंतिम व्यंजन पर विचार किया जाना चाहिए। उदाहरण: श्री - श् + र् + ई - 'य' वर्ग\n\nस्ववर्ग से 5वां वर्ग शत्रु वर्ग है। यह मृत्यु तुल्य कष्ट, खराब स्वास्थ्य, नुकसान और वित्तीय कठिनाइयों का कारण बनता है। इसे छोड़ दिया जाना चाहिए।\n\n③ शेष मित्र वर्ग सकारात्मक परिणाम देते हैं, और वित्तीय लाभ लाते हैं।" },
+        { heading: "", text: "पूर्व, दक्षिण-पूर्व — पूर्व दिशा\nदक्षिण, दक्षिण-पश्चिम — दक्षिण दिशा\nपश्चिम, उत्तर-पश्चिम — पश्चिम दिशा\nउत्तर, उत्तर-पूर्व — उत्तर दिशा\nके रूप में माना जाना चाहिए।" },
+        { heading: "", text: "संपूर्ण विवरण के लिए, कृपया एक सिद्धांत (वास्तु विशेषज्ञ) से परामर्श लें।" }
+      ]
+    },
+    "main-entrance": {
+      title: "मुख्य द्वार",
+      subtitle: "मुख्य द्वार मालिकों के आने और जाने के लिए प्राथमिक द्वार है।",
+      paragraphs: [
+        "मुख्य द्वार घर का चेहरा है। यह मालिकों के आने और जाने के लिए प्राथमिक द्वार है, जो शाही जीवन को दर्शाता है। यह घर में अधिक महिमा जोड़ता है।",
+        "यह निर्माण में अन्य सभी दरवाजों की तुलना में ऊंचाई और चौड़ाई में बड़ा होना चाहिए।"
+      ],
+      multiColumnTables: [
+        {
+                    headers: ["नाम का पहला अक्षर", "वर्ग", "दिशा", "उपयुक्त मुख्य द्वार", "अनुपयुक्त मुख्य द्वार"],
+          rows: [
+            ["1. अ से अः", "अ", "पूर्व", "पश्चिम, उत्तर, दक्षिण", "पूर्व"],
+            ["2. क, ख, ग, घ, ङ", "क", "दक्षिण-पूर्व", "पश्चिम, उत्तर, दक्षिण", "पूर्व"],
+            ["3. च, छ, ज, झ, ञ", "च", "दक्षिण", "उत्तर, पूर्व, पश्चिम", "दक्षिण"],
+            ["4. ट, ठ, ड, ढ, ण", "ट", "दक्षिण-पश्चिम", "उत्तर, पूर्व, पश्चिम", "दक्षिण"],
+            ["5. त, थ, द, ध, न", "त", "पश्चिम", "पूर्व, उत्तर, दक्षिण", "पश्चिम"],
+            ["6. प, फ, ब, भ, म", "प", "उत्तर-पश्चिम", "पूर्व, उत्तर, दक्षिण", "पश्चिम"],
+            ["7. य, र, ल, व", "य", "उत्तर", "दक्षिण, पूर्व, पश्चिम", "उत्तर"],
+            ["8. श, ष, स, ह", "श", "उत्तर-पूर्व", "दक्षिण, पूर्व, पश्चिम", "उत्तर"]
+          ]
+        }
+      ]
+    },
+    "plot-shapes": {
+      title: "भूखंड के आकार",
+      subtitle: "निर्माण के लिए भूखंड का आकार आवश्यक है।",
+      paragraphs: [
+        "विश्वकर्मा के अनुसार 'चतुरश्रे धनागमम'...",
+        "सभी घर और भवन निर्माण के लिए चौकोर, आयताकार और गोलाकार भूखंडों का चयन किया जाना चाहिए।"
+      ],
+      multiColumnTables: [
+        {
+          headers: ["संख्या - अक्षर", "भूखंड का नाम / दिशा", "सड़क का विवरण"],
+          rows: [
+            ["1. अ", "पूर्व भूखंड", "पश्चिम सड़क वाला"],
+            ["2. क", "दक्षिण-पूर्व भूखंड", "दक्षिण-पूर्व सड़क वाला"],
+            ["3. च", "रक्षिकास्थम", "दक्षिण सड़क वाला"],
+            ["4. ट", "-", "दक्षिण-पश्चिम सड़क वाला"],
+            ["5. त", "वादम्मासनम", "पश्चिम सड़क वाला"],
+            ["6. प", "उत्तर-पश्चिम भूखंड", "उत्तर-पश्चिम सड़क वाला"],
+            ["7. य", "उत्तर भूखंड", "उत्तर सड़क वाला"],
+            ["8. श", "उत्तर-पूर्व भूखंड", "उत्तर-पूर्व सड़क वाला"]
+          ]
+        }
+      ],
+      bottomContent: [
+        { text: "उन संबंधित वर्गों के लोगों को निर्माण के लिए अपने स्वयं के वर्ग और अनुकूल वर्गों के भूखंडों का चयन करना चाहिए।" }
+      ]
+    },
+    "shanku-sthapana": {
+      title: "शंकु स्थापना",
+      subtitle: "वास्तु पुरुष की नाभि पर किया जाने वाला महत्वपूर्ण अनुष्ठान",
+      paragraphs: [
+        "वास्तु शास्त्रों के अनुसार 'शंकु स्थापना' वास्तु पुरुष की नाभि पर की जानी चाहिए।",
+        "सभी घर निर्माण के लिए शंकु को शिल्प शास्त्र के अनुसार बनाया जाना चाहिए।",
+        "घर के मालिक को अपनी पत्नी के साथ उचित अनुष्ठान करके शंकु की स्थापना करनी चाहिए।"
+      ],
+      multiColumnTables: [
+        {
+          title: "घर निर्माण के लिए महीने",
+          headers: ["क्र.सं.", "महीना", "परिणाम"],
+          rows: [
+            ["1", "चैत्र", "धन"],
+            ["2", "वैशाख", "समृद्धि"],
+            ["3", "ज्येष्ठ", "घातक"],
+            ["4", "आषाढ़", "धन की हानि"],
+            ["5", "श्रावण", "धन"],
+            ["6", "भाद्रपद", "बीमारी का डर"],
+            ["7", "आश्वयुज", "संघर्ष"],
+            ["8", "कार्तिक", "वित्तीय लाभ"],
+            ["9", "मार्गशीर्ष", "अनाज"],
+            ["10", "पुष्य", "पशुओं की हानि"],
+            ["11", "माघ", "वंश वृद्धि"],
+            ["12", "फाल्गुन", "वित्तीय लाभ"]
+          ]
+        },
+        {
+          title: "शंकु स्थापना के लिए महीना निर्धारण",
+          headers: ["क्र.", "महीना", "मासिक परिणाम", "करने योग्य द्वार", "न करने योग्य द्वार"],
+          rows: [
+            ["1", "फाल्गुन", "लक्ष्मी की वृद्धि", "पूर्व, उत्तर", "पश्चिम, दक्षिण"],
+            ["2", "चैत्र", "बीमारी का डर", "पूर्व, उत्तर", "पश्चिम, दक्षिण"],
+            ["3", "वैशाख", "धन का लाभ", "पूर्व, उत्तर", "पश्चिम, दक्षिण"],
+            ["4", "ज्येष्ठ", "मृत्यु", "पूर्व, दक्षिण", "पश्चिम, उत्तर"],
+            ["5", "आषाढ़", "नौकर का लाभ", "पूर्व, दक्षिण", "पश्चिम, उत्तर"],
+            ["6", "श्रावण", "मित्र का लाभ", "पूर्व, दक्षिण", "पश्चिम, उत्तर"],
+            ["7", "भाद्रपद", "नुकसान", "पश्चिम, दक्षिण", "पूर्व, उत्तर"],
+            ["8", "आश्वयुज", "युद्ध का डर", "पश्चिम, दक्षिण", "पूर्व, उत्तर"],
+            ["9", "कार्तिक", "धन का लाभ", "पश्चिम, दक्षिण", "पूर्व, उत्तर"],
+            ["10", "मार्गशीर्ष", "धन वृद्धि", "पश्चिम, उत्तर", "पूर्व, दक्षिण"],
+            ["11", "पुष्य", "चोरों का डर", "पश्चिम, उत्तर", "पूर्व, दक्षिण"],
+            ["12", "माघ", "आग का डर", "पश्चिम, उत्तर", "पूर्व, दक्षिण"]
+          ]
+        }
+      ]
     },
     "bathroom": {
-      title: "वास्तु शास्त्र के अनुसार बाथरूम और शौचालय (Bathrooms & Toilets)",
-      subtitle: "बाथरूम और शौचालय (Bathrooms and Toilets)",
+      title: "वास्तु शास्त्र के अनुसार बाथरूम और शौचालय",
+      subtitle: "बाथरूम और शौचालय",
       paragraphs: [
         "वास्तु के अनुसार, शौचालय दक्षिण-पश्चिम, उत्तर-पश्चिम, पश्चिम या दक्षिण दिशाओं में होने चाहिए। हालाँकि, चूँकि अटैच्ड बाथरूम अक्सर आवश्यक होते हैं, उन्हें दक्षिण, दक्षिण-पश्चिम, पश्चिम और उत्तर-पश्चिम दिशाओं में बेडरूम से अटैच करके बनाया जा सकता है।",
         "बाथरूम (बिना शौचालय के) पूर्व और उत्तर दिशाओं में भी हो सकते हैं।"
       ],
     },
     "pooja-room": {
-      title: "पूजा कक्ष (Pooja Room)",
+      title: "पूजा कक्ष",
       subtitle: "पूजा कक्ष लेआउट",
       paragraphs: [
         "पूजा कक्ष या पूजा मंदिर घर के उत्तर-पूर्व में स्थापित किया जाना चाहिए। इसे पूर्व या उत्तर दिशाओं में भी स्थापित किया जा सकता है।",
@@ -622,7 +901,7 @@ const guideTranslations: Record<
       ],
     },
     "dining-room": {
-      title: "भोजन कक्ष (Dining Room)",
+      title: "भोजन कक्ष",
       subtitle: "डाइनिंग टेबल लेआउट",
       paragraphs: [
         "विश्वकर्म प्रकाशिका जैसे वास्तु शास्त्रों के अनुसार, भोजन कक्ष पश्चिम में स्थापित किया जाना चाहिए। इसलिए, भोजन कक्ष को पश्चिम दिशा में स्थापित करना सबसे अच्छा है।",
@@ -630,7 +909,7 @@ const guideTranslations: Record<
       ],
     },
     "staircase": {
-      title: "सीढ़ियाँ और लिफ्ट (Staircase & Lifts)",
+      title: "सीढ़ियाँ और लिफ्ट",
       subtitle: "सीढ़ी लेआउट",
       paragraphs: [
         "ऊपरी मंजिल पर जाने के लिए सीढ़ियां (Staircase) बनाना अनिवार्य है। यदि सीढ़ियां चढ़ते समय दक्षिणावर्त (Pradakshina) दिशा में ऊपर जाती हैं, तो यह लाभदायक है।",
@@ -639,7 +918,7 @@ const guideTranslations: Record<
       ],
     },
     "parking": {
-      title: "पार्किंग (Parking)",
+      title: "पार्किंग",
       subtitle: "पार्किंग लेआउट",
       paragraphs: [
         "वाहनों को खड़ा करने के लिए पार्किंग एक बहुत ही आवश्यक स्थान है। प्रत्येक निर्माण के लिए, पार्किंग को पूर्व या उत्तर भागों में स्थापित किया जाना चाहिए।",
@@ -647,7 +926,7 @@ const guideTranslations: Record<
       ],
     },
     "borewell": {
-      title: "पानी की टंकी और बोरवेल (Water Tank & Borewell)",
+      title: "पानी की टंकी और बोरवेल",
       subtitle: "पानी की टंकी और बोरवेल लेआउट",
       paragraphs: [
         "आमतौर पर, बोरवेल और नल उत्तर-पूर्व भाग में स्थापित किए जाने चाहिए।",
@@ -656,7 +935,7 @@ const guideTranslations: Record<
       ],
     },
     "septic-tank": {
-      title: "सेप्टिक टैंक (Septic Tank)",
+      title: "सेप्टिक टैंक",
       subtitle: "सेप्टिक टैंक लेआउट",
       paragraphs: [
         "सेप्टिक टैंक अस्वस्थता का कारण है, और आधुनिक वास्तु में इसे सावधानी से शामिल किया गया है। चूंकि इसमें गड्ढा खोदना शामिल है, इसलिए उत्तर-पश्चिम भाग हर तरह से अनुकूल है। आवश्यकता के आधार पर, इसे उत्तर, पूर्व या दक्षिण-पूर्व दिशाओं में भी स्थापित किया जा सकता है।",
@@ -673,10 +952,10 @@ const guideTranslations: Record<
       ],
     },
     "faq": {
-      title: "सामान्य प्रश्न (FAQ)",
+      title: "सामान्य प्रश्न",
       subtitle: "श्री वास्तु ऐप के बारे में सामान्य प्रश्न, यह कैसे काम करता है।",
       paragraphs: [
-        "ఆ విశ్వకర్మ శాస్త్ర సర్వస్వం ఒక ప్రొఫెషనల్ వాస్తు శాస్త్ర విశ్లేషణ అప్లికేషన్ 9949753939"
+        "ఆ విశ్వకర్మ శాస్త్ర సర్వస్వం ఒక ప్రొఫెషనల్ వాస్తు శాస్త్ర విశ్లేషణ అప్లికేషన్."
       ],
     },
     "contact": {
@@ -689,13 +968,45 @@ const guideTranslations: Record<
       ],
     },
     "about": {
-      title: "विश्वकर्मा वास्तु सर्वस्वम (Vishwakarma Vastu Sarvasvam)",
+      title: "विश्वकर्मा वास्तु सर्वस्वम",
       subtitle: "विश्वकर्मा वास्तु सर्वस्वम के बारे में",
       paragraphs: [
         "यह \"विश्वकर्मा वास्तु सर्वस्वम\" ऐप बहुत ही सरल शैली में विकसित किया गया है, जिसमें विश्वकर्मा प्रकाशिका, मयमतम, अपराजिता पृच्छा, समरांगण सूत्रधारम, और मनुष्यालय चंद्रिका जैसे प्राचीन वास्तु शास्त्र ग्रंथों से कुछ वैज्ञानिक रहस्य और विशेषताएं एकत्र की गई हैं, ताकि यह आम लोगों, सिद्धांतियों और वास्तु शास्त्र शोधकर्ताओं के लिए उपयोगी हो सके।",
         "पारंपरिक वास्तु प्रथाओं, भारतीय संस्कृति और परंपराओं की रक्षा करने के उद्देश्य से, \"विश्वकर्मा वास्तु सर्वस्वम\" पुस्तक जल्द ही लॉन्च की जा रही है।",
         "सुझाव, सलाह और संपर्क के लिए | लेखक की प्रतिभा को बढ़ाने के लिए आवश्यक वास्तु सिद्धांतियों से संपर्क करें..."
       ],
+    },
+    "soil-testing": {
+      title: "मिट्टी परीक्षण",
+      subtitle: "निर्माण के लिए भूमि अनुकूल है या नहीं, यह सुनिश्चित करने के लिए मिट्टी का परीक्षण किया जाना चाहिए।",
+      paragraphs: ["मिट्टी का परीक्षण 4 तरीकों से किया जाना चाहिए:"],
+      bottomContent: [
+        { heading: "1. रंग परीक्षण", text: "सफेद, लाल, पीला और काले रंग की भूमि सभी प्रकार के निर्माण के लिए उपयुक्त है।" },
+        { heading: "2. गंध परीक्षण", text: "सुखद सुगंध और आनंदमय वातावरण वाली भूमि शुभ है।" },
+        { heading: "3. स्वाद परीक्षण", text: "मीठा, खट्टा या कसैला स्वाद वाली भूमि अनुकूल है।" },
+                { heading: "4. स्पर्श परीक्षण", text: "यदि चुनी गई भूमि को छूने पर वह नरम, हल्की या भारी लगती है तो वह शुभ है।" },
+        { heading: "निषिद्ध भूमि", text: "1. श्मशान भूमि\n2. वह स्थान जहाँ मंदिर था (और हटा दिया गया)\n3. दीमक की बांबी वाली भूमि\n4. वह भूमि जहाँ हमेशा पानी रहता है (दलदली भूमि)\n5. खारी / बंजर भूमि\n6. हड्डियों, कोयले या राख वाली भूमि\n7. कुम्हार के भट्ठे वाली भूमि\n8. तेल मिलों वाली भूमि\n9. तालाबों/झीलों को भरकर बनाई गई भूमि" },
+        { heading: "", text: "सभी प्रकार के निर्माणों के लिए ऐसी भूमि से बचना चाहिए।\n\nसंपूर्ण विवरण के लिए, कृपया एक सिद्धांत (वास्तु विशेषज्ञ) से परामर्श लें।" }
+      ]
+    },
+    "vargu": {
+      title: "वर्ग",
+      subtitle: "दिशाओं के साथ अनुकूलता की जांच करने के लिए अपने नाम के पहले अक्षर के आधार पर अपना वर्ग निर्धारित करें।",
+      paragraphs: ["वर्ग का निर्धारण नाम के पहले अक्षर (नामाद्याक्षर) के आधार पर किया जाना चाहिए।"],
+      tableData: [
+        { label: "1", formula: "अ, आ, इ, ई...", value: "पूर्व" },
+        { label: "2", formula: "क, ख, ग, घ...", value: "दक्षिण-पूर्व" },
+        { label: "3", formula: "च, छ, ज, झ...", value: "दक्षिण" },
+        { label: "4", formula: "ट, ठ, ड, ढ...", value: "दक्षिण-पश्चिम" },
+        { label: "5", formula: "त, थ, द, ध, न...", value: "पश्चिम" },
+        { label: "6", formula: "प, फ, ब, भ, म...", value: "उत्तर-पश्चिम" },
+        { label: "7", formula: "य, र, ल, व...", value: "उत्तर" },
+        { label: "8", formula: "श, ष, स, ह...", value: "उत्तर-पूर्व" }
+      ],
+      bottomContent: [
+        { heading: "महत्वपूर्ण नियम", text: "नाम के पहले अक्षर वाले वर्ग को 'स्ववर्ग' कहा जाता है और यह अत्यधिक अनुकूल है। संयुक्ताक्षरों के मामले में, अंतिम व्यंजन पर विचार किया जाना चाहिए। स्ववर्ग से 5वां वर्ग शत्रु वर्ग है। इससे बचना चाहिए। शेष वर्ग मित्र वर्ग हैं।" },
+        { heading: "दिशा समूह", text: "• दक्षिण, दक्षिण-पूर्व - दक्षिण दिशा\n• पश्चिम, दक्षिण-पश्चिम - पश्चिम दिशा\n• उत्तर, उत्तर-पश्चिम - उत्तर दिशा\n• पूर्व, उत्तर-पूर्व - पूर्व दिशा" }
+      ]
     },
   },
 };
@@ -716,14 +1027,10 @@ export const getLocalizedGuidePages = (
   language: AppLanguage,
   basePages: GuidePage[],
 ): GuidePage[] => {
-  if (language === "English") {
-    return basePages;
-  }
-
   const localizedPages = guideTranslations[language];
 
   return basePages.map((page) => {
-    const localized = localizedPages[page.key];
+    const localized = localizedPages?.[page.key];
 
     if (!localized) {
       return page;
@@ -731,8 +1038,8 @@ export const getLocalizedGuidePages = (
 
     return {
       ...page,
-      title: localized.title,
-      subtitle: localized.subtitle,
+      title: localized.title || page.title,
+      subtitle: localized.subtitle || page.subtitle,
       paragraphs: localized.paragraphs || page.paragraphs,
       tableData: localized.tableData || page.tableData,
       multiColumnTables: localized.multiColumnTables || page.multiColumnTables,
