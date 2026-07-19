@@ -569,6 +569,9 @@ body {
 ═══════════════════════════════════════════ */
 .frame {
   width: 680px;
+  min-height: 1600px;
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   border: 10px solid #D4AF37;      /* Gold outer */
   outline: 3px solid #6B0F1A;      /* Dark maroon inner stripe */
@@ -723,7 +726,7 @@ body {
 /* ═══════════════════════════════════════════
    MAIN DATA TABLE
 ═══════════════════════════════════════════ */
-.main-table { width:100%; border-collapse:collapse; }
+.main-table { width:100%; border-collapse:collapse; table-layout:fixed; word-wrap:break-word; }
 .main-table thead tr { background: linear-gradient(90deg,#6B0F1A,#8B0000,#6B0F1A); }
 .main-table thead th {
   padding: 11px 8px;
@@ -771,6 +774,7 @@ body {
   padding: 14px 20px;
   gap: 0;
   border-top: 1px solid #E8D0A0;
+  margin-top: auto;
 }
 .contact-left  { flex:1; display:flex; align-items:center; gap:12px; border-right:2px solid #E0C880; padding-right:20px; }
 .contact-right { flex:1; display:flex; align-items:center; gap:12px; padding-left:20px; }
