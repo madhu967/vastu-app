@@ -61,6 +61,11 @@ export type GuidePage = {
   subtitle: string;
   sections: GuideSection[];
   paragraphs?: string[]; // rich flowing paragraph content
-  tableData?: { label: string; formula: string }[];
+  tableData?: { label: string; formula: string; value?: string }[];
+  multiColumnTables?: {
+    title?: string;
+    headers: string[];
+    rows: string[][];
+  }[];
   bottomContent?: { heading?: string; text: string }[];
 };

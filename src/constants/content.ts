@@ -50,130 +50,118 @@ export const guidePages: GuidePage[] = [
     subtitle: "The main entrance is the face of your home — it sets the first tone of energy that flows through your entire living space.",
     sections: [],
     paragraphs: [
-      "The main entrance of a home holds deep significance in Vastu Shastra. It is the primary gateway through which energy, light, and life enter the home. A well-positioned and well-maintained entrance invites prosperity, clarity, and calm into the household. The door should face a direction that complements the owner's birth star and the overall plot orientation, allowing the natural forces of the environment to work in harmony with the family's life rhythm.",
-      "The entrance area should always be kept clean, uncluttered, and well-lit. Warm lighting at the threshold creates a welcoming atmosphere that psychologically and energetically signals comfort and safety. Avoid placing heavy objects, broken items, or dark decorative elements near the doorway, as these can create subconscious resistance and block the natural flow of positive energy through the space.",
-      "The door itself should open smoothly and fully, without any creaking or resistance. A door that sticks or makes noise symbolises friction and delay in the progress of the household. The material, colour, and design of the main door should be chosen with care — solid wood with auspicious carvings or simple, clean lines is generally preferred. Keeping a small threshold lamp or a sacred symbol above the door enhances the sense of divine protection and invites grace into the home.",
+      "సింహద్వారము అనగా సింహము వంటి సింహ ద్వారము అనగా ద్వారము అని అర్ధము. యజమానులు రాక పోకలు చేయు ప్రధాన ద్వారము, రాజవీధిని చూస్తూ, రాజ జీవిత ఉట్టిపడు చూ, సద్గుణ సంపన్నులు సద్గురువులు, మహనీయులు, బంధు వులను ఆహ్వానించు సింహ ద్వారము ఇంటికి మరింత శోభను చేకూర్చును.",
+      "నిర్మాణము లోని మిగిలిన అన్ని ద్వార ముల కన్నా ఎత్తు, వెడల్పుల పెద్దదై సకల యజమానులకు సకల శుభాలను చేకూర్చును."
     ],
-  },
-  {
-    key: "living-room",
-    title: "Living Room",
-    subtitle: "The living room is the heart of the home — the space where family bonds are strengthened and guests are welcomed with warmth.",
-    sections: [],
-    paragraphs: [
-      "The living room functions as the central energy zone of any home. According to Vastu principles, this space should be designed to encourage openness, ease of movement, and a sense of calm togetherness. Furniture should be arranged so that conversation is natural and there are no physical barriers between people when they sit together. The seating should ideally face a direction that promotes attentiveness and calm, ensuring that all members of the household feel at ease and connected.",
-      "Natural light plays a critical role in the quality of energy within the living room. Large windows that allow morning or afternoon light to enter are highly beneficial, bringing vitality and warmth into daily life. The colours chosen for the walls and furnishings should be soft, grounding, and harmonious — earthy tones, warm whites, and muted golds create a space that feels both inviting and dignified. Avoid stark contrasts or overwhelming patterns that create visual noise and restlessness.",
-      "The television and media unit should be placed on a stable, balanced wall, ideally facing the seating arrangement without dominating the entire space. Decor elements — artwork, plants, and lighting — should be chosen to feel light and intentional rather than crowded. A single centrepiece or focal point in the room, such as a meaningful painting or a small plant, creates visual harmony. Keep movement paths clear and open, so energy can flow freely through the space without feeling trapped or blocked.",
-    ],
+    multiColumnTables: [
+      {
+        headers: ["పేరులోని మొదటి అక్షరం", "వర్గు", "దిక్కు", "సరిపోవు సింహద్వారం", "సరిపడని సింహద్వారం"],
+        rows: [
+          ["1. అ నుండి అ: వరకు", "అ", "తూర్పు", "పడమర, ఉత్తరం, దక్షిణం", "తూర్పు"],
+          ["2. క,,,,", "క", "ఆగ్నేయం", "పడమర, ఉత్తరం, దక్షిణం", "తూర్పు"],
+          ["3. చ,ఛ,జ,ఝ,ఇ", "చ", "దక్షిణం", "ఉత్తరం, తూర్పు, పడమర", "దక్షిణం"],
+          ["4. ,", "ట", "నైఋతి", "ఉత్తరం, తూర్పు, పడమర", "దక్షిణం"],
+          ["5. ....", "త", "పడమర", "తూర్పు, ఉత్తరం, దక్షిణం", "పడమర"],
+          ["6. ,, ,,", "ప", "వాయువ్యం", "తూర్పు, ఉత్తరం, దక్షిణం", "పడమర"],
+          ["7. య,ర,ల,వ", "య", "ఉత్తరం", "దక్షిణం, తూర్పు, పడమర", "ఉత్తరం"],
+          ["8. శ,ష,స,హ", "శ", "ఈశాన్యం", "దక్షిణం, తూర్పు, పడమర", "ఉత్తరం"]
+        ]
+      }
+    ]
   },
   {
     key: "kitchen",
     title: "Kitchen",
-    subtitle: "The kitchen is where nourishment is created — a space that connects the element of fire with the energy of abundance and health.",
+    subtitle: "Kitchen layout",
     sections: [],
     paragraphs: [
-      "In Vastu Shastra, the kitchen is governed by the fire element and holds a very important position in the health and prosperity of the household. The cooking area should be positioned so that the person cooking faces an auspicious direction, ideally with the fire source — the stove or burner — placed in a location that reflects the natural flow of the fire element within the home. This alignment ensures that meals are prepared with a calm and focused energy, which according to ancient wisdom, directly influences the wellbeing of those who consume the food.",
-      "The placement of water and fire elements within the kitchen deserves careful attention. The sink, representing water, and the stove, representing fire, should not be directly adjacent or opposite to each other, as these opposing elements can create conflict and instability in the household's health and finances. A comfortable working distance between them, with adequate counter space in between, creates a natural buffer that allows both energies to coexist and complement rather than clash.",
-      "Storage should be organised, accessible, and free of clutter. Frequently used items should be within easy reach, while the countertops should remain as clear as possible, giving the cook both physical and mental space to work with clarity and calm. Warm, grounding tones for the kitchen surfaces — such as cream, terracotta, or soft wood — promote a nurturing atmosphere. Avoid harsh, cold colours that can make the space feel clinical and unwelcoming. Good ventilation and clean exhaust systems are equally important, as they ensure the energy of cooked food and heat dissipates cleanly rather than accumulating and stagnating.",
+      "In all constructions, the kitchen should be set up in the South-East corner, which is the place of fire (Agni).",
+      "A kitchen should never be set up in the North-West, which is considered the enemy position to the South-East.",
+      "If the South-East is not possible, the kitchen can be set up in the South, South-West, or East directions."
     ],
   },
   {
     key: "bedroom",
-    title: "Bedroom",
-    subtitle: "The bedroom is your sanctuary of rest and renewal — where the body recovers, the mind quietens, and the spirit restores itself.",
+    title: "Bed rooms",
+    subtitle: "Bed room layout",
     sections: [],
     paragraphs: [
-      "The bedroom is the most personal space in any home, and its Vastu alignment directly influences the quality of sleep, health, and emotional wellbeing of its occupants. The bed should be positioned so that the head points in an auspicious direction during sleep — this alignment is believed to synchronise the body's magnetic field with the earth's natural magnetic energy, promoting deep, restorative rest. The bed should ideally be placed with a solid wall behind the headboard, giving a sense of support and security, and with walking space on at least two sides.",
-      "Mirrors in the bedroom require thoughtful placement. A mirror that directly reflects the sleeping person is generally considered disruptive to rest and emotional equilibrium, as the reflective surface is believed to amplify energy in a way that disturbs deep sleep. Mirrors should be placed on side walls or inside wardrobe doors, where they serve a practical function without creating visual or energetic imbalance. Wardrobe units should be placed on stable walls and kept organised and clean, as cluttered storage spaces are said to represent mental and emotional overload.",
-      "The colours, textures, and lighting of the bedroom should all contribute to a sense of calm, warmth, and intimacy. Soft earth tones, muted blues, warm greys, and gentle creams are ideal choices that promote relaxation without being dull. Avoid bright, stimulating colours or chaotic patterns that activate the mind rather than soothing it. Lighting should be layered — soft ambient light for evenings, and the ability to allow natural morning light without it being harsh. Removing electronic devices, or at minimum keeping them at a distance from the sleeping area, further supports the peaceful energy of this sacred resting space.",
+      "In a house, bedrooms should be located in the South, South-West, West, and North-West directions. The master bedroom should always be in the South-West direction.",
+      "Children's bedrooms should be in the West, South, and North-West directions. Guest bedrooms can also be in the South-East.",
+      "Bedrooms should never be in the North-East."
     ],
   },
   {
     key: "bathroom",
-    title: "Bathroom & Toilet",
-    subtitle: "A well-planned bathroom supports cleanliness, clarity, and the smooth release of what is no longer needed — physically and energetically.",
+    title: "Bathrooms & Toilets",
+    subtitle: "Bathrooms and Toilets according to Vastu Shastra",
     sections: [],
     paragraphs: [
-      "The bathroom and toilet are spaces dedicated to cleansing and release, and their Vastu placement has a direct influence on the flow of health, finances, and emotional clarity within the home. According to traditional principles, these spaces should be positioned away from the more sacred or productive zones of the house — such as the kitchen, pooja room, or the main entrance area. The location of drainage and water release points should follow the natural slope and flow direction of the site, ensuring that water exits the property in a way that is clean, efficient, and energetically sound.",
-      "Hygiene within the bathroom is paramount from both a physical and a Vastu perspective. Fixtures should be well-maintained, fully functional, and free of leaks or stagnation. A dripping tap or blocked drain is not simply a plumbing issue — it represents a continuous, uncontrolled loss of energy and resources that subtly affects the household's overall sense of abundance and control. Ventilation is equally important, as a well-ventilated bathroom ensures that stale, heavy energy is released quickly and replaced with fresh, light air.",
-      "The visual environment of the bathroom should feel clean, bright, and private. Light colours on walls and tiles promote a sense of freshness and ease. Organising toiletries, towels, and personal items in an orderly way creates a space that functions efficiently and feels restful rather than chaotic. Even small improvements — a clean mirror, a neatly arranged towel, a single plant or candle — can significantly shift the energy of a bathroom from heavy and congested to light and renewing.",
+      "According to Vastu, toilets should be located in the South-West, North-West, West, or South directions. However, since attached bathrooms are often necessary, they can be set up attached to bedrooms in the South, South-West, West, and North-West directions.",
+      "Bathrooms (without toilets) can also be located in the East and North directions."
     ],
   },
   {
     key: "pooja-room",
     title: "Pooja Room",
-    subtitle: "The pooja room is the spiritual centre of the home — a dedicated space where daily rituals connect the household to divine grace and inner peace.",
+    subtitle: "Pooja Room layout",
     sections: [],
     paragraphs: [
-      "The pooja room, or sacred prayer space, is the most spiritually significant room in any Indian home. According to Vastu Shastra, this space should be located in a direction that naturally supports the upward movement of spiritual energy and the clarity of prayer. The room should be quiet, clean, and entirely free of clutter — this is a space that deserves the same care and intentionality as a temple. Even a small, well-maintained pooja corner can carry the energy of a much larger sacred space if it is kept with consistency and devotion.",
-      "The placement of idols, sacred images, and ritual items within the pooja room should be thoughtful and respectful. Idols should be placed at a comfortable eye level when seated for prayer — neither too high that they feel distant and imposing, nor too low that the gesture of reverence feels awkward. Avoid crowding the space with too many items; a few well-chosen, meaningful objects create a more focused and powerful sacred atmosphere than many decorative pieces without intention. The ritual shelf or altar should be kept clean and renewed regularly.",
-      "Lighting in the pooja room deserves special attention. A soft, warm lamp — whether electric or oil-based — should be available for morning and evening prayers, creating a consistent ritual of light that anchors the household's spiritual life. The scent of incense, flowers, or sacred camphor used in daily rituals purifies the air and creates a sensory signal to the mind that this is a space for stillness, gratitude, and connection. The pooja room, when maintained with care, becomes the energetic anchor of the entire home — the place whose positive vibration radiates outward into every other room.",
+      "The Pooja room or Pooja mandir should be set up in the North-East of the house. It can also be set up in the East or North directions.",
+      "The deity's peetham (altar) should face West or South so that we face East or North while performing pooja.",
+      "The Pooja room should be filled with pictures of deities and divine items, enhancing spiritual radiance and bringing peace to the mind. Old items, leftover materials, and other heavy objects should not be kept in the Pooja room."
     ],
   },
   {
     key: "dining-room",
     title: "Dining Room",
-    subtitle: "The dining space is where the family gathers to share nourishment — a moment of daily communion that sustains both body and bond.",
+    subtitle: "Dining table layout",
     sections: [],
     paragraphs: [
-      "The dining room holds a unique and important position in the Vastu framework of the home. It is the space where the family comes together to share the most fundamental act of daily life — the taking of nourishment. This gathering point should be designed to feel warm, comfortable, and inclusive. The dining table should be proportionate to the room, leaving adequate space for easy movement around all sides, so that the act of sitting down together feels generous and unhurried rather than cramped and pressured.",
-      "The shape and material of the dining table carry subtle energetic significance. A rectangular or square table with clean, simple lines provides stability and balance, reflecting the grounding nature of the meal shared upon it. Round tables, while warm and egalitarian in their design, should be proportioned carefully to the room. The seating should be sturdy and comfortable — chairs that feel welcoming invite people to linger, converse, and enjoy the experience of eating together, rather than rushing away the moment the food is finished.",
-      "The colour palette and lighting of the dining room should stimulate appetite and warmth without being jarring or overly stimulating. Soft ambers, warm ochres, cream, and natural wood tones are ideal choices. A central light source above the table — whether a pendant lamp or a chandelier — creates a sense of gathering and focus. Avoid harsh overhead lighting that flattens the atmosphere. Keep the dining zone free of visual clutter and unrelated objects, so that the ritual of the meal remains clear, intentional, and pleasurable.",
+      "According to Vastu Shastras like Vishwakarma Prakashika, the dining room should be set up in the West. Therefore, it is best to set up the dining room in the West direction.",
+      "Depending on the requirement, the dining room can also be set up in the East, South, South-East, or North-East directions."
     ],
   },
   {
     key: "staircase",
-    title: "Staircase",
-    subtitle: "The staircase connects the floors of a home — its design and direction influence how energy rises and circulates through the living space.",
+    title: "Staircase & Lifts",
+    subtitle: "Staircase layout",
     sections: [],
     paragraphs: [
-      "The staircase is a dynamic element within the Vastu energy map of a home, as it physically mediates the movement of energy between floors. Its placement, direction of ascent, and design all influence how vitality circulates through the upper and lower levels of the building. A staircase that is well-lit, open, and structurally stable promotes a confident, steady upward movement of energy, reflecting ambition, growth, and positive momentum in the lives of the residents.",
-      "The steps themselves should be an odd number when counted in totality, as this is considered auspicious in traditional Vastu practice. Each step should be of an even, comfortable height and depth — awkward proportions make movement hesitant and can translate energetically into a sense of unsteadiness in life's progress. The railings should be solid, secure, and well-maintained, providing both physical safety and a visual sense of support and stability as one moves through the vertical space of the home.",
-      "The space beneath the staircase is often underutilised or cluttered, and this area deserves intentional planning. Blocked or heavily stuffed under-stair spaces create a sense of visual and energetic density that can feel oppressive. This area is best used for organised, purposeful storage — or, better still, left open with good lighting and perhaps a small decorative element that maintains the sense of spaciousness. Avoid placing the kitchen, pooja area, or sleeping space directly beneath the staircase, as the overhead movement can disturb the energetic quality of these sensitive rooms.",
+      "It is mandatory to set up a staircase to go to the upper floor. It is beneficial if the stairs go upward in a clockwise direction (Pradakshina order).",
+      "Depending on the direction of the construction, the staircase should be set up in the South-East, South-West, or North-West directions.",
+      "If setting up a lift, it should be placed in the South-East or North-West directions. A lift should not be set up in the South-West."
     ],
   },
   {
     key: "parking",
-    title: "Parking / Garage",
-    subtitle: "The parking and garage area reflects the home's relationship with movement, vehicles, and the practical flow of daily life.",
+    title: "Parking",
+    subtitle: "Parking layout",
     sections: [],
     paragraphs: [
-      "The parking and garage area, while often treated as purely functional, has its own Vastu significance as the zone of the home associated with vehicles, movement, and the external journeys of the household's members. According to traditional principles, the garage or parking zone should be positioned in a direction that supports easy, safe, and confident movement — both in the physical sense of driving in and out, and in the broader symbolic sense of the household's engagement with the outside world.",
-      "The layout of the parking area should prioritise spaciousness and clarity. Turning radii should be generous, allowing vehicles to enter and exit without awkward manoeuvring that creates daily frustration. Obstacles, sharp corners, and poorly lit areas near vehicle paths are hazardous in both a practical and an energetic sense. Good lighting is essential for night-time use, and the approach to the gate should feel intuitive and welcoming rather than complicated and guarded.",
-      "The gate itself — its design, direction of opening, and material — carries symbolic weight as the secondary gateway of the property. It should be well-maintained, functional, and proportionate to the overall design of the boundary wall. A gate that sticks, creaks, or is difficult to operate creates a subconscious daily friction that can accumulate over time. The space between the gate and the garage should ideally allow some breathing room, so that arriving home feels like a smooth, comfortable transition rather than an abrupt stop.",
+      "Parking is an essential space for vehicles. For every construction, parking should be set up in the East or North parts.",
+      "When it comes to providing underground parking, it is beneficial to avoid an entrance from the South-West."
     ],
   },
   {
     key: "borewell",
-    title: "Borewell & Water Tank",
-    subtitle: "Water is the element of abundance and flow — its source and storage within the property should be planned with care and precision.",
+    title: "Water Tank & Borewell",
+    subtitle: "Water tank & Borewell layout",
     sections: [],
     paragraphs: [
-      "Water is one of the five fundamental elements in Vastu Shastra, and its presence, movement, and storage within a property have a profound influence on the overall health, prosperity, and emotional tone of the household. The borewell or underground water source should ideally be located in the zones of the plot associated with the water element, allowing the natural energy of the site to support and sustain the water supply. A well-positioned water source is said to ensure a consistent, abundant flow of resources — both literal and metaphorical — into the lives of the residents.",
-      "Underground water tanks should be planned so that they are accessible for cleaning and maintenance without requiring major disruption to the surrounding structure. The pipes and pumping systems that feed the water through the property should run logically and cleanly, without crossing over fire or electrical zones in a way that creates conflict between elements. Overhead tanks, which sit above the roofline, should be positioned to allow gravity-fed flow in a direction that is energetically harmonious with the rest of the site.",
-      "Any leaks, blockages, or stagnation in the water system of a property require prompt attention, as they represent a disruption in the natural flow of abundance and clarity within the household's life. Clean, freely flowing water is one of the most powerful Vastu assets a property can have — it reflects movement, renewal, and the continuous provision of what is needed. Regular inspection and maintenance of all water systems, from the borewell to the overhead tank to the distribution pipes, is an act of care toward the home's energetic wellbeing as much as its physical function.",
+      "Generally, a Borewell and Tap should be set up in the North-East part.",
+      "Water filling in the North-East and being drawn out from the North-East is a very healthy Vastu feature.",
+      "Only in the case of an OHT (Over Head Tank), depending on the weight and size, the O.H Tank should be set up on top of the house in the South-West, South, or West directions."
     ],
   },
   {
     key: "septic-tank",
     title: "Septic Tank",
-    subtitle: "The septic system manages what the home releases — its placement ensures that the energetic and physical cleansing of the space is complete.",
+    subtitle: "Septic tank layout",
     sections: [],
     paragraphs: [
-      "The septic tank and waste disposal system represent the home's capacity to release what is no longer needed — both physically and energetically. In Vastu Shastra, the location of the septic tank is important because improper placement can symbolically and practically bring the energy of waste and stagnation too close to the living, cooking, or sacred zones of the property. Careful placement, following the natural drainage slope of the site and keeping the unit at an appropriate distance from the main living areas, ensures that release happens cleanly and completely.",
-      "Accessibility is one of the most practically important aspects of septic tank placement. A tank that cannot be serviced without major disruption to the surrounding landscape or structure becomes a long-term maintenance challenge that can translate into significant household stress. Ensuring that the access point is clear, well-marked, and reachable allows for regular inspection and cleaning, keeping the system functioning efficiently and preventing the kind of failures that create both physical and energetic disturbance in the home.",
-      "Beyond placement, the quality of the construction and materials used in the septic system determines its longevity and reliability. Proper sealing prevents leakage into the surrounding soil, which protects both the environment and the water table. Correct drainage design ensures that solids and liquids are processed in the right balance. From a Vastu perspective, a well-designed, properly functioning septic system is a sign of a household that manages its resources responsibly, closes its cycles cleanly, and maintains its relationship with the land with care and respect.",
-    ],
-  },
-  {
-    key: "garden",
-    title: "Garden & Trees",
-    subtitle: "The garden is the living boundary of the home — its plants, trees, and water features breathe life and beauty into the entire property.",
-    sections: [],
-    paragraphs: [
-      "The garden surrounding a home is far more than a decorative feature — it is the living energetic boundary of the property, a space where the built environment meets the natural world. According to Vastu principles, the trees, plants, and landscaping elements in the garden should be selected and positioned with an understanding of how they interact with the directions, the elements, and the daily patterns of light and shadow on the plot. Plants that are healthy, well-tended, and appropriately sized for their positions bring vitality and beauty to the home's exterior environment.",
-      "Certain plants carry specific Vastu significance. The Tulsi plant, regarded as sacred in Hindu tradition, should be given a clean, respectful position — ideally in the open, with good sunlight and easy access for daily watering and worship. Its placement reflects the household's connection to spiritual practice and its acknowledgment of the divine in everyday life. Large trees, while valuable for shade and beauty, should not be positioned in a way that causes their roots to disrupt the foundation of the structure, or their canopy to block essential light from reaching the home's primary living spaces.",
-      "Water features in the garden — fountains, small ponds, or decorative water elements — can be powerful enhancers of the property's Vastu energy when placed in harmony with the water zones of the site. Moving water is particularly auspicious, as it represents the continuous flow of abundance and renewal. However, stagnant water — a neglected pond, a clogged fountain, or a waterlogged patch of garden — creates the opposite effect, symbolising blocked energy and potential ill-health. The garden, tended with regularity and love, becomes a living reflection of the household's relationship with nature, beauty, and the cycles of growth and renewal.",
+      "The septic tank is a cause of ill health, and its placement is considered carefully in modern Vastu. Because it involves digging a pit, the North-West portion is favorable in all respects. Depending on the need, it can also be set up in the North, East, or South-East parts.",
+      "Under no circumstances should a Septic tank be set up in the South-West, West, South, or North-East directions."
     ],
   },
   {
@@ -182,9 +170,38 @@ export const guidePages: GuidePage[] = [
     subtitle: "The shape of the plot determines the foundation of your home's energy — a well-proportioned plot supports balance and long-term wellbeing.",
     sections: [],
     paragraphs: [
-      "The shape of the plot on which a home is built is the foundational element of Vastu analysis. Before any structure is designed, the geometric form of the land itself determines how energy accumulates, flows, and is retained within the property. Square and rectangular plots, with clean right-angled corners and proportionate dimensions, are considered the most auspicious forms in Vastu Shastra, as their regularity allows for a balanced and even distribution of the five elemental energies across the site. Such plots are easier to divide according to Vastu zones and support stable, predictable outcomes for the household.",
-      "Irregular or oddly shaped plots — those with missing corners, protruding angles, or non-perpendicular boundaries — present energetic challenges that require careful design solutions. A plot with a missing north-east corner, for example, is said to reduce the flow of light and prosperity into the home. Plots with acute angles or arrow-like projections can create pockets of intense or unstable energy that affect specific areas of life. These challenges are not insurmountable — skilled planning, strategic placement of structures, and the use of Vastu remedies such as boundary plants, water elements, or specific room allocations can mitigate the impact of an irregular plot significantly.",
-      "Before purchasing or building on a plot, a thorough assessment of its shape, orientation, surrounding environment, and slope is essential. The direction in which the plot faces, the proportion of its length to breadth, the slope of the land, and the position of any natural water bodies or roadways nearby all contribute to the overall Vastu quality of the site. A plot that may appear undesirable on paper can become a powerful, harmonious foundation for a home when its challenges are understood and addressed with knowledge and intention. The shape of the land is the beginning of the story — what is built upon it continues that story for generations.",
+      "'చతురత్రే ధనాగమం', ఆయతం సిద్దియ:",
+      "స్వరాక్ష: \"కృతం పుష్టి రుచ్యతే . అను -  విశ్వకర్మముననుసరించి.",
+      "చతురస్రం, దీర్ఘ చతురస్రం, వుత్తాకార సలాలను సకలగృహ, భవన నిర్మాణముల లటే ఎన్ను కొన వలయును.  విశేషము"
+    ],
+    multiColumnTables: [
+      {
+        headers: ["సంఖ్య - అక్షరం", "స్థలం పేరు / దిశ", "రోడ్డు వివరాలు"],
+        rows: [
+          ["1. అ", "తూర్పు స్తలం", "పడమర రోడ్డు గలది"],
+          ["2. క", "ఆగ్నేయ స్తలం", "ఆగ్నేయ రోడ్డు గలది"],
+          ["3. చ", "రక్షికాస్తుం", "దక్షిణం రోడ్డు గలది"],
+          ["4. ట", "-", "నైరుతి రోడ్డు గలది"],
+          ["5. త", "వాడమ్మాసనం", "పడమర రోడ్డు గలది"],
+          ["6. ప", "వాయువ్వం స్తలం", "వాయువ్యం రోడ్డు గలది"],
+          ["7. య", "ఉత్తరం స్థలం", "ఉత్తరం రోడ్డు గలది"],
+          ["8. శ", "ఈశాన్యం స్థలం", "ఈశాన్యం రోడ్డు గలది"]
+        ]
+      }
+    ],
+    bottomContent: [
+      { text: "ఆయా వర్గుల వాళ్ళు తమ స్వవర్గు మిత్ర వర్గు స్థలములను ఎన్నుకొని నిర్మాణములు చేసుకొనవలెను. శత్రువర్గ నిలములను విసర్జించ వలెను.  పూర్తి వివరములను సిద్ధాంతిగారిని సంప్రదించండి." }
+    ]
+  },
+  {
+    key: "veedi-potlu",
+    title: "Veedi Potlu",
+    subtitle: "Veedi potlu play a prominent role in determining the auspiciousness and inauspiciousness of a site.",
+    sections: [],
+    paragraphs: [
+      "Veedi potlu play a prominent role in determining the auspiciousness and inauspiciousness of a site.",
+      "(Potlu) This site is favorable in all ways. Sites with potlu (hits) bring many advantages acting as centers in North, North-East, and West.",
+      "Those acting as centers in East, West, South-East, North-West, and South-West cause health issues and financial losses."
     ],
   },
   {
@@ -193,9 +210,7 @@ export const guidePages: GuidePage[] = [
     subtitle: "Common questions about the Sri Vastu app, how it works, and how to get the most from your Vastu analysis.",
     sections: [],
     paragraphs: [
-      "The Sri Vastu calculator generates a precise Vastu analysis based on the measurements you provide for your plot — its width, depth, and relevant Vastu calculations including nakshatram, direction, and Suddha Padham values. The application processes these inputs through established Vastu Shastra formulas to produce a structured report that can be downloaded as a formatted PDF. To ensure the accuracy of your report, all measurements should be entered consistently in the same unit system — feet, inches, and nullu — as specified in the input fields.",
-      "The guide section of the app provides room-by-room Vastu guidance for the main areas of the home. These pages are intended to complement the calculator's numerical output with qualitative, practical insights about how each space in the home functions within the broader Vastu framework. The guidance provided is based on classical Vastu principles interpreted for modern living, and is most valuable when read in conjunction with a professional Vastu assessment of your specific property and life circumstances.",
-      "For the most accurate results, we recommend filling all relevant fields before generating each table. The three tables in the calculator correspond to different aspects of the Vastu analysis — width and depth calculations, Suddha Padham analysis, and Padam mapping with star reference. Each table can be generated and downloaded independently, allowing you to focus on the specific aspect of the analysis most relevant to your current needs. If you encounter any issues with the calculator output or the PDF generation, please use the contact page to reach the development team directly.",
+      "ఆ విశ్వకర్మ శాస్త్ర సర్వస్వం ఒక ప్రొఫెషనల్ వాస్తు శాస్త్ర విశ్లేషణ అప్లికేషన్ 9949753939"
     ],
   },
   {
@@ -211,13 +226,13 @@ export const guidePages: GuidePage[] = [
   },
   {
     key: "about",
-    title: "About Sri Vastu",
-    subtitle: "A premium Vastu analysis application built to bring the wisdom of an ancient science into the clarity of modern design.",
+    title: "Vishwakarma Vastu Sarvasvam",
+    subtitle: "About Vishwakarma Vastu Sarvasvam",
     sections: [],
     paragraphs: [
-      "Sri Vastu is a professional-grade Vastu Shastra analysis application, designed to serve Vastu practitioners and their clients with precision, elegance, and ease. The application provides a structured calculation engine based on established Vastu formulas, a comprehensive room-by-room guidance library, and a formatted PDF report system that presents results in a professional, shareable format. Our goal is to honour the depth and integrity of Vastu Shastra as a living science while making its insights accessible and practical for modern households.",
-      "The application has been built with a deep respect for the tradition it represents. Every aspect of the design — from the colour palette and typography to the structure of the calculator and the tone of the guidance content — has been chosen to reflect the seriousness and beauty of Vastu as a discipline. We believe that a tool built for an ancient science should itself carry a sense of quality, care, and reverence — not just functional efficiency, but aesthetic and spiritual alignment with the values it serves.",
-      "Sri Vastu is an evolving product. As the formulas, guidelines, and PDF templates are refined and updated, those improvements will be reflected in future versions of the application. We are committed to keeping the calculation engine accurate and current, the guidance content relevant and thoughtful, and the overall user experience as seamless and dignified as the science it represents. We thank all practitioners and users who have placed their trust in this application and invite your continued feedback as we grow and improve together.",
+      "This \"Vishwakarma Vastu Sarvasvam\" App has been developed in a very simple style, extracting secret and special scientific details from ancient Vastu Shastra texts like Vishwakarma Prakashika, Mayamatam, Aparajita Pruccha, Samarangana Sutradharam, and Manushyalaya Chandrika, so as to be useful to common people, Siddhantis (experts), and Vastu Shastra researchers.",
+      "With the objective of protecting traditional Vastu practices, Indian culture, and traditions, the book \"Vishwakarma Vastu Sarvasvam\" is being launched soon.",
+      "For suggestions, advice, and contact | To contact the Vastu Siddhantis needed to enhance the author's talent..."
     ],
   },
   {
@@ -250,6 +265,96 @@ export const guidePages: GuidePage[] = [
       { heading: "9. Dikruthi", text: "There are 8 lords for directions. Here 2,4,6,8 should not come, and 1,3,5,7 should come." }
     ],
   },
+  {
+    key: "soil-testing",
+    title: "Soil Testing",
+    subtitle: "Soil testing should be done to ensure the land is auspicious for construction.",
+    sections: [],
+    paragraphs: [
+      "Soil testing should be done in 4 ways:"
+    ],
+    bottomContent: [
+      { heading: "1. Color Test", text: "Land with white, red, yellow, and black colors is suitable for all types of construction." },
+      { heading: "2. Smell Test", text: "Land with a pleasant fragrance and delightful environment is auspicious." },
+      { heading: "3. Taste Test", text: "Land with sweet, sour, or astringent taste is favorable." },
+      { heading: "4. Touch Test", text: "The chosen land is auspicious if it feels soft, light, or heavy when touched." },
+      { heading: "Prohibited Land", text: "1. Graveyard land\n2. Place where a temple existed (and was removed)\n3. Land with anthills\n4. Land where water always stagnates (muddy land)\n5. Saline / Barren land\n6. Land containing bones, charcoal, or ash\n7. Land with potter's kilns\n8. Land with oil mills\n9. Land filled over ponds/lakes" },
+      { heading: "", text: "Such lands should be avoided for all constructions.\n\nFor complete details, please consult a Siddhanti (Vastu expert)." }
+    ]
+  },
+  {
+    key: "vargu",
+    title: "Vargu",
+    subtitle: "Determine your Vargu based on the first letter of your name to check compatibility with directions.",
+    sections: [],
+    paragraphs: [
+      "The Vargu should be determined based on the first letter of the name (Namadyaksharam)."
+    ],
+    tableData: [
+      { label: "1", formula: "a, aa, i, ee...", value: "East" },
+      { label: "2", formula: "ka, kha, ga, gha...", value: "South-East" },
+      { label: "3", formula: "cha, chha, ja, jha...", value: "South" },
+      { label: "4", formula: "ta, tha, da, dha...", value: "South-West" },
+      { label: "5", formula: "ta, tha, da, dha, na...", value: "West" },
+      { label: "6", formula: "pa, pha, ba, bha, ma...", value: "North-West" },
+      { label: "7", formula: "ya, ra, la, va...", value: "North" },
+      { label: "8", formula: "sha, sha, sa, ha...", value: "North-East" }
+    ],
+    bottomContent: [
+      { heading: "Important Rules", text: "The Vargu containing the first letter of the name is called 'Swavargu' and is highly favorable, strong, and excellent.\n\nIn the case of conjunct consonants, the last consonant should be considered.\n\nThe 5th Vargu from the Swavargu is the enemy vargu (Shatruvargu). It causes enemy troubles, ill health, court losses, and financial difficulties. It must be avoided.\n\nThe remaining vargus are friendly (Mitra Vargu) and yield positive results, bringing friendship and financial gain." },
+      { heading: "Direction Groupings", text: "• South, South-East - Considered as South direction\n• West, South-West - Considered as West direction\n• North, North-West - Considered as North direction\n• East, North-East - Considered as East direction" },
+      { heading: "", text: "For complete details, please consult a Siddhanti (Vastu expert)." }
+    ]
+  },
+  {
+    key: "shanku-sthapana",
+    title: "శంఖుస్థాపన",
+    subtitle: "వాస్తు పురుషుని నాభి ప్రదేశమందు చేయు ముఖ్యమైన విధి",
+    sections: [],
+    paragraphs: [
+      "విశ్వకర్మ ప్రకాశికాది వాస్తు శాస్త్రానుసారం \"శంఖు స్థాపన\" వాస్తు పురుషుని నాభి ప్రదేశమందు చేయు వలెను. ప్రస్తుత కాలమందు ఈశాన్యమున చేయుచున్నారు. శంఖువును స్థాపించుటయే శంఖుస్థాపన. ఇటుకలతో చేయునది ప్రథమేష్టి కాన్యాసము మాత్రమే శంఖుస్థాపన కానీరదు.",
+      "శంకు నిర్మాణము: సకల గృహభవన నిర్మాణములకు శిల్ప శాస్త్రానుసారం శంకును తయారుచేసి స్థాపించవలెను. 6x6 అంగుళంలు చతురము 12 అంగుళములు ఎత్తు గల దారువుతో శంకును తయారుచేయవలెను. క్రింద 4 భుజములు 4 అంగుళములు ఎత్తు, దానిపై 8 భుజములు 4 అంగుళములు ఎత్తు దానిపై 4 అంగుళములు ఎత్తుతో శంకు నిర్మాణము చేయవలెను. శంకువు పై కొన వాస్తుపురుషుని నాభిస్థానమునకు సూచిక.",
+      "శంకు స్థాపన విధి: గృహ యజమాని భార్యతోకూడి వస్త్రాభరణాద్యలంకారంబులను ధరించిన వాడై స్వస్తి పుణ్యాహావాచనము ఆచరించి అష్టదిక్పాలకులను, నవగ్రహాదులను శాస్త్రోక్తముగా అర్చించి శంకువునకు పసుపువ్రాసి కుంకుమబొట్లుంచి గంధపుష్పాక్షతలొసంగి ధాన్యపు రాశిపై నుంచి షోడశోపచారపూజలు చేసి పంచామృతములు వివిధ ఫలరసంబులు, నీటితో అభిషేకించి నూతన వస్త్రములతో అలంకరించి మంగళవాయిద్యములు మ్రోయగా శంకువును నవరత్నములు పంచలోహాదులతో సహ వాస్తు పురుషుని నాభిస్థానమున నిర్ణయించిన అగడ్త యందు స్థాపించి వాస్తుపురుష ధ్యానంబులతో అర్చించి ధూపదీప నైవేధ్యములు అర్పించవలెను. ఇట్లు శాస్త్రోక్తముగా శంకుస్థాపన చేయు యజమాని వాస్తు పురుషుని కరుణా కటాక్షములకు పాత్రుడగును."
+    ],
+    multiColumnTables: [
+      {
+        title: "గృహనిర్మాణమునకు మాసములు",
+        headers: ["వ.నెం", "నెల", "ఫలితం"],
+        rows: [
+          ["1", "చైత్రము", "~~ధనక్షయము~~ ధనము"],
+          ["2", "వైశాఖము", "సంపద"],
+          ["3", "జ్యేష్ఠము", "మృత్యుప్రదము"],
+          ["4", "ఆషాఢము", "సిరి సంపదలు నాశంబు"],
+          ["5", "శ్రావణము", "ధనము"],
+          ["6", "భాద్రపదము", "రోగభయము"],
+          ["7", "ఆశ్వయుజము", "కలహములు"],
+          ["8", "కార్తీకము", "ధన యోగము"],
+          ["9", "మార్గశిరము", "ధాన్యము"],
+          ["10", "పుష్యము", "పశునాశనము"],
+          ["11", "మాఘము", "వంశాభివృద్ధి"],
+          ["12", "ఫాల్గుణము", "ధనలాభం"]
+        ]
+      },
+      {
+        title: "శంఖుస్థాపనకు మాస నిర్ణయము",
+        headers: ["నెం", "నెల", "మాస ఫలము", "చేయవలసిన సింహద్వారములు", "చేయకూడని సింహద్వారములు"],
+        rows: [
+          ["1", "ఫాల్గుణ మాసము", "లక్ష్మీవృద్ధి", "తూర్పు, ఉత్తరం", "పడమర, దక్షిణం"],
+          ["2", "చైత్ర మాసము", "వ్యాధి భయం", "తూర్పు, ఉత్తరం", "పడమర, దక్షిణం"],
+          ["3", "వైశాఖ మాసము", "ధన, రత్న లాభము", "తూర్పు, ఉత్తరం", "పడమర, దక్షిణం"],
+          ["4", "జ్యేష్ఠ మాసము", "మరణము", "తూర్పు, దక్షిణం", "పడమర, ఉత్తరం"],
+          ["5", "ఆషాఢ మాసము", "భృత్యు లాభము", "తూర్పు, దక్షిణం", "పడమర, ఉత్తరం"],
+          ["6", "శ్రావణ మాసము", "మిత్ర లాభము", "తూర్పు, దక్షిణం", "పడమర, ఉత్తరం"],
+          ["7", "భాద్రపద మాసము", "హాని", "పడమర, దక్షిణం", "తూర్పు, ఉత్తరం"],
+          ["8", "ఆశ్వయుజ మాసము", "యుద్ధ భయము", "పడమర, దక్షిణం", "తూర్పు, ఉత్తరం"],
+          ["9", "కార్తీక మాసము", "ధన, ధాన్య లాభము", "పడమర, దక్షిణం", "తూర్పు, ఉత్తరం"],
+          ["10", "మార్గశిర మాసము", "ధనవృద్ధి", "పడమర, ఉత్తరం", "తూర్పు, దక్షిణం"],
+          ["11", "పుష్య మాసము", "చోర భయము", "పడమర, ఉత్తరం", "తూర్పు, దక్షిణం"],
+          ["12", "మాఘ మాసము", "అగ్ని భయము", "పడమర, ఉత్తరం", "తూర్పు, దక్షిణం"]
+        ]
+      }
+    ]
+  }
 ];
 
 export const drawerItems = [

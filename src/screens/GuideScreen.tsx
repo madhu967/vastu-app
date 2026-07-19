@@ -18,7 +18,7 @@ import { getLocalizedGuidePages } from "@/i18n/strings";
 // ── icon map ─────────────────────────────────────────────────────────────────
 const pageIcons: Record<string, string> = {
   "main-entrance": "🚪",
-  "living-room":   "🛋️",
+
   kitchen:         "🍳",
   bedroom:         "🛏️",
   bathroom:        "🚿",
@@ -28,11 +28,13 @@ const pageIcons: Record<string, string> = {
   parking:         "🚗",
   borewell:        "💧",
   "septic-tank":   "🔧",
-  garden:          "🌿",
   "plot-shapes":   "📐",
   faq:             "❓",
   contact:         "📞",
   about:           "ℹ️",
+  "soil-testing":  "🌱",
+  vargu:           "🔠",
+  "shanku-sthapana": "🏗️",
 };
 
 // ── section number labels ─────────────────────────────────────────────────────
@@ -140,7 +142,37 @@ export const GuideScreen = () => {
               {page.tableData.map((row, rIdx) => (
                 <View key={rIdx} style={[s.tableRow, rIdx === page.tableData!.length - 1 && { borderBottomWidth: 0 }]}>
                   <Text style={s.tableLabel}>{row.label}</Text>
-                  <Text style={s.tableFormula}>{row.formula}</Text>
+                  <Text style={[s.tableFormula, !row.value && { textAlign: "right", flex: 2 }]}>{row.formula}</Text>
+                  {row.value && <Text style={s.tableValue}>{row.value}</Text>}
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* ══════════ MULTI-COLUMN TABLES ══════════ */}
+          {page.multiColumnTables && page.multiColumnTables.length > 0 && (
+            <View style={s.multiTablesWrap}>
+              {page.multiColumnTables.map((table, tIdx) => (
+                <View key={tIdx} style={s.multiTableBlock}>
+                  {table.title && <Text style={s.multiTableTitle}>{table.title}</Text>}
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.multiTableScroll}>
+                    <View style={s.multiTableContainer}>
+                      {/* Headers */}
+                      <View style={[s.multiTableRow, s.multiTableHeaderRow]}>
+                        {table.headers.map((header, hIdx) => (
+                          <Text key={hIdx} style={[s.multiTableCell, s.multiTableHeaderCell]}>{header}</Text>
+                        ))}
+                      </View>
+                      {/* Rows */}
+                      {table.rows.map((row, rIdx) => (
+                        <View key={rIdx} style={[s.multiTableRow, rIdx === table.rows.length - 1 && { borderBottomWidth: 0 }]}>
+                          {row.map((cell, cIdx) => (
+                            <Text key={cIdx} style={s.multiTableCell}>{cell}</Text>
+                          ))}
+                        </View>
+                      ))}
+                    </View>
+                  </ScrollView>
                 </View>
               ))}
             </View>
@@ -365,11 +397,62 @@ const s = StyleSheet.create({
     color: palette.primary,
   },
   tableFormula: {
-    flex: 2,
+    flex: 1.5,
+    fontFamily: "Manrope_400Regular",
+    fontSize: 16,
+    color: palette.textMedium,
+  },
+  tableValue: {
+    flex: 1,
     fontFamily: "Manrope_400Regular",
     fontSize: 16,
     color: palette.textMedium,
     textAlign: "right",
+  },
+
+  // ══ MULTI-COLUMN TABLE ══
+  multiTablesWrap: {
+    gap: spacing.xl,
+    marginTop: spacing.md,
+  },
+  multiTableBlock: {},
+  multiTableTitle: {
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 20,
+    color: palette.primary,
+    marginBottom: spacing.sm,
+    paddingHorizontal: 16,
+  },
+  multiTableScroll: {},
+  multiTableContainer: {
+    backgroundColor: palette.surface,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: palette.border,
+    overflow: "hidden",
+    minWidth: '100%',
+  },
+  multiTableRow: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: palette.border,
+    paddingVertical: 12,
+  },
+  multiTableHeaderRow: {
+    backgroundColor: "rgba(255,217,92,0.1)",
+  },
+  multiTableCell: {
+    fontFamily: "Manrope_400Regular",
+    fontSize: 15,
+    color: palette.textMedium,
+    width: 120, // fixed width for scrollable table
+    paddingHorizontal: 12,
+    textAlign: "center",
+  },
+  multiTableHeaderCell: {
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 16,
+    color: palette.primary,
   },
 
   // ══ BOTTOM CONTENT ══
