@@ -314,31 +314,31 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
     let phalaHtml = "";
     if (phalaData[1] && phalaData[1] !== "") {
        phalaHtml = `
-         <table style="width:100%; height:100%; border-collapse:collapse; margin:0; padding:0; border:none;">
+         <table style="width:100%; height:100%; border-collapse:collapse; margin:0; padding:0; border:none; table-layout:fixed; word-wrap:break-word;">
            <tr>
-             <td style="width:50%; border-right:1px solid #D4B896; padding:11px 4px; text-align:center; vertical-align:middle; color:#4A4A4A; font-size:13px; font-weight:600; border-top:none; border-bottom:none; border-left:none;">${phalaData[0]}</td>
-             <td style="width:50%; padding:11px 4px; text-align:center; vertical-align:middle; color:${colorCode}; font-size:13px; font-weight:700; border:none;">${phalaData[1]}</td>
+             <td style="width:50%; border-right:1px solid #D4B896; padding:11px 4px; text-align:center; vertical-align:middle; color:#4A4A4A; font-size:13px; font-weight:600; border-top:none; border-bottom:none; border-left:none; word-wrap:break-word;">${phalaData[0]}</td>
+             <td style="width:50%; padding:11px 4px; text-align:center; vertical-align:middle; color:${colorCode}; font-size:13px; font-weight:700; border:none; word-wrap:break-word;">${phalaData[1]}</td>
            </tr>
          </table>
        `;
     } else {
-       phalaHtml = `<div style="padding:11px 8px; font-size:13px; font-weight:700; color:${colorCode}; text-align:center; display:block;">${phalaData[0]}</div>`;
+       phalaHtml = `<div style="padding:11px 8px; font-size:13px; font-weight:700; color:${colorCode}; text-align:center; display:block; word-wrap:break-word;">${phalaData[0]}</div>`;
     }
 
     return `
  <tr>
    <td style="background:#F5EDD8;text-align:center;font-size:14px;font-weight:700;
-       color:#3D1A00;border:1px solid #D4B896;width:48px;padding:11px 6px;">${i + 1}</td>
+       color:#3D1A00;border:1px solid #D4B896;width:50px;padding:11px 4px;">${i + 1}</td>
    <td style="background:${bg};font-size:14px;color:#2C1000;border:1px solid #D4B896;
-       padding:11px 12px;font-weight:600;">${row.label}</td>
+       width:180px;padding:11px 12px;font-weight:600;">${row.label}</td>
    <td style="background:${bg};font-size:13px;color:#5A3000;border:1px solid #D4B896;
-       padding:11px 12px;text-align:center;">${row.formula}</td>
+       width:160px;padding:11px 12px;text-align:center;">${row.formula}</td>
    <td style="background:${bg};text-align:center;font-size:13px;font-weight:700;
-       color:#1A0A00;border:1px solid #D4B896;width:60px;padding:11px 4px;">${row.val}</td>
+       color:#1A0A00;border:1px solid #D4B896;width:80px;padding:11px 4px;">${row.val}</td>
    <td style="background:${bg};text-align:center;font-size:14px;font-weight:700;
-       color:#8B0000;border:1px solid #D4B896;width:55px;padding:11px 4px;">${row.rounded}</td>
+       color:#8B0000;border:1px solid #D4B896;width:95px;padding:11px 4px;">${row.rounded}</td>
    <td style="background:${bg};text-align:center;border:1px solid #D4B896;
-       width:130px;padding:0px;font-size:14px;font-weight:600;">${phalaHtml}</td>
+       width:175px;padding:0px;font-size:14px;font-weight:600;">${phalaHtml}</td>
  </tr>`;
   }).join("");
 };
@@ -361,7 +361,7 @@ const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
       areaUnit: 'పదము',
       col1: 'క్రమం',
       col2: 'అంశం',
-      col3: 'సూత్రం (అడుగులు/అంగుళాలు)',
+      col3: 'సూత్రం',
       col4: 'ఫలితం (వాస్తవ)',
       col5: 'సవరించిన (Rounded)',
       phalaHeader: 'ఫల విశ్లేషణ',
@@ -400,7 +400,7 @@ const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
       areaUnit: 'पदम',
       col1: 'क्रम',
       col2: 'अंश',
-      col3: 'सूत्र (फीट/इंच)',
+      col3: 'सूत्र',
       col4: 'परिणाम (वास्तविक)',
       col5: 'संशोधित (Rounded)',
       phalaHeader: 'फल विश्लेषण',
@@ -438,7 +438,7 @@ const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
     areaUnit: 'Padamu',
     col1: 'S.No',
     col2: 'Aspect',
-    col3: 'Formula (Feet/Inches)',
+    col3: 'Formula',
     col4: 'Result (Actual)',
     col5: 'Modified (Rounded)',
     phalaHeader: 'Phala Analysis',
@@ -549,10 +549,10 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 
-@page { margin: 0; size: 720px 1600px; }
+@page { margin: 0; size: 800px 1338px; }
 html, body {
-  width: 720px;
-  height: 1600px;
+  width: 800px;
+  height: 1338px;
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -568,8 +568,7 @@ body {
    OUTER TRIPLE BORDER: Gold > Dark > Gold
 ═══════════════════════════════════════════ */
 .frame {
-  width: 680px;
-  min-height: 1600px;
+  width: 760px;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -729,12 +728,17 @@ body {
 .main-table { width:100%; border-collapse:collapse; table-layout:fixed; word-wrap:break-word; }
 .main-table thead tr { background: linear-gradient(90deg,#6B0F1A,#8B0000,#6B0F1A); }
 .main-table thead th {
-  padding: 11px 8px;
-  font-size: 13px;
+  padding: 12px 6px;
+  font-size: 14px;
   font-weight: 700;
   color: #FFFDF8;
   text-align: center;
   border: 1px solid rgba(212,175,55,0.35);
+  letter-spacing: 0.2px;
+  vertical-align: middle;
+  line-height: 1.3;
+  word-wrap: normal;
+  word-break: normal;
 }
 .main-table thead th:nth-child(2) { text-align:left; }
 .main-table thead th:nth-child(3) { text-align:center; }
@@ -774,7 +778,6 @@ body {
   padding: 14px 20px;
   gap: 0;
   border-top: 1px solid #E8D0A0;
-  margin-top: auto;
 }
 .contact-left  { flex:1; display:flex; align-items:center; gap:12px; border-right:2px solid #E0C880; padding-right:20px; }
 .contact-right { flex:1; display:flex; align-items:center; gap:12px; padding-left:20px; }
@@ -863,12 +866,12 @@ body {
 <table class="main-table">
   <thead>
     <tr>
-      <th style="width:48px;">${T.col1}</th>
-      <th style="width:140px;text-align:left;padding-left:12px;">${T.col2}</th>
-      <th style="text-align:left;padding-left:12px;">${T.col3}</th>
-      <th style="width:60px;">${T.col4}</th>
-      <th style="width:55px;">${T.col5}</th>
-      <th style="width:120px;">ఫల విశ్లేషణ</th>
+      <th style="width:50px;">${T.col1}</th>
+      <th style="width:180px;text-align:left;padding-left:12px;">${T.col2}</th>
+      <th style="width:160px;text-align:center;padding-left:4px;">${T.col3}</th>
+      <th style="width:80px;">${T.col4}</th>
+      <th style="width:95px;">${T.col5}</th>
+      <th style="width:175px;">ఫల విశ్లేషణ</th>
     </tr>
   </thead>
   <tbody>
@@ -932,7 +935,7 @@ export const generateVastuPdf = async (
   const table = report.summaryTables[0];
   const html  = buildHtml(form, table, yantraBase64, compassBase64);
 
-  const { uri } = await Print.printToFileAsync({ html, width: 720, height: 1600 });
+  const { uri } = await Print.printToFileAsync({ html, width: 800, height: 1338 });
   const finalUri = `${FileSystem.cacheDirectory}viswakarma_vastu_analysis_${Date.now()}.pdf`;
   
   if (Platform.OS !== 'web') {
