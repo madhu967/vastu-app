@@ -461,7 +461,7 @@ const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
   };
 };
 
-const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: string, compassBase64: string): string => {
+const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: string, compassBase64: string, profilePicUrl?: string): string => {
   const isTable1 = table.title === "Result Table 1";
   const isTable2 = table.title === "Result Table 2";
 
@@ -479,6 +479,11 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
 
   const LEFT_ICON = (isTable1 || isTable2) ? `<img src="${icon4Base64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />` : COMPASS;
   const RIGHT_ICON = (isTable1 || isTable2) ? `<img src="${icon5Base64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />` : `<div style="transform:scaleX(-1);">${COMPASS}</div>`;
+
+  // Contact bar profile image or fallback SVG icon
+  const CONTACT_PROFILE_IMG = profilePicUrl
+    ? `<img src="${profilePicUrl}" style="width:72px;height:72px;border-radius:50%;border:3px solid #D4AF37;object-fit:cover;flex-shrink:0;" />`
+    : PROFILE_ICON;
 
   const varguMapTE: Record<string, string> = { "1": "'అ' వర్గం", "2": "'క' వర్గం", "3": "'చ' వర్గం", "4": "'ట' వర్గం", "5": "'త' వర్గం", "6": "'ప' వర్గం", "7": "'య' వర్గం", "8": "'శ' వర్గం" };
   const varguMapHI: Record<string, string> = { "1": "'अ' वर्ग", "2": "'क' वर्ग", "3": "'च' वर्ग", "4": "'ट' वर्ग", "5": "'त' वर्ग", "6": "'प' वर्ग", "7": "'य' वर्ग", "8": "'श' वर्ग" };
@@ -549,10 +554,10 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 
-@page { margin: 0; size: 800px 1338px; }
+@page { margin: 0; size: 800px 1500px; }
 html, body {
   width: 800px;
-  height: 1338px;
+  height: 1500px;
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -587,7 +592,7 @@ body {
   width: 100%;
   background: linear-gradient(180deg, #7B0A10 0%, #9B1515 50%, #7B0A10 100%);
   border-bottom: 4px solid #D4AF37;
-  min-height: 135px;
+  min-height: 120px;
 }
 .hdr-col { display: table-cell; vertical-align: middle; }
 
@@ -772,19 +777,36 @@ body {
    CONTACT BAR
 ═══════════════════════════════════════════ */
 .contact {
-  background: #FFFDF2;
+  background: linear-gradient(135deg, #FFFDF2 0%, #FFF8E1 100%);
   display: flex;
-  align-items: center;
-  padding: 14px 20px;
+  align-items: stretch;
+  padding: 0;
   gap: 0;
-  border-top: 1px solid #E8D0A0;
+  border-top: 3px solid #D4AF37;
+  min-height: 160px;
 }
-.contact-left  { flex:1; display:flex; align-items:center; gap:12px; border-right:2px solid #E0C880; padding-right:20px; }
-.contact-right { flex:1; display:flex; align-items:center; gap:12px; padding-left:20px; }
-.contact-texts {}
-.contact-lbl   { font-size:12px; color:#7A4A20; font-weight:600; margin-bottom:3px; }
-.contact-phone { font-size:22px; font-weight:900; color:#1A0A00; letter-spacing:1px; }
-.contact-app   { font-size:14px; font-weight:700; color:#0088CC; }
+.contact-left {
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  border-right: 3px solid #D4AF37;
+  padding: 0;
+  overflow: hidden;
+}
+.contact-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 32px;
+  gap: 14px;
+  background: linear-gradient(135deg, #FFFDF2 0%, #FFF8E1 100%);
+}
+.contact-name-lbl  { font-size:11px; color:#7A4A20; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.contact-name-val  { font-size:28px; font-weight:900; color:#1A0A00; letter-spacing:0.3px; line-height:1.1; }
+.contact-phone-lbl { font-size:11px; color:#7A4A20; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.contact-phone-val { font-size:24px; font-weight:900; color:#1A0A00; letter-spacing:2px; }
+.contact-divider   { height:1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); margin: 2px 0; }
 </style>
 </head>
 <body>
@@ -904,18 +926,33 @@ body {
      CONTACT BAR
 ═══════════════════════════════ -->
 <div class="contact">
+  <!-- LEFT: Image only, natural width, no background -->
   <div class="contact-left">
-    ${PROFILE_ICON}
-    <div class="contact-texts">
-      <div class="contact-lbl">Name</div>
-      <div class="contact-phone">${form.clientName || "—"}</div>
-    </div>
+    ${profilePicUrl
+      ? `<img src="${profilePicUrl}" style="width:240px;height:100%;min-height:160px;object-fit:cover;display:block;" />`
+      : `<div style="width:240px;height:100%;min-height:160px;background:#F5F0E8;display:flex;align-items:center;justify-content:center;">${PROFILE_ICON}</div>`
+    }
   </div>
+  <!-- RIGHT 50%: Name + WhatsApp + Jyothishyalayam -->
   <div class="contact-right">
-    ${WHATSAPP_ICON}
-    <div class="contact-texts">
-      <div class="contact-lbl">${T.whatsapp}</div>
-      <div class="contact-phone">${form.phoneNumber || "9949598627"}</div>
+    ${form.jyothishyalayam ? `
+    <div style="margin-bottom: 4px;">
+      <div class="contact-name-lbl">Jyothishyalayam</div>
+      <div class="contact-name-val" style="color:#7B0A10; font-size:24px; margin-bottom: 2px;">${form.jyothishyalayam}</div>
+      <div class="contact-divider"></div>
+    </div>
+    ` : ''}
+    <div>
+      <div class="contact-name-lbl">Consultant Name</div>
+      <div class="contact-name-val" style="${form.jyothishyalayam ? 'font-size:20px;' : ''}">${form.clientName || '—'}</div>
+      <div class="contact-divider"></div>
+    </div>
+    <div>
+      <div class="contact-phone-lbl">${T.whatsapp}</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:2px;">
+        ${WHATSAPP_ICON}
+        <div class="contact-phone-val">${form.phoneNumber || '9949598627'}</div>
+      </div>
     </div>
   </div>
 </div>
@@ -931,11 +968,12 @@ body {
 export const generateVastuPdf = async (
   form: VastuFormValues,
   report: VastuReport,
+  profilePicUrl?: string,
 ) => {
   const table = report.summaryTables[0];
-  const html  = buildHtml(form, table, yantraBase64, compassBase64);
+  const html  = buildHtml(form, table, yantraBase64, compassBase64, profilePicUrl);
 
-  const { uri } = await Print.printToFileAsync({ html, width: 800, height: 1338 });
+  const { uri } = await Print.printToFileAsync({ html, width: 800, height: 1500 });
   const finalUri = `${FileSystem.cacheDirectory}viswakarma_vastu_analysis_${Date.now()}.pdf`;
   
   if (Platform.OS !== 'web') {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
 import { collection, query, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +11,7 @@ type UserData = {
   email: string;
   name?: string;
   phone?: string;
+  profilePicUrl?: string;
   status: 'pending' | 'approved' | 'rejected' | 'suspended';
   requestDate: string;
 };
@@ -93,9 +94,16 @@ export default function AdminApprovalsScreen() {
     return (
       <View style={styles.userCard}>
         <View style={styles.cardHeaderRow}>
-          <View style={styles.avatarCircle}>
-            <Text style={styles.avatarText}>{initial}</Text>
-          </View>
+          {item.profilePicUrl ? (
+            <Image
+              source={{ uri: item.profilePicUrl }}
+              style={styles.avatarImage}
+            />
+          ) : (
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarText}>{initial}</Text>
+            </View>
+          )}
           <View style={styles.userInfoCol}>
             <Text style={styles.userName} numberOfLines={1}>{item.name || 'Unknown User'}</Text>
             <Text style={styles.userEmail} numberOfLines={1}>{item.email}</Text>
@@ -324,19 +332,27 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   avatarCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: '#FFF8F0',
-    borderWidth: 1,
-    borderColor: 'rgba(244, 196, 48, 0.4)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(244, 196, 48, 0.5)',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.md,
   },
+  avatarImage: {
+    width: 56,
+    height: 56,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#F4C430',
+    marginRight: spacing.md,
+  },
   avatarText: {
     fontFamily: 'CormorantGaramond_700Bold',
-    fontSize: 24,
+    fontSize: 26,
     color: '#8B000F',
     marginTop: 2,
   },

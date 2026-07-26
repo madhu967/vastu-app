@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Picker } from "@react-native-picker/picker";
 import {
   ActivityIndicator,
@@ -38,6 +38,7 @@ const initialForm: VastuFormValues = {
   language: "English",
   clientName: "",
   ownerName: "",
+  jyothishyalayam: "",
   nakshatram: "",
   vargu: "",
   phoneNumber: "",
@@ -66,6 +67,9 @@ export const HomeScreen = () => {
   const [isApproved, setIsApproved] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
+  const [userProfilePic, setUserProfilePic] = useState('');
+  const [form, setForm] = useState<VastuFormValues>(initialForm);
+  const hasAutoFilledRef = useRef(false);
 
   // Check admin and approved status in real-time
   useEffect(() => {
@@ -78,6 +82,34 @@ export const HomeScreen = () => {
           setIsAdmin(true);
           setIsApproved(true);
           setUserName('Administrator');
+          
+           unsubscribeSnapshot = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              setUserName(data.name || 'Administrator');
+              setUserProfilePic(data.profilePicUrl || '');
+              if (!hasAutoFilledRef.current) {
+                hasAutoFilledRef.current = true;
+                setForm(prev => ({
+                  ...prev,
+                  clientName: data.name || 'Administrator',
+                  phoneNumber: data.phone || '',
+                  jyothishyalayam: data.jyothishyalayam || '',
+                }));
+              }
+            } else {
+              setUserProfilePic('');
+              if (!hasAutoFilledRef.current) {
+                hasAutoFilledRef.current = true;
+                setForm(prev => ({
+                  ...prev,
+                  clientName: 'Administrator',
+                  phoneNumber: '',
+                  jyothishyalayam: '',
+                }));
+              }
+            }
+          });
         } else {
           setIsAdmin(false);
           // Listen to their approval status in real-time
@@ -85,8 +117,18 @@ export const HomeScreen = () => {
             if (docSnap.exists()) {
               const data = docSnap.data();
               setUserName(data.name || 'User');
+              setUserProfilePic(data.profilePicUrl || '');
               if (data.status === 'approved') {
                 setIsApproved(true);
+                if (!hasAutoFilledRef.current) {
+                  hasAutoFilledRef.current = true;
+                  setForm(prev => ({
+                    ...prev,
+                    clientName: data.name || '',
+                    phoneNumber: data.phone || '',
+                    jyothishyalayam: data.jyothishyalayam || '',
+                  }));
+                }
               } else {
                 // If they become suspended, rejected, or deleted, instantly revoke access
                 setIsApproved(false);
@@ -100,6 +142,9 @@ export const HomeScreen = () => {
         setIsLoggedIn(false);
         setIsAdmin(false);
         setIsApproved(false);
+        setUserProfilePic('');
+        hasAutoFilledRef.current = false;
+        setForm(initialForm);
         if (unsubscribeSnapshot) unsubscribeSnapshot();
       }
     });
@@ -108,8 +153,6 @@ export const HomeScreen = () => {
       if (unsubscribeSnapshot) unsubscribeSnapshot();
     };
   }, []);
-
-  const [form, setForm] = useState<VastuFormValues>(initialForm);
 
   const [table1, setTable1] = useState<ResultTableType | null>(null);
   const [table1a, setTable1a] = useState<ResultTableType | null>(null);
@@ -178,7 +221,7 @@ export const HomeScreen = () => {
         status: "success" as const,
         notes: [],
       };
-      await generateVastuPdf(form, fakeReport);
+      await generateVastuPdf(form, fakeReport, userProfilePic || undefined);
     } catch (e) {
       console.error(e);
       alert("Failed to generate PDF. Please try again.");
@@ -356,9 +399,16 @@ export const HomeScreen = () => {
           </LinearGradient>
           {(isAdmin || isApproved) && (
             <View style={styles.premiumGreetingCard}>
-              <View style={styles.avatarCircle}>
-                <Text style={styles.avatarText}>{isAdmin ? 'A' : (userName ? userName.charAt(0).toUpperCase() : '?')}</Text>
-              </View>
+              {userProfilePic ? (
+                <Image
+                  source={{ uri: userProfilePic }}
+                  style={styles.greetingAvatarImage}
+                />
+              ) : (
+                <View style={styles.avatarCircle}>
+                  <Text style={styles.avatarText}>{isAdmin ? 'A' : (userName ? userName.charAt(0).toUpperCase() : '?')}</Text>
+                </View>
+              )}
               <View style={styles.greetingTextCol}>
                 <Text style={styles.greetingTime}>{strings.home.welcomeBack}</Text>
                 <Text style={styles.greetingNameText}>{isAdmin ? strings.home.administrator : userName}</Text>
@@ -395,6 +445,15 @@ export const HomeScreen = () => {
               keyboardType="phone-pad"
               onChangeText={(text) =>
                 updateField("phoneNumber", digitsOnly(text))
+              }
+            />
+            <PremiumInput
+              label="Jyothishyalayam"
+              value={form.jyothishyalayam}
+              placeholder="e.g. Sri Jyothishyalayam"
+              autoCapitalize="words"
+              onChangeText={(text) =>
+                updateField("jyothishyalayam", text)
               }
             />
           </SectionCard>
@@ -754,14 +813,22 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   avatarCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: '#FFF8F0',
-    borderWidth: 1,
-    borderColor: 'rgba(244, 196, 48, 0.4)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(244, 196, 48, 0.5)',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: spacing.md,
+  },
+  greetingAvatarImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#F4C430',
     marginRight: spacing.md,
   },
   avatarText: {

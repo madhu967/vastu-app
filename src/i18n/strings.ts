@@ -75,6 +75,7 @@ type AppStrings = {
   nakshatrams: OptionItem[];
   vargus: OptionItem[];
   resultTableLabels: Record<string, string>;
+  taraPhalam: string[];
 };
 
 const englishStrings: AppStrings = {
@@ -178,7 +179,20 @@ const englishStrings: AppStrings = {
     "1st Suddha Padham": "1st Suddha Padham",
     "2nd Suddha Padham": "2nd Suddha Padham",
     "No Subham Padamu found": "No Subham Padamu found",
+    "Owner Tara Phalam": "Owner Tara Phalam",
+    "Wife Tara Phalam": "Wife Tara Phalam",
   },
+  taraPhalam: [
+    "Janma Tara",
+    "Sampat Tara",
+    "Vipat Tara",
+    "Kshema Tara",
+    "Pratyak Tara",
+    "Sadhana Tara",
+    "Naidhana Tara",
+    "Mitra Tara",
+    "Parama Mitra Tara",
+  ],
 };
 
 const teluguStrings: AppStrings = {
@@ -290,7 +304,20 @@ const teluguStrings: AppStrings = {
     "1st Suddha Padham": "1వ శుద్ధ పాదం",
     "2nd Suddha Padham": "2వ శుద్ధ పాదం",
     "No Subham Padamu found": "శుభ పాదం లభించలేదు",
+    "Owner Tara Phalam": "యజమాని తారా ఫలం",
+    "Wife Tara Phalam": "భార్య తారా ఫలం",
   },
+  taraPhalam: [
+    "జన్మతార – దేహనాశనం",
+    "సంపత్తార – సంపద",
+    "విపత్తార – విపత్తు",
+    "క్షేమతార – క్షేమం",
+    "ప్రత్యక్తార – వ్యతిరేకత",
+    "సాధనతార – శుభం",
+    "నైధనతార – అశుభం",
+    "మిత్రతార – శుభం",
+    "పరమమిత్రతార – శుభం",
+  ],
 };
 
 const hindiStrings: AppStrings = {
@@ -402,7 +429,20 @@ const hindiStrings: AppStrings = {
     "1st Suddha Padham": "1वां शुद्ध पादम",
     "2nd Suddha Padham": "2वां शुद्ध पादम",
     "No Subham Padamu found": "कोई शुभ पादम नहीं मिला",
+    "Owner Tara Phalam": "मालिक तारा फलम",
+    "Wife Tara Phalam": "पत्नी तारा फलम",
   },
+  taraPhalam: [
+    "1. जन्म तारा",
+    "2. सम्पत तारा",
+    "3. विपत तारा",
+    "4. क्षेम तारा",
+    "5. प्रत्यक तारा",
+    "6. साधन तारा",
+    "7. नैधन तारा",
+    "8. मित्र तारा",
+    "9. परम मित्र तारा",
+  ],
 };
 
 const guideTranslations: Record<

@@ -146,6 +146,12 @@ export const ResultTable = ({ table }: ResultTableProps) => {
               
               {currentRows.map((row, index) => {
                 const translatedLabel = strings.resultTableLabels?.[row.label] || row.label;
+                const isTara = row.label === "Owner Tara Phalam" || row.label === "Wife Tara Phalam";
+                const translateTara = (v: string) => {
+                  const idx = parseInt(v, 10) - 1;
+                  const res = (isTara && idx >= 0 && idx <= 8) ? (strings.taraPhalam?.[idx] || v) : v;
+                  return res.replace(/^\d+\.\s*/, "");
+                };
                 return (
                 <View
                   key={`${row.label}-${index}`}
@@ -158,12 +164,12 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                   <Text style={[styles.label, { width: 80, textAlign: "center", fontSize: 12 }]}>{translatedLabel}</Text>
                   {row.columns?.map((col, i) => (
                     <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontSize: 12 }]}>
-                      {col}
+                      {translateTara(col)}
                     </Text>
                   ))}
                 </View>
-              )})}
-            </View>
+                );
+              })}</View>
           </ScrollView>
         </View>
       );
@@ -183,6 +189,13 @@ export const ResultTable = ({ table }: ResultTableProps) => {
           {currentRows.map((row, index) => {
             const translatedLabel = strings.resultTableLabels?.[row.label] || row.label;
             const isPadamu = row.label === "Padamu" || translatedLabel === "పదము" || translatedLabel === "पदम";
+            const isTara = row.label === "Owner Tara Phalam" || row.label === "Wife Tara Phalam";
+            const translateTara = (v?: string) => {
+              if (!isTara || !v) return v;
+              const idx = parseInt(v, 10) - 1;
+              const res = (idx >= 0 && idx <= 8) ? (strings.taraPhalam?.[idx] || v) : v;
+              return res.replace(/^\d+\.\s*/, "");
+            };
             return (
               <View
                 key={`${row.label}-${index}`}
@@ -192,8 +205,14 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                 ]}
               >
                 <Text style={[styles.label, isPadamu && { color: "#8B0000", fontWeight: "bold" }]}>{translatedLabel}</Text>
-                <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}, isPadamu && { color: "#8B0000" }]}>{row.value}</Text>
-                {row.roundedValue && <Text style={[styles.value, isPadamu && { color: "#8B0000" }]}>{row.roundedValue}</Text>}
+                {isTara ? (
+                  <Text style={[styles.value, { flex: 1, textAlign: "right" }]}>{translateTara(row.value)}</Text>
+                ) : (
+                  <>
+                    <Text style={[styles.value, row.roundedValue ? { flex: 1, textAlign: "center" } : {}, isPadamu && { color: "#8B0000" }]}>{row.value}</Text>
+                    {row.roundedValue && <Text style={[styles.value, isPadamu && { color: "#8B0000" }]}>{row.roundedValue}</Text>}
+                  </>
+                )}
               </View>
             );
           })}

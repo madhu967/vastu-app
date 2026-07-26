@@ -7,6 +7,7 @@ export type VastuFormValues = {
   language: string;
   clientName: string;
   ownerName: string;
+  jyothishyalayam: string;
   nakshatram: string;
   vargu: string;
   phoneNumber: string;
