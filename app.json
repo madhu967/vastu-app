@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "icon":"./assets/icon3.jpeg",
+    "icon": "./assets/icon3_square.png",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -20,9 +20,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "4b83c463-0361-4f70-9ad1-22182a297d4b"
+        "projectId": "bf5e3608-9a29-4111-92e5-f73e15630dc3"
       }
     },
-    "owner": "madhu0586"
+    "owner": "ironmanmadhu"
   }
 }
