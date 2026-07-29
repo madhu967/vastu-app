@@ -1,7 +1,7 @@
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system/legacy";
-import { Platform, Alert, Image } from "react-native";
+import { Platform, Alert, Image, PixelRatio } from "react-native";
 import { Asset } from 'expo-asset';
 import { VastuFormValues, VastuReport, ResultTable } from "@/types/vastu";
 import { yantraBase64, compassBase64, icon4Base64, icon5Base64 } from "./assetsBase64";
@@ -122,12 +122,12 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
       const colsHtml = row.columns
         ?.map(
           (col) =>
-            `<td style="background:${bg};text-align:center;font-size:12px;font-weight:700;color:#1A0A00;border:1px solid #D4B896;padding:8px 4px;">${col}</td>`
+            `<td style="background:${bg};text-align:center;font-size:calc(12px * var(--fs-factor));font-weight:700;color:#1A0A00;border:1px solid #D4B896;padding:8px 4px;">${col}</td>`
         )
         .join("");
       rowsHtml += `
         <tr>
-          <td style="background:${bg};font-size:13px;color:#8B0000;border:1px solid #D4B896;padding:8px;font-weight:bold;">${row.label}</td>
+          <td style="background:${bg};font-size:calc(13px * var(--fs-factor));color:#8B0000;border:1px solid #D4B896;padding:8px;font-weight:bold;">${row.label}</td>
           ${colsHtml}
         </tr>
       `;
@@ -136,7 +136,7 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
     const headersHtml = table.headers
       .map(
         (header) =>
-          `<th style="padding: 10px 4px; font-size: 11px; font-weight: 700; color: #FFFDF8; text-align: center; border: 1px solid rgba(212,175,55,0.35);">${header}</th>`
+          `<th style="padding: 10px 4px; font-size:calc(11px * var(--fs-factor)); font-weight: 700; color: #FFFDF8; text-align: center; border: 1px solid rgba(212,175,55,0.35);">${header}</th>`
       )
       .join("");
 
@@ -146,7 +146,7 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
          document.addEventListener("DOMContentLoaded", function() {
            const thead = document.querySelector(".main-table thead tr");
              if(thead) {
-               thead.innerHTML = '<th style="width:60px; padding: 10px 4px; font-size: 12px; font-weight: bold; color: #FFCDD2; text-align: center; border: 1px solid rgba(212,175,55,0.35);">Padamu</th>' + \`${headersHtml}\`;
+               thead.innerHTML = '<th style="width:60px; padding: 10px 4px; font-size:calc(12px * var(--fs-factor)); font-weight: bold; color: #FFCDD2; text-align: center; border: 1px solid rgba(212,175,55,0.35);">Padamu</th>' + \`${headersHtml}\`;
              }
          });
       </script>
@@ -316,29 +316,29 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
        phalaHtml = `
          <table style="width:100%; height:100%; border-collapse:collapse; margin:0; padding:0; border:none; table-layout:fixed; word-wrap:break-word;">
            <tr>
-             <td style="width:50%; border-right:1px solid #D4B896; padding:11px 4px; text-align:center; vertical-align:middle; color:#4A4A4A; font-size:13px; font-weight:600; border-top:none; border-bottom:none; border-left:none; word-wrap:break-word;">${phalaData[0]}</td>
-             <td style="width:50%; padding:11px 4px; text-align:center; vertical-align:middle; color:${colorCode}; font-size:13px; font-weight:700; border:none; word-wrap:break-word;">${phalaData[1]}</td>
+             <td style="width:50%; border-right:1px solid #D4B896; padding:11px 4px; text-align:center; vertical-align:middle; color:#4A4A4A; font-size:calc(13px * var(--fs-factor)); font-weight:600; border-top:none; border-bottom:none; border-left:none; word-wrap:break-word;">${phalaData[0]}</td>
+             <td style="width:50%; padding:11px 4px; text-align:center; vertical-align:middle; color:${colorCode}; font-size:calc(13px * var(--fs-factor)); font-weight:700; border:none; word-wrap:break-word;">${phalaData[1]}</td>
            </tr>
          </table>
        `;
     } else {
-       phalaHtml = `<div style="padding:11px 8px; font-size:13px; font-weight:700; color:${colorCode}; text-align:center; display:block; word-wrap:break-word;">${phalaData[0]}</div>`;
+       phalaHtml = `<div style="padding:11px 8px; font-size:calc(13px * var(--fs-factor)); font-weight:700; color:${colorCode}; text-align:center; display:block; word-wrap:break-word;">${phalaData[0]}</div>`;
     }
 
     return `
  <tr>
-   <td style="background:#F5EDD8;text-align:center;font-size:14px;font-weight:700;
+   <td style="background:#F5EDD8;text-align:center;font-size:calc(14px * var(--fs-factor));font-weight:700;
        color:#3D1A00;border:1px solid #D4B896;width:50px;padding:11px 4px;">${i + 1}</td>
-   <td style="background:${bg};font-size:14px;color:#2C1000;border:1px solid #D4B896;
+   <td style="background:${bg};font-size:calc(14px * var(--fs-factor));color:#2C1000;border:1px solid #D4B896;
        width:180px;padding:11px 12px;font-weight:600;">${row.label}</td>
-   <td style="background:${bg};font-size:13px;color:#5A3000;border:1px solid #D4B896;
+   <td style="background:${bg};font-size:calc(13px * var(--fs-factor));color:#5A3000;border:1px solid #D4B896;
        width:160px;padding:11px 12px;text-align:center;">${row.formula}</td>
-   <td style="background:${bg};text-align:center;font-size:13px;font-weight:700;
+   <td style="background:${bg};text-align:center;font-size:calc(13px * var(--fs-factor));font-weight:700;
        color:#1A0A00;border:1px solid #D4B896;width:80px;padding:11px 4px;">${row.val}</td>
-   <td style="background:${bg};text-align:center;font-size:14px;font-weight:700;
-       color:#8B0000;border:1px solid #D4B896;width:95px;padding:11px 4px;">${row.rounded}</td>
+   <td style="background:${bg};text-align:center;font-size:calc(14px * var(--fs-factor));font-weight:700;
+        color:#8B0000;border:1px solid #D4B896;width:95px;padding:11px 4px;">${row.rounded}</td>
    <td style="background:${bg};text-align:center;border:1px solid #D4B896;
-       width:175px;padding:0px;font-size:14px;font-weight:600;">${phalaHtml}</td>
+       width:175px;padding:0px;font-size:calc(14px * var(--fs-factor));font-weight:600;">${phalaHtml}</td>
  </tr>`;
   }).join("");
 };
@@ -462,6 +462,7 @@ const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
 };
 
 const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: string, compassBase64: string, profilePicUrl?: string): string => {
+  const fontScale = PixelRatio.getFontScale() || 1.0;
   const isTable1 = table.title === "Result Table 1";
   const isTable2 = table.title === "Result Table 2";
 
@@ -552,12 +553,16 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
 <meta name="viewport" content="width=720, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>${T.title}</title>
 <style>
+:root {
+  --fs-factor: ${1 / fontScale};
+}
+
 * { box-sizing:border-box; margin:0; padding:0; }
 
-@page { margin: 0; size: 800px 1500px; }
+@page { margin: 0; size: 800px 1150px; }
 html, body {
   width: 800px;
-  height: 1500px;
+  height: 1150px;
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -571,16 +576,17 @@ body {
 
 /* ═══════════════════════════════════════════
    OUTER TRIPLE BORDER: Gold > Dark > Gold
-═══════════════════════════════════════════ */
+// ═══════════════════════════════════════════ */
 .frame {
-  width: 760px;
+  width: 900px;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
+  margin: 20px auto 0;
   border: 10px solid #D4AF37;      /* Gold outer */
   outline: 3px solid #6B0F1A;      /* Dark maroon inner stripe */
   outline-offset: -3px;
   background: #FFFDF8;
+  zoom: 0.76;
 }
 
 /* ═══════════════════════════════════════════
@@ -601,7 +607,7 @@ body {
 
 .hdr-center { text-align: center; padding: 5px; }
 .hdr-title {
-  font-size: 28px;
+  font-size: calc(28px * var(--fs-factor));
   font-weight: 800;
   color: #FFE57A;
   line-height: 1.1;
@@ -616,8 +622,8 @@ body {
   gap: 8px;
 }
 .hdr-divline { flex:1; height:1px; background: linear-gradient(90deg,transparent,#D4AF37,transparent); }
-.hdr-divdot  { font-size:10px; color:#D4AF37; }
-.hdr-sub     { font-size:14px; color:rgba(255,248,220,0.8); font-style:italic; letter-spacing:0.8px; }
+.hdr-divdot  { font-size: calc(10px * var(--fs-factor)); color:#D4AF37; }
+.hdr-sub     { font-size: calc(14px * var(--fs-factor)); color:rgba(255,248,220,0.8); font-style:italic; letter-spacing:0.8px; }
 
 /* ═══════════════════════════════════════════
    RED TITLE BAR
@@ -629,7 +635,7 @@ body {
   border-bottom: 2px solid #D4AF37;
 }
 .redbar-text {
-  font-size: 17px;
+  font-size: calc(17px * var(--fs-factor));
   font-weight: 700;
   color: #FFFFFF;
   letter-spacing: 0.4px;
@@ -657,8 +663,8 @@ body {
 }
 .client-col:last-child { border-right: none; }
 .client-row + .client-row .client-col { border-top: 1px solid #D4B080; }
-.client-lbl { font-size: 11px; color: #7A4A20; margin-bottom: 2px; font-weight: 600; }
-.client-val { font-size: 15px; font-weight: 800; color: #8B0000; line-height: 1.1; }
+.client-lbl { font-size: calc(11px * var(--fs-factor)); color: #7A4A20; margin-bottom: 2px; font-weight: 600; }
+.client-val { font-size: calc(15px * var(--fs-factor)); font-weight: 800; color: #8B0000; line-height: 1.1; }
 
 /* ═══════════════════════════════════════════
    BLUE SECTION HEADER
@@ -671,7 +677,7 @@ body {
   border-bottom: 1px solid #64B5F6;
 }
 .blue-hdr-text {
-  font-size: 15px;
+  font-size: calc(15px * var(--fs-factor));
   font-weight: 700;
   color: #0D47A1;
 }
@@ -686,7 +692,7 @@ body {
   width: 190px;
   background: #FFEBEE;     /* Very light pink — exactly like reference */
   padding: 13px 18px;
-  font-size: 15px;
+  font-size: calc(15px * var(--fs-factor));
   font-weight: 600;
   color: #4A1A00;
   vertical-align: middle;
@@ -696,7 +702,7 @@ body {
   display: table-cell;
   background: #FFFFFF;
   padding: 13px 20px;
-  font-size: 18px;
+  font-size: calc(18px * var(--fs-factor));
   font-weight: 700;
   color: #1A0A00;
   vertical-align: middle;
@@ -723,8 +729,8 @@ body {
   font-weight: 700;
 }
 .area-col:last-child { border-right: none; }
-.area-lbl  { font-size: 16px; color: #FFE57A; }
-.area-val  { font-size: 26px; color: #FFD700; letter-spacing: 1px;
+.area-lbl  { font-size: calc(16px * var(--fs-factor)); color: #FFE57A; }
+.area-val  { font-size: calc(26px * var(--fs-factor)); color: #FFD700; letter-spacing: 1px;
              text-shadow: 0 0 10px rgba(255,215,0,0.5); }
 
 /* ═══════════════════════════════════════════
@@ -734,7 +740,7 @@ body {
 .main-table thead tr { background: linear-gradient(90deg,#6B0F1A,#8B0000,#6B0F1A); }
 .main-table thead th {
   padding: 12px 6px;
-  font-size: 14px;
+  font-size: calc(14px * var(--fs-factor));
   font-weight: 700;
   color: #FFFDF8;
   text-align: center;
@@ -767,11 +773,11 @@ body {
 }
 .rec-divline   { flex:1; height:1px; background:linear-gradient(90deg,transparent,#D4AF37 70%); }
 .rec-divline-r { flex:1; height:1px; background:linear-gradient(90deg,#D4AF37 30%,transparent); }
-.rec-title-text { font-size:16px; font-weight:700; color:#FFE57A; letter-spacing:1.2px; white-space:nowrap; }
+.rec-title-text { font-size: calc(16px * var(--fs-factor)); font-weight:700; color:#FFE57A; letter-spacing:1.2px; white-space:nowrap; }
 .rec-body { display:flex; align-items:center; gap:18px; }
 .rec-diya  { flex-shrink:0; }
 .rec-text  { flex:1; text-align:center; }
-.rec-text p { font-size:14px; color:#FFF8E8; line-height:2.1; letter-spacing:0.3px; }
+.rec-text p { font-size: calc(14px * var(--fs-factor)); color:#FFF8E8; line-height:2.1; letter-spacing:0.3px; }
 
 /* ═══════════════════════════════════════════
    CONTACT BAR
@@ -802,10 +808,10 @@ body {
   gap: 14px;
   background: linear-gradient(135deg, #FFFDF2 0%, #FFF8E1 100%);
 }
-.contact-name-lbl  { font-size:11px; color:#7A4A20; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
-.contact-name-val  { font-size:28px; font-weight:900; color:#1A0A00; letter-spacing:0.3px; line-height:1.1; }
-.contact-phone-lbl { font-size:11px; color:#7A4A20; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
-.contact-phone-val { font-size:24px; font-weight:900; color:#1A0A00; letter-spacing:2px; }
+.contact-name-lbl  { font-size: calc(11px * var(--fs-factor)); color:#7A4A20; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.contact-name-val  { font-size: calc(28px * var(--fs-factor)); font-weight:900; color:#1A0A00; letter-spacing:0.3px; line-height:1.1; }
+.contact-phone-lbl { font-size: calc(11px * var(--fs-factor)); color:#7A4A20; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.contact-phone-val { font-size: calc(24px * var(--fs-factor)); font-weight:900; color:#1A0A00; letter-spacing:2px; }
 .contact-divider   { height:1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); margin: 2px 0; }
 </style>
 </head>
@@ -938,13 +944,13 @@ body {
     ${form.jyothishyalayam ? `
     <div style="margin-bottom: 4px;">
       <div class="contact-name-lbl">Jyothishyalayam</div>
-      <div class="contact-name-val" style="color:#7B0A10; font-size:24px; margin-bottom: 2px;">${form.jyothishyalayam}</div>
+      <div class="contact-name-val" style="color:#7B0A10; font-size:calc(24px * var(--fs-factor)); margin-bottom: 2px;">${form.jyothishyalayam}</div>
       <div class="contact-divider"></div>
     </div>
     ` : ''}
     <div>
       <div class="contact-name-lbl">Consultant Name</div>
-      <div class="contact-name-val" style="${form.jyothishyalayam ? 'font-size:20px;' : ''}">${form.clientName || '—'}</div>
+      <div class="contact-name-val" style="${form.jyothishyalayam ? 'font-size:calc(20px * var(--fs-factor));' : ''}">${form.clientName || '—'}</div>
       <div class="contact-divider"></div>
     </div>
     <div>
@@ -973,7 +979,12 @@ export const generateVastuPdf = async (
   const table = report.summaryTables[0];
   const html  = buildHtml(form, table, yantraBase64, compassBase64, profilePicUrl);
 
-  const { uri } = await Print.printToFileAsync({ html, width: 800, height: 1500 });
+  const { uri } = await Print.printToFileAsync({
+    html,
+    width: 800,
+    height: 1150,
+    margins: { left: 0, right: 0, top: 0, bottom: 0 },
+  });
   const finalUri = `${FileSystem.cacheDirectory}viswakarma_vastu_analysis_${Date.now()}.pdf`;
   
   if (Platform.OS !== 'web') {
