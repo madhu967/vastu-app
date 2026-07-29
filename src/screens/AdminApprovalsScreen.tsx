@@ -29,12 +29,33 @@ export default function AdminApprovalsScreen() {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const usersData: UserData[] = [];
       querySnapshot.forEach((doc) => {
-        usersData.push({ id: doc.id, ...doc.data() } as UserData);
+        const data = doc.data();
+        // Skip the admin account itself to prevent self-deletion or lockout
+        if (data.email === 'admin@vastuapp.com') {
+          return;
+        }
+        usersData.push({ id: doc.id, ...data } as UserData);
       });
-      // Sort by date, newest first
-      usersData.sort((a, b) => new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime());
+
+      // Sort by date, newest first, handling missing/invalid dates safely
+      usersData.sort((a, b) => {
+        const dateA = a.requestDate ? new Date(a.requestDate).getTime() : 0;
+        const dateB = b.requestDate ? new Date(b.requestDate).getTime() : 0;
+        
+        const isNaNA = isNaN(dateA);
+        const isNaNB = isNaN(dateB);
+
+        if (isNaNA && isNaNB) return 0;
+        if (isNaNA) return 1;  // Put invalid dates at the end
+        if (isNaNB) return -1; // Put invalid dates at the end
+
+        return dateB - dateA;
+      });
+
       setUsers(usersData);
       setLoading(false);
+    }, (error) => {
+      console.error("Firestore approvals query error:", error);
     });
 
     return () => unsubscribe();
@@ -64,8 +85,9 @@ export default function AdminApprovalsScreen() {
             try {
               await deleteDoc(doc(db, 'users', userId));
               Alert.alert('Deleted', 'User data has been removed from the database.');
-            } catch (error) {
-              Alert.alert('Error', 'Failed to delete user');
+            } catch (error: any) {
+              console.error("Failed to delete user document:", error);
+              Alert.alert('Error', `Failed to delete user: ${error.message || error}`);
             }
           }
         }

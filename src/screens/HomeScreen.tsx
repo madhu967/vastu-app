@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Picker } from "@react-native-picker/picker";
 import {
   ActivityIndicator,
@@ -70,6 +70,137 @@ export const HomeScreen = () => {
   const [userProfilePic, setUserProfilePic] = useState('');
   const [form, setForm] = useState<VastuFormValues>(initialForm);
   const hasAutoFilledRef = useRef(false);
+
+  const dynamicDirectionOptions = useMemo(() => {
+    let baseList = [
+      { label: "East", value: "East", index: 1 },
+      { label: "South-East", value: "South-East", index: 2 },
+      { label: "South", value: "South", index: 3 },
+      { label: "South-West", value: "South-West", index: 4 },
+      { label: "West", value: "West", index: 5 },
+      { label: "North-West", value: "North-West", index: 6 },
+      { label: "North", value: "North", index: 7 },
+      { label: "North-East", value: "North-East", index: 8 },
+    ];
+
+    if (language === "Telugu") {
+      baseList = [
+        { label: "తూర్పు", value: "తూర్పు", index: 1 },
+        { label: "ఆగ్నేయం", value: "ఆగ్నేయం", index: 2 },
+        { label: "దక్షిణం", value: "దక్షిణం", index: 3 },
+        { label: "నైరుతి", value: "నైరుతి", index: 4 },
+        { label: "పడమర", value: "పడమర", index: 5 },
+        { label: "వాయువ్యం", value: "వాయువ్యం", index: 6 },
+        { label: "ఉత్తరం", value: "ఉత్తరం", index: 7 },
+        { label: "ఈశాన్యం", value: "ఈశాన్యం", index: 8 },
+      ];
+    } else if (language === "Hindi") {
+      baseList = [
+        { label: "पूर्व", value: "पूर्व", index: 1 },
+        { label: "आग्नेय", value: "आग्नेय", index: 2 },
+        { label: "दक्षिण", value: "दक्षिण", index: 3 },
+        { label: "नैऋत्य", value: "नैऋत्य", index: 4 },
+        { label: "पश्चिम", value: "पश्चिम", index: 5 },
+        { label: "वायव्य", value: "वायव्य", index: 6 },
+        { label: "उत्तर", value: "उत्तर", index: 7 },
+        { label: "ईशान", value: "ईशान", index: 8 },
+      ];
+    }
+
+    const ownerVarguNum = parseInt(form.vargu, 10);
+    const wifeVarguNum = parseInt(form.wifeVargu, 10);
+
+    const hasOwnerVargu = !isNaN(ownerVarguNum) && ownerVarguNum >= 1 && ownerVarguNum <= 8;
+    const hasWifeVargu = !isNaN(wifeVarguNum) && wifeVarguNum >= 1 && wifeVarguNum <= 8;
+
+    if (!hasOwnerVargu && !hasWifeVargu) {
+      return baseList.map(({ label, value }) => ({ label, value }));
+    }
+
+    const getVarguRelation = (vNum: number, dirIdx: number): 'swavargu' | 'shatruvargu' | 'mitravargu' => {
+      if (vNum === 1 || vNum === 2) {
+        if (dirIdx === 1 || dirIdx === 2) return 'swavargu';
+        if (dirIdx === 5 || dirIdx === 6) return 'shatruvargu';
+        return 'mitravargu';
+      }
+      if (vNum === 3 || vNum === 4) {
+        if (dirIdx === 3 || dirIdx === 4) return 'swavargu';
+        if (dirIdx === 7 || dirIdx === 8) return 'shatruvargu';
+        return 'mitravargu';
+      }
+      if (vNum === 5 || vNum === 6) {
+        if (dirIdx === 5 || dirIdx === 6) return 'swavargu';
+        if (dirIdx === 1 || dirIdx === 2) return 'shatruvargu';
+        return 'mitravargu';
+      }
+      if (vNum === 7 || vNum === 8) {
+        if (dirIdx === 7 || dirIdx === 8) return 'swavargu';
+        if (dirIdx === 3 || dirIdx === 4) return 'shatruvargu';
+        return 'mitravargu';
+      }
+      return 'mitravargu';
+    };
+
+    return baseList.map(({ label, value, index }) => {
+      let relation: 'swavargu' | 'shatruvargu' | 'mitravargu' = 'mitravargu';
+
+      if (hasOwnerVargu && hasWifeVargu) {
+        const ownerRel = getVarguRelation(ownerVarguNum, index);
+        const wifeRel = getVarguRelation(wifeVarguNum, index);
+
+        if (ownerRel === 'shatruvargu' || wifeRel === 'shatruvargu') {
+          relation = 'shatruvargu';
+        } else if (ownerRel === 'swavargu' || wifeRel === 'swavargu') {
+          relation = 'swavargu';
+        } else {
+          relation = 'mitravargu';
+        }
+      } else if (hasOwnerVargu) {
+        relation = getVarguRelation(ownerVarguNum, index);
+      } else {
+        relation = getVarguRelation(wifeVarguNum, index);
+      }
+
+      let suffix = "";
+      let textColor = undefined;
+      let disabled = false;
+      let disabledMessage = undefined;
+
+      if (relation === "swavargu") {
+        textColor = "#FFA000"; // Yellow/Gold
+      } else if (relation === "shatruvargu") {
+        textColor = "#D32F2F"; // Red
+        disabled = true;
+        disabledMessage = language === "Telugu"
+          ? "శత్రువర్గ దిశను ఎంచుకోలేరు!"
+          : (language === "Hindi" ? "शत्रुवर्ग दिशा का चयन नहीं कर सकते!" : "Cannot select Shatruvargu");
+      } else {
+        textColor = "#2E7D32"; // Green
+      }
+
+      if (language === "Telugu") {
+        if (relation === "swavargu") suffix = " (స్వవర్గం)";
+        else if (relation === "shatruvargu") suffix = " (శత్రువర్గం)";
+        else suffix = " (మిత్రవర్గం)";
+      } else if (language === "Hindi") {
+        if (relation === "swavargu") suffix = " (स्ववर्ग)";
+        else if (relation === "shatruvargu") suffix = " (शत्रुवर्ग)";
+        else suffix = " (मित्रवर्ग)";
+      } else {
+        if (relation === "swavargu") suffix = " (Swavargu)";
+        else if (relation === "shatruvargu") suffix = " (Shatruvargu)";
+        else suffix = " (Mitravargu)";
+      }
+
+      return {
+        label: `${label}${suffix}`,
+        value: value,
+        textColor,
+        disabled,
+        disabledMessage,
+      };
+    });
+  }, [language, form.vargu, form.wifeVargu]);
 
   // Check admin and approved status in real-time
   useEffect(() => {
@@ -536,9 +667,10 @@ export const HomeScreen = () => {
             <SearchableSelect
               label={strings.home.directionLabel}
               value={form.direction}
-              options={strings.directions}
+              options={dynamicDirectionOptions}
               placeholder={strings.home.directionPlaceholder}
               onChange={(value) => updateField("direction", value)}
+              isBold={true}
             />
           </SectionCard>
 

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import {
+  Alert,
   FlatList,
   Modal,
   Pressable,
@@ -18,6 +19,7 @@ type SearchableSelectProps = {
   placeholder?: string;
   error?: string;
   onChange: (value: string) => void;
+  isBold?: boolean;
 };
 
 export const SearchableSelect = ({
@@ -27,6 +29,7 @@ export const SearchableSelect = ({
   placeholder = "Select",
   error,
   onChange,
+  isBold = false,
 }: SearchableSelectProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -39,8 +42,9 @@ export const SearchableSelect = ({
     [options, search],
   );
 
-  const selectedLabel =
-    options.find((option) => option.value === value)?.label ?? "";
+  const selectedOption = options.find((option) => option.value === value);
+  const selectedLabel = selectedOption?.label ?? "";
+  const selectedTextColor = selectedOption?.textColor;
 
   return (
     <View style={styles.wrapper}>
@@ -57,6 +61,8 @@ export const SearchableSelect = ({
           style={[
             styles.selectorText,
             !selectedLabel ? styles.placeholder : null,
+            selectedTextColor ? { color: selectedTextColor } : null,
+            isBold ? { fontFamily: "Manrope_700Bold", fontWeight: "700" } : null,
           ]}
         >
           {selectedLabel || placeholder}
@@ -106,8 +112,15 @@ export const SearchableSelect = ({
                   styles.option,
                   item.value === value ? styles.optionSelected : null,
                   pressed ? styles.optionPressed : null,
+                  item.disabled ? { opacity: 0.5 } : null,
                 ]}
                 onPress={() => {
+                  if (item.disabled) {
+                    if (item.disabledMessage) {
+                      Alert.alert(label, item.disabledMessage);
+                    }
+                    return;
+                  }
                   onChange(item.value);
                   setSearch("");
                   setOpen(false);
@@ -122,6 +135,8 @@ export const SearchableSelect = ({
                   style={[
                     styles.optionText,
                     item.value === value ? styles.optionTextSelected : null,
+                    item.textColor ? { color: item.textColor } : null,
+                    isBold ? { fontFamily: "Manrope_700Bold", fontWeight: "700" } : null,
                   ]}
                 >
                   {item.label}

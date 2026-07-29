@@ -50,6 +50,13 @@ export default function StatusScreen({ status }: { status: string }) {
           colors: ['#9A3412', '#C2410C'],
           icon: '⏸️',
         };
+      case 'deleted':
+        return {
+          title: 'Account Deleted',
+          message: 'Your account has been deleted by the administrator. You no longer have access to this application.',
+          colors: ['#374151', '#4B5563'], // Dark gray
+          icon: '🗑️',
+        };
       default:
         return {
           title: 'Approval Pending',

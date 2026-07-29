@@ -1,6 +1,9 @@
 export type OptionItem = {
   label: string;
   value: string;
+  disabled?: boolean;
+  textColor?: string;
+  disabledMessage?: string;
 };
 
 export type VastuFormValues = {

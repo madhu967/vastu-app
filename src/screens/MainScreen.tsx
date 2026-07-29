@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, SafeAreaView, Alert } from 'react-native';
 import { HomeScreen } from './HomeScreen';
 import LoginScreen from './LoginScreen';
 import ProfileScreen from './ProfileScreen';
@@ -45,6 +45,21 @@ export default function MainScreen() {
                 // if they are trying to view a restricted tab like Profile
                 setActiveTab(prev => prev === 'auth' ? 'status' : prev);
               }
+            } else {
+              // The user document was deleted from Firestore database
+              console.log("User document deleted. Initiating account deletion from Firebase Auth...");
+              setUserStatus('deleted');
+              // Run account deletion asynchronously
+              (async () => {
+                try {
+                  await u.delete();
+                  Alert.alert("Account Deleted", "Your account has been removed by the administrator. Please register again to request access.");
+                } catch (err: any) {
+                  console.warn("Auth deletion failed (likely needs recent login). Signing out...", err);
+                  Alert.alert("Account Deleted", "Your account has been deleted by the administrator. Signing out...");
+                  await auth.signOut();
+                }
+              })();
             }
           });
         }
