@@ -4,6 +4,7 @@ export type OptionItem = {
   disabled?: boolean;
   textColor?: string;
   disabledMessage?: string;
+  relationText?: string;
 };
 
 export type VastuFormValues = {

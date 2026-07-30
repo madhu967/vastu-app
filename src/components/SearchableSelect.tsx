@@ -20,6 +20,7 @@ type SearchableSelectProps = {
   error?: string;
   onChange: (value: string) => void;
   isBold?: boolean;
+  language?: string;
 };
 
 export const SearchableSelect = ({
@@ -30,6 +31,7 @@ export const SearchableSelect = ({
   error,
   onChange,
   isBold = false,
+  language,
 }: SearchableSelectProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -46,6 +48,21 @@ export const SearchableSelect = ({
   const selectedLabel = selectedOption?.label ?? "";
   const selectedTextColor = selectedOption?.textColor;
 
+  const hasTableFormat = options.some((o) => o.relationText !== undefined);
+
+  const renderHeader = () => {
+    if (!hasTableFormat) return null;
+    const col1 = language === "Telugu" ? "దిశ" : (language === "Hindi" ? "दिशा" : "Direction");
+    const col2 = language === "Telugu" ? "వర్గ సంబంధం" : (language === "Hindi" ? "वर्ग संबंध" : "Relation");
+    return (
+      <View style={styles.tableHeaderRow}>
+        <View style={styles.headerCheckSpace} />
+        <Text style={[styles.tableHeaderCell, { flex: 1.2 }]}>{col1}</Text>
+        <Text style={[styles.tableHeaderCell, { flex: 1, textAlign: "right" }]}>{col2}</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.wrapper}>
       <Text style={styles.label}>{label}</Text>
@@ -61,7 +78,8 @@ export const SearchableSelect = ({
           style={[
             styles.selectorText,
             !selectedLabel ? styles.placeholder : null,
-            selectedTextColor ? { color: selectedTextColor } : null,
+            (selectedTextColor && !selectedOption?.relationText) ? { color: selectedTextColor } : null,
+            selectedOption?.relationText ? { color: "#000000" } : null,
             isBold ? { fontFamily: "Manrope_700Bold", fontWeight: "700" } : null,
           ]}
         >
@@ -106,6 +124,7 @@ export const SearchableSelect = ({
             data={filtered}
             keyExtractor={(item) => item.value}
             keyboardShouldPersistTaps="handled"
+            ListHeaderComponent={renderHeader}
             renderItem={({ item }) => (
               <Pressable
                 style={({ pressed }) => [
@@ -131,16 +150,43 @@ export const SearchableSelect = ({
                 ) : (
                   <View style={styles.emptyCheck} />
                 )}
-                <Text
-                  style={[
-                    styles.optionText,
-                    item.value === value ? styles.optionTextSelected : null,
-                    item.textColor ? { color: item.textColor } : null,
-                    isBold ? { fontFamily: "Manrope_700Bold", fontWeight: "700" } : null,
-                  ]}
-                >
-                  {item.label}
-                </Text>
+                {item.relationText ? (
+                  <View style={{ flexDirection: "row", alignItems: "center", flex: 1, gap: 10 }}>
+                    <Text
+                      style={[
+                        styles.optionText,
+                        { color: "#000000", flex: 1.2 },
+                        item.value === value ? styles.optionTextSelected : null,
+                        isBold ? { fontFamily: "Manrope_700Bold", fontWeight: "700" } : null,
+                      ]}
+                    >
+                      {item.label}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "Manrope_700Bold",
+                        fontWeight: "700",
+                        fontSize: 14,
+                        color: item.textColor || palette.text,
+                        flex: 1,
+                        textAlign: "right",
+                      }}
+                    >
+                      {item.relationText}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text
+                    style={[
+                      styles.optionText,
+                      item.value === value ? styles.optionTextSelected : null,
+                      item.textColor ? { color: item.textColor } : null,
+                      isBold ? { fontFamily: "Manrope_700Bold", fontWeight: "700" } : null,
+                    ]}
+                  >
+                    {item.label}
+                  </Text>
+                )}
               </Pressable>
             )}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -315,5 +361,27 @@ const styles = StyleSheet.create({
     color: palette.secondaryText,
     paddingTop: spacing.lg,
     textAlign: "center",
+  },
+  tableHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    backgroundColor: "#FDF2F4",
+    paddingHorizontal: 8,
+    borderRadius: cornerRadius.sm,
+    marginBottom: spacing.xs,
+    borderWidth: 1,
+    borderColor: "#EFE3C7",
+  },
+  headerCheckSpace: {
+    width: 26,
+  },
+  tableHeaderCell: {
+    fontSize: 13,
+    fontFamily: "Manrope_700Bold",
+    fontWeight: "700",
+    color: "#2C1A1A",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
 });

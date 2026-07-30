@@ -161,40 +161,41 @@ export const HomeScreen = () => {
         relation = getVarguRelation(wifeVarguNum, index);
       }
 
-      let suffix = "";
+      let relationText = "";
       let textColor = undefined;
       let disabled = false;
       let disabledMessage = undefined;
 
       if (relation === "swavargu") {
-        textColor = "#FFA000"; // Yellow/Gold
+        textColor = "#fca903"; // Dark Yellow/Gold
       } else if (relation === "shatruvargu") {
-        textColor = "#D32F2F"; // Red
+        textColor = "#ff0404"; // Dark Red
         disabled = true;
         disabledMessage = language === "Telugu"
           ? "శత్రువర్గ దిశను ఎంచుకోలేరు!"
           : (language === "Hindi" ? "शत्रुवर्ग दिशा का चयन नहीं कर सकते!" : "Cannot select Shatruvargu");
       } else {
-        textColor = "#2E7D32"; // Green
+        textColor = "#0f6415"; // Dark Green
       }
 
       if (language === "Telugu") {
-        if (relation === "swavargu") suffix = " (స్వవర్గం)";
-        else if (relation === "shatruvargu") suffix = " (శత్రువర్గం)";
-        else suffix = " (మిత్రవర్గం)";
+        if (relation === "swavargu") relationText = "స్వవర్గం";
+        else if (relation === "shatruvargu") relationText = "శత్రువర్గం";
+        else relationText = "మిత్రవర్గం";
       } else if (language === "Hindi") {
-        if (relation === "swavargu") suffix = " (स्ववर्ग)";
-        else if (relation === "shatruvargu") suffix = " (शत्रुवर्ग)";
-        else suffix = " (मित्रवर्ग)";
+        if (relation === "swavargu") relationText = "स्ववर्ग";
+        else if (relation === "shatruvargu") relationText = "शत्रुवर्ग";
+        else relationText = "मित्रवर्ग";
       } else {
-        if (relation === "swavargu") suffix = " (Swavargu)";
-        else if (relation === "shatruvargu") suffix = " (Shatruvargu)";
-        else suffix = " (Mitravargu)";
+        if (relation === "swavargu") relationText = "Swavargu";
+        else if (relation === "shatruvargu") relationText = "Shatruvargu";
+        else relationText = "Mitravargu";
       }
 
       return {
-        label: `${label}${suffix}`,
+        label: label,
         value: value,
+        relationText: relationText,
         textColor,
         disabled,
         disabledMessage,
@@ -671,6 +672,7 @@ export const HomeScreen = () => {
               placeholder={strings.home.directionPlaceholder}
               onChange={(value) => updateField("direction", value)}
               isBold={true}
+              language={language}
             />
           </SectionCard>
 

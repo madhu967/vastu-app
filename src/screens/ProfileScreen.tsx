@@ -33,6 +33,7 @@ export default function ProfileScreen() {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [savingDetails, setSavingDetails] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
   
   // Profile details state
   const [name, setName] = useState('');
@@ -134,6 +135,7 @@ export default function ProfileScreen() {
         }, { merge: true });
         
         Alert.alert('Success', 'Profile details updated successfully!');
+        setIsEditable(false);
         fetchUser();
       }
     } catch (e: any) {
@@ -417,6 +419,8 @@ export default function ProfileScreen() {
               placeholder="Enter your name"
               onChangeText={setName}
               autoCapitalize="words"
+              editable={isEditable}
+              style={!isEditable ? styles.lockedInput : null}
             />
 
             <PremiumInput
@@ -425,6 +429,8 @@ export default function ProfileScreen() {
               placeholder="Enter your phone number"
               keyboardType="phone-pad"
               onChangeText={setPhone}
+              editable={isEditable}
+              style={!isEditable ? styles.lockedInput : null}
             />
 
             <PremiumInput
@@ -433,10 +439,12 @@ export default function ProfileScreen() {
               placeholder="Enter Jyothishyalayam name"
               onChangeText={setJyothishyalayam}
               autoCapitalize="words"
+              editable={isEditable}
+              style={!isEditable ? styles.lockedInput : null}
             />
 
             <Pressable
-              onPress={handleSaveDetails}
+              onPress={isEditable ? handleSaveDetails : () => setIsEditable(true)}
               style={({ pressed }) => [styles.saveBtn, pressed && styles.btnPressed]}
               disabled={savingDetails}
             >
@@ -449,7 +457,9 @@ export default function ProfileScreen() {
                 {savingDetails ? (
                   <ActivityIndicator color="#3B1F00" />
                 ) : (
-                  <Text style={styles.saveBtnText}>Save Details</Text>
+                  <Text style={styles.saveBtnText}>
+                    {isEditable ? 'Save Details' : 'Edit Details'}
+                  </Text>
                 )}
               </LinearGradient>
             </Pressable>
@@ -954,5 +964,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope_700Bold',
     color: '#3B1F00',
     fontSize: 14,
+  },
+  lockedInput: {
+    backgroundColor: '#F5EEDC',
+    color: '#705A5A',
+    borderColor: '#DFD3B9',
+    opacity: 0.85,
   },
 });
