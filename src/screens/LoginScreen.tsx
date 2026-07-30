@@ -6,15 +6,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { PremiumInput } from '@/components/PremiumInput';
 import { cornerRadius, palette, spacing, typography } from '@/constants/theme';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { useAppLanguage } from '@/context/AppLanguageContext';
+import { getAppStrings } from '@/i18n/strings';
 
 export default function LoginScreen({ onSwitchToSignup }: { onSwitchToSignup: () => void }) {
+  const { language } = useAppLanguage();
+  const strings = getAppStrings(language);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please enter email and password');
+      Alert.alert(strings.profile.error || 'Error', 'Please enter email and password');
       return;
     }
 
@@ -45,15 +49,15 @@ export default function LoginScreen({ onSwitchToSignup }: { onSwitchToSignup: ()
           end={{ x: 1, y: 1 }}
           style={styles.appTitleBanner}
         >
-          <Text style={styles.appTitleText}>Welcome Back</Text>
-          <Text style={styles.appTitleSub}>Sign in to access your account</Text>
+          <Text style={styles.appTitleText}>{strings.login.welcomeBack}</Text>
+          <Text style={styles.appTitleSub}>{strings.login.subtitle}</Text>
         </LinearGradient>
 
         <View style={styles.formContainer}>
           <PremiumInput
-            label="Email Address"
+            label={strings.login.emailLabel}
             value={email}
-            placeholder="Enter your email"
+            placeholder={strings.login.emailPlaceholder}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -61,9 +65,9 @@ export default function LoginScreen({ onSwitchToSignup }: { onSwitchToSignup: ()
           />
 
           <PremiumInput
-            label="Password"
+            label={strings.login.passwordLabel}
             value={password}
-            placeholder="Enter your password"
+            placeholder={strings.login.passwordPlaceholder}
             onChangeText={setPassword}
             secureTextEntry
           />
@@ -82,15 +86,15 @@ export default function LoginScreen({ onSwitchToSignup }: { onSwitchToSignup: ()
               {loading ? (
                 <ActivityIndicator color="#3B1F00" />
               ) : (
-                <Text style={styles.calcBtnText}>Sign In</Text>
+                <Text style={styles.calcBtnText}>{strings.login.signIn}</Text>
               )}
             </LinearGradient>
           </Pressable>
 
           <View style={styles.footerContainer}>
-            <Text style={styles.footerText}>Don't have an account? </Text>
+            <Text style={styles.footerText}>{strings.login.noAccount}</Text>
             <Pressable onPress={onSwitchToSignup} hitSlop={10}>
-              <Text style={styles.signupText}>Register Now</Text>
+              <Text style={styles.signupText}>{strings.login.registerNow}</Text>
             </Pressable>
           </View>
         </View>

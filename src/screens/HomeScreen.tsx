@@ -71,39 +71,46 @@ export const HomeScreen = () => {
   const [form, setForm] = useState<VastuFormValues>(initialForm);
   const hasAutoFilledRef = useRef(false);
 
+  useEffect(() => {
+    setForm(prev => ({
+      ...prev,
+      language,
+    }));
+  }, [language]);
+
   const dynamicDirectionOptions = useMemo(() => {
     let baseList = [
-      { label: "East", value: "East", index: 1 },
-      { label: "South-East", value: "South-East", index: 2 },
-      { label: "South", value: "South", index: 3 },
-      { label: "South-West", value: "South-West", index: 4 },
-      { label: "West", value: "West", index: 5 },
-      { label: "North-West", value: "North-West", index: 6 },
-      { label: "North", value: "North", index: 7 },
-      { label: "North-East", value: "North-East", index: 8 },
+      { label: "East (West Main Door)", value: "East", index: 1 },
+      { label: "South-East (West Main Door)", value: "South-East", index: 2 },
+      { label: "South (North Main Door)", value: "South", index: 3 },
+      { label: "South-West (North Main Door)", value: "South-West", index: 4 },
+      { label: "West (East Main Door)", value: "West", index: 5 },
+      { label: "North-West (East Main Door)", value: "North-West", index: 6 },
+      { label: "North (South Main Door)", value: "North", index: 7 },
+      { label: "North-East (South Main Door)", value: "North-East", index: 8 },
     ];
 
     if (language === "Telugu") {
       baseList = [
-        { label: "తూర్పు", value: "తూర్పు", index: 1 },
-        { label: "ఆగ్నేయం", value: "ఆగ్నేయం", index: 2 },
-        { label: "దక్షిణం", value: "దక్షిణం", index: 3 },
-        { label: "నైరుతి", value: "నైరుతి", index: 4 },
-        { label: "పడమర", value: "పడమర", index: 5 },
-        { label: "వాయువ్యం", value: "వాయువ్యం", index: 6 },
-        { label: "ఉత్తరం", value: "ఉత్తరం", index: 7 },
-        { label: "ఈశాన్యం", value: "ఈశాన్యం", index: 8 },
+        { label: "\u0C24\u0C42\u0C30\u0C4D\u0C2A\u0C41 (\u0C2A\u0C21\u0C41\u0C2E\u0C30 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C24\u0C42\u0C30\u0C4D\u0C2A\u0C41", index: 1 },
+        { label: "\u0C06\u0C17\u0C4D\u0C28\u0C47\u0C2F\u0C02 (\u0C2A\u0C21\u0C41\u0C2E\u0C30 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C06\u0C17\u0C4D\u0C28\u0C47\u0C2F\u0C02", index: 2 },
+        { label: "\u0C26\u0C15\u0C4D\u0C37\u0C3F\u0C23\u0C02 (\u0C09\u0C24\u0C4D\u0C24\u0C30 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C26\u0C15\u0C4D\u0C37\u0C3F\u0C23\u0C02", index: 3 },
+        { label: "\u0C28\u0C48\u0C30\u0C41\u0C24\u0C3F (\u0C09\u0C24\u0C4D\u0C24\u0C30 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C28\u0C48\u0C30\u0C41\u0C24\u0C3F", index: 4 },
+        { label: "\u0C2A\u0C21\u0C41\u0C2E\u0C30 (\u0C24\u0C42\u0C30\u0C4D\u0C2A\u0C41 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C2A\u0C21\u0C2E\u0C30", index: 5 },
+        { label: "\u0C35\u0C3E\u0C2F\u0C41\u0C35\u0C4D\u0C2F\u0C02 (\u0C24\u0C42\u0C30\u0C4D\u0C2A\u0C41 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C35\u0C3E\u0C2F\u0C41\u0C35\u0C4D\u0C2F\u0C02", index: 6 },
+        { label: "\u0C09\u0C24\u0C4D\u0C24\u0C30\u0C02 (\u0C26\u0C15\u0C4D\u0C37\u0C3F\u0C23 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C09\u0C24\u0C4D\u0C24\u0C30\u0C02", index: 7 },
+        { label: "\u0C08\u0C36\u0C3E\u0C28\u0C4D\u0C2F\u0C02 (\u0C26\u0C15\u0C4D\u0C37\u0C3F\u0C23 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C08\u0C36\u0C3E\u0C28\u0C4D\u0C2F\u0C02", index: 8 },
       ];
     } else if (language === "Hindi") {
       baseList = [
-        { label: "पूर्व", value: "पूर्व", index: 1 },
-        { label: "आग्नेय", value: "आग्नेय", index: 2 },
-        { label: "दक्षिण", value: "दक्षिण", index: 3 },
-        { label: "नैऋत्य", value: "नैऋत्य", index: 4 },
-        { label: "पश्चिम", value: "पश्चिम", index: 5 },
-        { label: "वायव्य", value: "वायव्य", index: 6 },
-        { label: "उत्तर", value: "उत्तर", index: 7 },
-        { label: "ईशान", value: "ईशान", index: 8 },
+        { label: "\u092a\u0942\u0930\u094d\u0935 (\u092a\u0936\u094d\u091a\u093f\u092e \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u092a\u0942\u0930\u094d\u0935", index: 1 },
+        { label: "\u0906\u0917\u094d\u0928\u0947\u092f (\u092a\u0936\u094d\u091a\u093f\u092e \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0906\u0917\u094d\u0928\u0947\u092f", index: 2 },
+        { label: "\u0926\u0915\u094d\u0937\u093f\u0923 (\u0909\u0924\u094d\u0924\u0930 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0926\u0915\u094d\u0937\u093f\u0923", index: 3 },
+        { label: "\u0928\u0948\u090b\u0924\u094d\u092f (\u0909\u0924\u094d\u0924\u0930 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0928\u0948\u090b\u0924\u094d\u092f", index: 4 },
+        { label: "\u092a\u0936\u094d\u091a\u093f\u092e (\u092a\u0942\u0930\u094d\u0935 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u092a\u0936\u094d\u091a\u093f\u092e", index: 5 },
+        { label: "\u0935\u093e\u092f\u0935\u094d\u092f (\u092a\u0942\u0930\u094d\u0935 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0935\u093e\u092f\u0935\u094d\u092f", index: 6 },
+        { label: "\u0909\u0924\u094d\u0924\u0930 (\u0926\u0915\u094d\u0937\u093f\u0923 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0909\u0924\u094d\u0924\u0930", index: 7 },
+        { label: "\u0908\u0936\u093e\u0928 (\u0926\u0915\u094d\u0937\u093f\u0923 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0908\u0936\u093e\u0928", index: 8 },
       ];
     }
 
@@ -353,7 +360,7 @@ export const HomeScreen = () => {
         status: "success" as const,
         notes: [],
       };
-      await generateVastuPdf(form, fakeReport, userProfilePic || undefined);
+      await generateVastuPdf({ ...form, language }, fakeReport, userProfilePic || undefined);
     } catch (e) {
       console.error(e);
       alert("Failed to generate PDF. Please try again.");
@@ -564,7 +571,7 @@ export const HomeScreen = () => {
             <PremiumInput
               label={strings.home.nameLabel}
               value={form.clientName}
-              placeholder="e.g. Name"
+              placeholder={strings.home.namePlaceholder}
               autoCapitalize="words"
               onChangeText={(text) =>
                 updateField("clientName", text)
@@ -573,16 +580,16 @@ export const HomeScreen = () => {
             <PremiumInput
               label={strings.home.phoneLabel || "Phone Number"}
               value={form.phoneNumber}
-              placeholder="e.g. 9949598627"
+              placeholder={strings.home.phonePlaceholder}
               keyboardType="phone-pad"
               onChangeText={(text) =>
                 updateField("phoneNumber", digitsOnly(text))
               }
             />
             <PremiumInput
-              label="Jyothishyalayam"
+              label={strings.home.jyothishyalayamLabel || "Jyothishyalayam"}
               value={form.jyothishyalayam}
-              placeholder="e.g. Sri Jyothishyalayam"
+              placeholder={strings.home.jyothishyalayamPlaceholder}
               autoCapitalize="words"
               onChangeText={(text) =>
                 updateField("jyothishyalayam", text)

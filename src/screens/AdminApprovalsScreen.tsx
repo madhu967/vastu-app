@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, Image, Modal } from 'react-native';
 import { collection, query, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -23,6 +23,9 @@ export default function AdminApprovalsScreen() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('pending');
   const [limit, setLimit] = useState(50);
+  const [selectedPhotoUrl, setSelectedPhotoUrl] = useState<string | null>(null);
+  const [selectedName, setSelectedName] = useState<string>('');
+  const [isViewerVisible, setIsViewerVisible] = useState(false);
 
   useEffect(() => {
     const q = query(collection(db, 'users'));
@@ -116,16 +119,25 @@ export default function AdminApprovalsScreen() {
     return (
       <View style={styles.userCard}>
         <View style={styles.cardHeaderRow}>
-          {item.profilePicUrl ? (
-            <Image
-              source={{ uri: item.profilePicUrl }}
-              style={styles.avatarImage}
-            />
-          ) : (
-            <View style={styles.avatarCircle}>
-              <Text style={styles.avatarText}>{initial}</Text>
-            </View>
-          )}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              setSelectedPhotoUrl(item.profilePicUrl || null);
+              setSelectedName(item.name || 'User');
+              setIsViewerVisible(true);
+            }}
+          >
+            {item.profilePicUrl ? (
+              <Image
+                source={{ uri: item.profilePicUrl }}
+                style={styles.avatarImage}
+              />
+            ) : (
+              <View style={styles.avatarCircle}>
+                <Text style={styles.avatarText}>{initial}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
           <View style={styles.userInfoCol}>
             <Text style={styles.userName} numberOfLines={1}>{item.name || 'Unknown User'}</Text>
             <Text style={styles.userEmail} numberOfLines={1}>{item.email}</Text>
@@ -263,6 +275,45 @@ export default function AdminApprovalsScreen() {
             windowSize={11}
           />
         )}
+        {/* Full Screen Image Viewer Modal */}
+        <Modal
+          visible={isViewerVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setIsViewerVisible(false)}
+        >
+          <View style={styles.viewerOverlay}>
+            <TouchableOpacity 
+              style={styles.viewerDismiss} 
+              activeOpacity={1}
+              onPress={() => setIsViewerVisible(false)} 
+            />
+            <View style={styles.viewerContent}>
+              <Text style={styles.viewerTitle}>{selectedName}</Text>
+              
+              {selectedPhotoUrl ? (
+                <Image 
+                  source={{ uri: selectedPhotoUrl }} 
+                  style={styles.viewerImage} 
+                  resizeMode="contain" 
+                />
+              ) : (
+                <View style={styles.viewerFallbackCircle}>
+                  <Text style={styles.viewerFallbackText}>
+                    {selectedName ? selectedName.charAt(0).toUpperCase() : '?'}
+                  </Text>
+                </View>
+              )}
+              
+              <TouchableOpacity 
+                style={styles.viewerCloseBtn} 
+                onPress={() => setIsViewerVisible(false)}
+              >
+                <Text style={styles.viewerCloseText}>✕</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </View>
   );
@@ -540,5 +591,67 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope_500Medium',
     fontSize: 16,
     color: palette.secondaryText,
-  }
+  },
+  viewerOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewerDismiss: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  viewerContent: {
+    width: '90%',
+    height: '75%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewerTitle: {
+    fontFamily: 'CormorantGaramond_700Bold',
+    fontSize: 24,
+    color: '#FFD95C',
+    marginBottom: spacing.xl,
+    textAlign: 'center',
+  },
+  viewerImage: {
+    width: '100%',
+    height: '80%',
+  },
+  viewerFallbackCircle: {
+    width: 240,
+    height: 240,
+    borderRadius: 120,
+    backgroundColor: '#FFF8F0',
+    borderWidth: 3,
+    borderColor: '#F4C430',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  viewerFallbackText: {
+    fontFamily: 'CormorantGaramond_700Bold',
+    fontSize: 90,
+    color: '#8B000F',
+  },
+  viewerCloseBtn: {
+    position: 'absolute',
+    top: 20,
+    right: 0,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  viewerCloseText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontFamily: 'Manrope_700Bold',
+  },
 });

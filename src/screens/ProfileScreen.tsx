@@ -23,6 +23,8 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { PremiumInput } from '@/components/PremiumInput';
 import * as ImagePicker from 'expo-image-picker';
 import { sha1 } from '@/utils/sha1';
+import { useAppLanguage } from '@/context/AppLanguageContext';
+import { getAppStrings } from '@/i18n/strings';
 
 const CLOUDINARY_CLOUD_NAME = (process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dk6ewm6o3').trim().replace(/['"]/g, '');
 const CLOUDINARY_API_KEY = (process.env.EXPO_PUBLIC_CLOUDINARY_API_KEY || '596222265113323').trim().replace(/['"]/g, '');
@@ -30,10 +32,15 @@ const CLOUDINARY_API_SECRET = (process.env.EXPO_PUBLIC_CLOUDINARY_API_SECRET || 
 const containerSize = 260;
 
 export default function ProfileScreen() {
+  const { language } = useAppLanguage();
+  const strings = getAppStrings(language);
+
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [savingDetails, setSavingDetails] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+  const [photoOptionsVisible, setPhotoOptionsVisible] = useState(false);
+  const [viewPhotoVisible, setViewPhotoVisible] = useState(false);
   
   // Profile details state
   const [name, setName] = useState('');
@@ -121,7 +128,7 @@ export default function ProfileScreen() {
 
   const handleSaveDetails = async () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Name field cannot be empty');
+      Alert.alert(strings.profile.error || 'Error', strings.profile.nameEmptyError || 'Name field cannot be empty');
       return;
     }
 
@@ -134,12 +141,12 @@ export default function ProfileScreen() {
           jyothishyalayam: jyothishyalayam.trim(),
         }, { merge: true });
         
-        Alert.alert('Success', 'Profile details updated successfully!');
+        Alert.alert(strings.profile.success || 'Success', strings.profile.profileUpdated || 'Profile details updated successfully!');
         setIsEditable(false);
         fetchUser();
       }
     } catch (e: any) {
-      Alert.alert('Error', e.message || 'Failed to update profile details.');
+      Alert.alert(strings.profile.error || 'Error', e.message || 'Failed to update profile details.');
     } finally {
       setSavingDetails(false);
     }
@@ -147,15 +154,15 @@ export default function ProfileScreen() {
 
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all password fields');
+      Alert.alert(strings.profile.error || 'Error', strings.profile.passwordFieldsEmpty || 'Please fill in all password fields');
       return;
     }
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'New passwords do not match');
+      Alert.alert(strings.profile.error || 'Error', strings.profile.passwordsDoNotMatch || 'New passwords do not match');
       return;
     }
     if (newPassword.length < 6) {
-      Alert.alert('Error', 'Password should be at least 6 characters');
+      Alert.alert(strings.profile.error || 'Error', strings.profile.passwordLengthError || 'Password should be at least 6 characters');
       return;
     }
 
@@ -165,13 +172,13 @@ export default function ProfileScreen() {
         const credential = EmailAuthProvider.credential(user.email, currentPassword);
         await reauthenticateWithCredential(user, credential);
         await updatePassword(user, newPassword);
-        Alert.alert('Success', 'Password updated successfully!');
+        Alert.alert(strings.profile.success || 'Success', 'Password updated successfully!');
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
       }
     } catch (e: any) {
-      Alert.alert('Failed to Change Password', e.message || 'Error occurred. Please verify current password.');
+      Alert.alert(strings.profile.error || 'Failed to Change Password', e.message || 'Error occurred. Please verify current password.');
     } finally {
       setChangingPassword(false);
     }
@@ -378,8 +385,8 @@ export default function ProfileScreen() {
           end={{ x: 1, y: 1 }}
           style={styles.appTitleBanner}
         >
-          <Text style={styles.appTitleText}>Your Profile</Text>
-          <Text style={styles.appTitleSub}>Manage your details, security and photo</Text>
+          <Text style={styles.appTitleText}>{strings.profile.title}</Text>
+          <Text style={styles.appTitleSub}>{strings.profile.subtitle}</Text>
         </LinearGradient>
 
         {loading ? (
@@ -388,7 +395,7 @@ export default function ProfileScreen() {
           <View style={styles.mainCard}>
             {/* Avatar block */}
             <View style={styles.avatarWrapper}>
-              <Pressable style={styles.avatarPressable} onPress={handlePickImage}>
+              <Pressable style={styles.avatarPressable} onPress={() => setPhotoOptionsVisible(true)}>
                 {userData?.profilePicUrl ? (
                   <Image source={{ uri: userData.profilePicUrl }} style={styles.avatarImage} />
                 ) : (
@@ -402,7 +409,7 @@ export default function ProfileScreen() {
                   <Text style={styles.editBadgeIcon}>📷</Text>
                 </View>
               </Pressable>
-              <Text style={styles.roleTitle}>{isAdmin ? 'Administrator' : 'Verified Member'}</Text>
+              <Text style={styles.roleTitle}>{isAdmin ? strings.profile.administrator : strings.profile.verifiedMember}</Text>
               <Text style={styles.emailSubText}>{user?.email}</Text>
             </View>
 
@@ -410,13 +417,13 @@ export default function ProfileScreen() {
 
             {/* Profile Info Form */}
             <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionHeading}>Personal Details</Text>
+              <Text style={styles.sectionHeading}>{strings.profile.personalDetails}</Text>
             </View>
 
             <PremiumInput
-              label="Full Name"
+              label={strings.profile.fullName}
               value={name}
-              placeholder="Enter your name"
+              placeholder={strings.profile.namePlaceholder}
               onChangeText={setName}
               autoCapitalize="words"
               editable={isEditable}
@@ -424,9 +431,9 @@ export default function ProfileScreen() {
             />
 
             <PremiumInput
-              label="Phone Number"
+              label={strings.profile.phoneNumber}
               value={phone}
-              placeholder="Enter your phone number"
+              placeholder={strings.profile.phonePlaceholder}
               keyboardType="phone-pad"
               onChangeText={setPhone}
               editable={isEditable}
@@ -434,9 +441,9 @@ export default function ProfileScreen() {
             />
 
             <PremiumInput
-              label="Jyothishyalayam"
+              label={strings.profile.jyothishyalayam}
               value={jyothishyalayam}
-              placeholder="Enter Jyothishyalayam name"
+              placeholder={strings.profile.jyothishyalayamPlaceholder}
               onChangeText={setJyothishyalayam}
               autoCapitalize="words"
               editable={isEditable}
@@ -458,7 +465,7 @@ export default function ProfileScreen() {
                   <ActivityIndicator color="#3B1F00" />
                 ) : (
                   <Text style={styles.saveBtnText}>
-                    {isEditable ? 'Save Details' : 'Edit Details'}
+                    {isEditable ? strings.profile.saveDetails : strings.profile.editDetails}
                   </Text>
                 )}
               </LinearGradient>
@@ -468,29 +475,29 @@ export default function ProfileScreen() {
 
             {/* Change Password Form */}
             <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionHeading}>Security / Change Password</Text>
+              <Text style={styles.sectionHeading}>{strings.profile.securityTitle}</Text>
             </View>
 
             <PremiumInput
-              label="Current Password"
+              label={strings.profile.currentPassword}
               value={currentPassword}
-              placeholder="Enter current password"
+              placeholder={strings.profile.currentPasswordPlaceholder}
               secureTextEntry
               onChangeText={setCurrentPassword}
             />
 
             <PremiumInput
-              label="New Password"
+              label={strings.profile.newPassword}
               value={newPassword}
-              placeholder="Enter new password"
+              placeholder={strings.profile.newPasswordPlaceholder}
               secureTextEntry
               onChangeText={setNewPassword}
             />
 
             <PremiumInput
-              label="Confirm New Password"
+              label={strings.profile.confirmPassword}
               value={confirmPassword}
-              placeholder="Confirm new password"
+              placeholder={strings.profile.confirmPasswordPlaceholder}
               secureTextEntry
               onChangeText={setConfirmPassword}
             />
@@ -509,7 +516,7 @@ export default function ProfileScreen() {
                 {changingPassword ? (
                   <ActivityIndicator color="#FFD95C" />
                 ) : (
-                  <Text style={styles.passwordBtnText}>Change Password</Text>
+                  <Text style={styles.passwordBtnText}>{strings.profile.changePassword}</Text>
                 )}
               </LinearGradient>
             </Pressable>
@@ -610,6 +617,87 @@ export default function ProfileScreen() {
                 </LinearGradient>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Profile Photo Options Modal */}
+      <Modal
+        visible={photoOptionsVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setPhotoOptionsVisible(false)}
+      >
+        <View style={styles.sheetOverlay}>
+          <Pressable style={styles.sheetDismiss} onPress={() => setPhotoOptionsVisible(false)} />
+          <View style={styles.sheetContent}>
+            <View style={styles.sheetHeader}>
+              <Text style={styles.sheetTitle}>{strings.profile.photoOptionsTitle || "Profile Photo Options"}</Text>
+              <View style={styles.sheetHeaderDivider} />
+            </View>
+
+            <TouchableOpacity 
+              style={styles.sheetOption} 
+              onPress={() => {
+                setPhotoOptionsVisible(false);
+                if (userData?.profilePicUrl) {
+                  setViewPhotoVisible(true);
+                } else {
+                  Alert.alert(strings.profile.error || 'Error', strings.profile.noPhotoUploaded || 'No profile picture uploaded');
+                }
+              }}
+            >
+              <Text style={styles.sheetOptionIcon}>👁️</Text>
+              <Text style={styles.sheetOptionText}>{strings.profile.viewPhoto || "View Profile Picture"}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={styles.sheetOption} 
+              onPress={() => {
+                setPhotoOptionsVisible(false);
+                handlePickImage();
+              }}
+            >
+              <Text style={styles.sheetOptionIcon}>📷</Text>
+              <Text style={styles.sheetOptionText}>{strings.profile.uploadPhoto || "Upload Profile Picture"}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.sheetOption, styles.sheetCancelOption]} 
+              onPress={() => setPhotoOptionsVisible(false)}
+            >
+              <Text style={styles.sheetCancelText}>{strings.profile.cancel || "Cancel"}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Full-Screen Image Viewer Modal */}
+      <Modal
+        visible={viewPhotoVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setViewPhotoVisible(false)}
+      >
+        <View style={styles.viewerOverlay}>
+          <Pressable style={styles.viewerDismiss} onPress={() => setViewPhotoVisible(false)} />
+          <View style={styles.viewerContent}>
+            {userData?.profilePicUrl ? (
+              <Image 
+                source={{ uri: userData.profilePicUrl }} 
+                style={styles.viewerImage} 
+                resizeMode="contain" 
+              />
+            ) : (
+              <ActivityIndicator size="large" color="#FFFFFF" />
+            )}
+            
+            <TouchableOpacity 
+              style={styles.viewerCloseBtn} 
+              onPress={() => setViewPhotoVisible(false)}
+            >
+              <Text style={styles.viewerCloseText}>✕</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -970,5 +1058,105 @@ const styles = StyleSheet.create({
     color: '#705A5A',
     borderColor: '#DFD3B9',
     opacity: 0.85,
+  },
+  sheetOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  sheetDismiss: {
+    flex: 1,
+  },
+  sheetContent: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: cornerRadius.lg,
+    borderTopRightRadius: cornerRadius.lg,
+    padding: spacing.xl,
+    borderWidth: 1,
+    borderColor: '#EFE3C7',
+  },
+  sheetHeader: {
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  sheetTitle: {
+    fontFamily: 'CormorantGaramond_700Bold',
+    fontSize: 22,
+    color: '#8B000F',
+    marginBottom: 8,
+  },
+  sheetHeaderDivider: {
+    width: 60,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#F4C430',
+  },
+  sheetOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  sheetOptionIcon: {
+    fontSize: 20,
+    marginRight: spacing.md,
+  },
+  sheetOptionText: {
+    fontFamily: 'Manrope_600SemiBold',
+    fontSize: 16,
+    color: palette.text,
+  },
+  sheetCancelOption: {
+    borderBottomWidth: 0,
+    marginTop: spacing.sm,
+    justifyContent: 'center',
+    backgroundColor: '#FEF2F2',
+    borderRadius: cornerRadius.md,
+  },
+  sheetCancelText: {
+    fontFamily: 'Manrope_700Bold',
+    fontSize: 16,
+    color: '#B91C1C',
+  },
+  viewerOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewerDismiss: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  viewerContent: {
+    width: '90%',
+    height: '75%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewerImage: {
+    width: '100%',
+    height: '100%',
+  },
+  viewerCloseBtn: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  viewerCloseText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontFamily: 'Manrope_700Bold',
   },
 });

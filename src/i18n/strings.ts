@@ -61,6 +61,65 @@ type HomeStrings = {
   contactInfoSubtitle: string;
   nameLabel: string;
   phoneLabel: string;
+  jyothishyalayamLabel: string;
+  jyothishyalayamPlaceholder: string;
+  namePlaceholder: string;
+  phonePlaceholder: string;
+};
+
+export type LoginStrings = {
+  welcomeBack: string;
+  subtitle: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  passwordLabel: string;
+  passwordPlaceholder: string;
+  signIn: string;
+  noAccount: string;
+  registerNow: string;
+};
+
+export type ProfileStrings = {
+  title: string;
+  subtitle: string;
+  personalDetails: string;
+  fullName: string;
+  namePlaceholder: string;
+  phoneNumber: string;
+  phonePlaceholder: string;
+  jyothishyalayam: string;
+  jyothishyalayamPlaceholder: string;
+  saveDetails: string;
+  editDetails: string;
+  securityTitle: string;
+  currentPassword: string;
+  currentPasswordPlaceholder: string;
+  newPassword: string;
+  newPasswordPlaceholder: string;
+  confirmPassword: string;
+  confirmPasswordPlaceholder: string;
+  changePassword: string;
+  signOut: string;
+  verifiedMember: string;
+  administrator: string;
+  photoOptionsTitle: string;
+  viewPhoto: string;
+  uploadPhoto: string;
+  cancel: string;
+  cropTitle: string;
+  cropSubtitle: string;
+  zoom: string;
+  reset: string;
+  cropSave: string;
+  noPhotoUploaded: string;
+  error: string;
+  success: string;
+  profileUpdated: string;
+  photoUpdated: string;
+  passwordsDoNotMatch: string;
+  passwordLengthError: string;
+  passwordFieldsEmpty: string;
+  nameEmptyError: string;
 };
 
 type AppStrings = {
@@ -71,6 +130,8 @@ type AppStrings = {
   profileTab: string;
   loginTab: string;
   home: HomeStrings;
+  login: LoginStrings;
+  profile: ProfileStrings;
   directions: OptionItem[];
   nakshatrams: OptionItem[];
   vargus: OptionItem[];
@@ -144,6 +205,63 @@ const englishStrings: AppStrings = {
     contactInfoSubtitle: "Enter WhatsApp number for the report",
     nameLabel: "Name",
     phoneLabel: "Phone Number",
+    jyothishyalayamLabel: "Jyothishyalayam",
+    jyothishyalayamPlaceholder: "e.g. Sri Jyothishyalayam",
+    namePlaceholder: "e.g. Name",
+    phonePlaceholder: "e.g. 9949598627",
+  },
+  login: {
+    welcomeBack: "Welcome Back",
+    subtitle: "Sign in to access your account",
+    emailLabel: "Email Address",
+    emailPlaceholder: "Enter your email",
+    passwordLabel: "Password",
+    passwordPlaceholder: "Enter your password",
+    signIn: "Sign In",
+    noAccount: "Don't have an account? ",
+    registerNow: "Register Now",
+  },
+  profile: {
+    title: "Your Profile",
+    subtitle: "Manage your details, security and photo",
+    personalDetails: "Personal Details",
+    fullName: "Full Name",
+    namePlaceholder: "Enter your name",
+    phoneNumber: "Phone Number",
+    phonePlaceholder: "Enter your phone number",
+    jyothishyalayam: "Jyothishyalayam",
+    jyothishyalayamPlaceholder: "Enter Jyothishyalayam name",
+    saveDetails: "Save Details",
+    editDetails: "Edit Details",
+    securityTitle: "Security / Change Password",
+    currentPassword: "Current Password",
+    currentPasswordPlaceholder: "Enter current password",
+    newPassword: "New Password",
+    newPasswordPlaceholder: "Enter new password",
+    confirmPassword: "Confirm New Password",
+    confirmPasswordPlaceholder: "Confirm new password",
+    changePassword: "Change Password",
+    signOut: "Sign Out",
+    verifiedMember: "Verified Member",
+    administrator: "Administrator",
+    photoOptionsTitle: "Profile Photo Options",
+    viewPhoto: "View Profile Picture",
+    uploadPhoto: "Upload Profile Picture",
+    cancel: "Cancel",
+    cropTitle: "Crop & Adjust Photo",
+    cropSubtitle: "Drag to reposition • Use slider to zoom",
+    zoom: "Zoom",
+    reset: "Reset Adjustments",
+    cropSave: "Crop & Save",
+    noPhotoUploaded: "No profile picture uploaded",
+    error: "Error",
+    success: "Success",
+    profileUpdated: "Profile details updated successfully!",
+    photoUpdated: "Profile picture updated successfully!",
+    passwordsDoNotMatch: "New passwords do not match",
+    passwordLengthError: "Password should be at least 6 characters",
+    passwordFieldsEmpty: "Please fill in all password fields",
+    nameEmptyError: "Name field cannot be empty",
   },
   directions: directionOptions,
   nakshatrams: nakshatramOptions,
@@ -261,6 +379,63 @@ const teluguStrings: AppStrings = {
     contactInfoSubtitle: "రిపోర్ట్ కోసం వాట్సాప్ నంబర్ నమోదు చేయండి",
     nameLabel: "పేరు",
     phoneLabel: "ఫోన్ నంబర్",
+    jyothishyalayamLabel: "\u0C1C\u0C4D\u0C2F\u0C4B\u0C24\u0C3F\u0C37\u0C4D\u0C2F\u0C3E\u0C32\u0C2F\u0C02",
+    jyothishyalayamPlaceholder: "\u0C09\u0C26\u0C3E. \u0C36\u0C4D\u0C30\u0C40 \u0C1C\u0C4D\u0C2F\u0C4B\u0C24\u0C3F\u0C37\u0C4D\u0C2F\u0C3E\u0C32\u0C2F\u0C02",
+    namePlaceholder: "\u0C09\u0C26\u0C3E. \u0C2A\u0C47\u0C30\u0C41",
+    phonePlaceholder: "\u0C09\u0C26\u0C3E. 9949598627",
+  },
+  login: {
+    welcomeBack: "\u0C24\u0C3F\u0C30\u0C3F\u0C17\u0C3F \u0C38\u0C4D\u0C35\u0C3E\u0C17\u0C24\u0C02",
+    subtitle: "\u0C16\u0C3E\u0C24\u0C3E\u0C28\u0C41 \u0C2F\u0C3E\u0C15\u0C4D\u0C38\u0C46\u0C38\u0C4D \u0C1a\u0C47\u0C2F\u0C21\u0C3E\u0C28\u0C3F\u0C15\u0C3F \u0C38\u0C48\u0C28\u0C4D \u0C07\u0C28\u0C4D \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    emailLabel: "\u0C08\u0C2E\u0C46\u0C2F\u0C3F\u0C32\u0C4D \u0C1A\u0C3F\u0C30\u0C41\u0C28\u0C3E\u0C2E\u0C3E",
+    emailPlaceholder: "\u0C2E\u0C40 \u0C08\u0C2E\u0C46\u0C2F\u0C3F\u0C32\u0C4D \u0C28\u0C2E\u0C4B\u0C26\u0C41 \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    passwordLabel: "\u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D",
+    passwordPlaceholder: "\u0C2E\u0C40 \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D \u0C28\u0C2E\u0C4B\u0C26\u0C41 \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    signIn: "\u0C38\u0C48\u0C28\u0C4D \u0C07\u0C28\u0C4D",
+    noAccount: "\u0C16\u0C3E\u0C24\u0C3E \u0C32\u0C47\u0C26\u0C3E? ",
+    registerNow: "\u0C07\u0C2A\u0C4D\u0C2A\u0C41\u0C21\u0C47 \u0C28\u0C2E\u0C4B\u0C26\u0C41 \u0C1a\u0C47\u0C38\u0C41\u0C15\u0C4B\u0C02\u0C21\u0C3F",
+  },
+  profile: {
+    title: "\u0C2E\u0C40 \u0C2A\u0C4D\u0C30\u0C4B\u0C2B\u0C48\u0C32\u0C4D",
+    subtitle: "\u0C2E\u0C40 \u0C35\u0C3F\u0C35\u0C30\u0C3E\u0C32\u0C41, \u0C2d\u0C26\u0C4D\u0C30\u0C24 \u0C2E\u0C30\u0C3F\u0C2F\u0C41 \u0C2B\u0C4B\u0C1F\u0C4D \u0C28\u0C3F\u0C30\u0C4D\u0C35\u0C39\u0C3F\u0C02\u0C1a\u0C02\u0C21\u0C3F",
+    personalDetails: "\u0C35\u0C4D\u0C2F\u0C15\u0C4D\u0C24\u0C3F\u0C17\u0C24 \u0C35\u0C3F\u0C35\u0C30\u0C3E\u0C32\u0C41",
+    fullName: "\u0C2A\u0C42\u0C30\u0C4D\u0C24\u0C3F \u0C2A\u0C47\u0C30\u0C41",
+    namePlaceholder: "\u0C2E\u0C40 \u0C2A\u0C47\u0C30\u0C41 \u0C28\u0C2E\u0C4B\u0C26\u0C41 \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    phoneNumber: "\u0C2B\u0C4B\u0C28\u0C4D \u0C28\u0C02\u0C2C\u0C30\u0C4D",
+    phonePlaceholder: "\u0C2E\u0C40 \u0C2B\u0C4B\u0C28\u0C4D \u0C28\u0C02\u0C2C\u0C30\u0C4D \u0C28\u0C2E\u0C4B\u0C26\u0C41 \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    jyothishyalayam: "\u0C1C\u0C4D\u0C2F\u0C4B\u0C24\u0C3F\u0C37\u0C4D\u0C2F\u0C3E\u0C32\u0C2F\u0C02",
+    jyothishyalayamPlaceholder: "\u0C1C\u0C4D\u0C2F\u0C4B\u0C24\u0C3F\u0C37\u0C4D\u0C2F\u0C3E\u0C32\u0C2F\u0C02 \u0C2A\u0C47\u0C30\u0C41 \u0C28\u0C2E\u0C4B\u0C26\u0C41 \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    saveDetails: "\u0C35\u0C3F\u0C35\u0C30\u0C3E\u0C32\u0C28\u0C41 \u0C38\u0C47\u0C35\u0C4D \u0C1a\u0C47\u0C2F\u0C3F",
+    editDetails: "\u0C35\u0C3F\u0C35\u0C30\u0C3E\u0C32\u0C28\u0C41 \u0C38\u0C35\u0C30\u0C3F\u0C02\u0C1a\u0C41",
+    securityTitle: "\u0C2d\u0C26\u0C4D\u0C30\u0C24 / \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D \u0C2E\u0C3E\u0C30\u0C4D\u0C1a\u0C02\u0C21\u0C3F",
+    currentPassword: "\u0C2A\u0C4D\u0C30\u0C38\u0C4D\u0C24\u0C41\u0C24 \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D",
+    currentPasswordPlaceholder: "\u0C2A\u0C4D\u0C30\u0C38\u0C4D\u0C24\u0C41\u0C24 \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D\u0C28\u0C41 \u0C28\u0C2E\u0C4B\u0C26\u0C41 \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    newPassword: "\u0C15\u0C4A\u0C24\u0C4D\u0C24 \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D",
+    newPasswordPlaceholder: "\u0C15\u0C4A\u0C24\u0C4D\u0C24 \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D\u0C28\u0C41 \u0C28\u0C2E\u0C4B\u0C26\u0C41 \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    confirmPassword: "\u0C15\u0C4A\u0C24\u0C4D\u0C24 \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D\u0C28\u0C41 \u0C28\u0C3F\u0C30\u0C4D\u0C27\u0C3E\u0C30\u0C3F\u0C02\u0C1a\u0C02\u0C21\u0C3F",
+    confirmPasswordPlaceholder: "\u0C15\u0C4A\u0C24\u0C4D\u0C24 \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D\u0C28\u0C41 \u0C28\u0C3F\u0C30\u0C4D\u0C27\u0C3E\u0C30\u0C3F\u0C02\u0C1a\u0C02\u0C21\u0C3F",
+    changePassword: "\u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D \u0C2E\u0C3E\u0C30\u0C4D\u0C1a\u0C02\u0C21\u0C3F",
+    signOut: "\u0C38\u0C48\u0C28\u0C4D \u0C05\u0C09\u0C1F\u0C4D",
+    verifiedMember: "\u0C27\u0C43\u0C35\u0C40\u0C15\u0C30\u0C3F\u0C02\u0C1a\u0C2c\u0C21\u0C3F\u0C28 \u0C38\u0C2d\u0C4D\u0C2F\u0C41\u0C21\u0C41",
+    administrator: "\u0C05\u0C21\u0C4D\u0C2E\u0C3F\u0C28\u0C3F\u0C38\u0C4D\u0C1F\u0C4D\u0C30\u0C47\u0C1F\u0C30\u0C4D",
+    photoOptionsTitle: "\u0C2A\u0C4D\u0C30\u0C4B\u0C2B\u0C48\u0C32\u0C4D \u0C2B\u0C4B\u0C1F\u0C4D \u0C0E\u0C02\u0C2A\u0C3F\u0C15\u0C32\u0C41",
+    viewPhoto: "\u0C2A\u0C4D\u0C30\u0C4B\u0C2B\u0C48\u0C32\u0C4D \u0C1a\u0C3F\u0C24\u0C4D\u0C30\u0C02 \u0C1a\u0C42\u0C21\u0C02\u0C21\u0C3F",
+    uploadPhoto: "\u0C2A\u0C4D\u0C30\u0C4B\u0C2B\u0C48\u0C32\u0C4D \u0C1a\u0C3F\u0C24\u0C4D\u0C30\u0C3E\u0C28\u0C4D\u0C28\u0C3F \u0C05\u0C2A\u0C4D\u0C32\u0C4B\u0C21\u0C4D \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    cancel: "\u0C30\u0C26\u0C4D\u0C26\u0C41 \u0C1a\u0C47\u0C2F\u0C3F",
+    cropTitle: "\u0C2b\u0C4B\u0C1F\u0C4D\u0C28\u0C41 \u0C15\u0C24\u0C4D\u0C24\u0C3F\u0C30\u0C3F\u0C02\u0C1a\u0C02\u0C21\u0C3F & \u0C38\u0C30\u0C4D\u0C26\u0C41\u0C2c\u0C3E\u0C1F\u0C4D \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    cropSubtitle: "\u0C24\u0C3F\u0C30\u0C3F\u0C17\u0C3F \u0C09\u0C02\u0C1a\u0C21\u0C3E\u0C28\u0C3F\u0C15\u0C3F \u0C32\u0C3E\u0C17\u0C02\u0C21\u0C3F \u2022 \u0C1C\u0C4D\u0C2E\u0C4D \u0C1a\u0C47\u0C2F\u0C21\u0C3E\u0C28\u0C3F\u0C15\u0C3F \u0C38\u0C4D\u0C32\u0C48\u0C21\u0C30\u0C4D\u0C28\u0C41 \u0C09\u0C2A\u0C2F\u0C4B\u0C17\u0C3F\u0C02\u0C1a\u0C02\u0C21\u0C3F",
+    zoom: "\u0C1C\u0C4D\u0C2E\u0C4D",
+    reset: "\u0C38\u0C30\u0C4D\u0C26\u0C41\u0C2c\u0C3E\u0C1F\u0C4D\u0C32\u0C28\u0C41 \u0C30\u0C40\u0C38\u0C46\u0C1F\u0C4D \u0C1a\u0C47\u0C2F\u0C3F",
+    cropSave: "\u0C15\u0C24\u0C4D\u0C24\u0C3F\u0C30\u0C3F\u0C02\u0C1a\u0C02\u0C21\u0C3F & \u0C35\u0C3F\u0C1C\u0C2F\u0C35\u0C02\u0C24\u0C02\u0C17\u0C3E \u0C38\u0C47\u0C35\u0C4D \u0C1a\u0C47\u0C2F\u0C02\u0C21\u0C3F",
+    noPhotoUploaded: "\u0C2a\u0C4D\u0C30\u0C4B\u0C2B\u0C48\u0C32\u0C4D \u0C1a\u0C3F\u0C24\u0C4D\u0C30\u0C02 \u0C05\u0C2A\u0C4D\u0C32\u0C4B\u0C21\u0C4D \u0C1a\u0C47\u0C2F\u0C2c\u0C21\u0C32\u0C47\u0C26\u0C41",
+    error: "\u0C32\u0C4B\u0C2A\u0C02",
+    success: "\u0C35\u0C3F\u0C1C\u0C2F\u0C02",
+    profileUpdated: "\u0C2a\u0C4D\u0C30\u0C4B\u0C2B\u0C48\u0C32\u0C4D \u0C35\u0C3F\u0C35\u0C30\u0C3E\u0C32\u0C41 \u0C35\u0C3F\u0C1C\u0C2F\u0C35\u0C02\u0C24\u0C02\u0C17\u0C3E \u0C28\u0C35\u0C40\u0C15\u0C30\u0C3F\u0C02\u0C1a\u0C2c\u0C21\u0C4D\u0C21\u0C3E\u0C2F\u0C3F!",
+    photoUpdated: "\u0C2a\u0C4D\u0C30\u0C4B\u0C2B\u0C48\u0C32\u0C4D \u0C1a\u0C3F\u0C24\u0C4D\u0C30\u0C02 \u0C35\u0C3F\u0C1C\u0C2F\u0C35\u0C02\u0C24\u0C02\u0C17\u0C3E \u0C28\u0C35\u0C40\u0C15\u0C30\u0C3F\u0C02\u0C1a\u0C2c\u0C21\u0C3F\u0C02\u0C26\u0C3F!",
+    passwordsDoNotMatch: "\u0C15\u0C4A\u0C24\u0C4D\u0C24 \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D\u0C32\u0C41 \u0C38\u0C30\u0C3F\u0C2A\u0C4B\u0C32\u0C32\u0C47\u0C26\u0C41",
+    passwordLengthError: "\u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D \u0C15\u0C28\u0C40\u0C38\u0C02 6 \u0C05\u0C15\u0C4D\u0C37\u0C30\u0C3E\u0C32\u0C41 \u0C09\u0C02\u0C21\u0C3E\u0C32\u0C3F",
+    passwordFieldsEmpty: "\u0C26\u0C2F\u0C1A\u0C47\u0C38\u0C3F \u0C05\u0C28\u0C4D\u0C28\u0C3F \u0C2A\u0C3E\u0C38\u0C4D\u0C35\u0C30\u0C4D\u0C21\u0C4D \u0C2B\u0C40\u0C32\u0C4D\u0C21\u0C4D\u0C28\u0C41 \u0C2A\u0C42\u0C30\u0C3F\u0C02\u0C1a\u0C02\u0C21\u0C3F",
+    nameEmptyError: "\u0C2A\u0C47\u0C30\u0C41 \u0C2B\u0C4B\u0C28\u0C4D\u0C32\u0C41 \u0C16\u0C3E\u0C32\u0C40\u0C17\u0C3E \u0C09\u0C02\u0C21\u0C15\u0C42\u0C21\u0C26\u0C41",
   },
   directions: [
     "ఉత్తరం", "ఈశాన్యం", "తూర్పు", "ఆగ్నేయం", "దక్షిణం", "నైరుతి", "పడమర", "వాయువ్యం"
@@ -386,6 +561,63 @@ const hindiStrings: AppStrings = {
     contactInfoSubtitle: "रिपोर्ट के लिए व्हाट्सएप नंबर दर्ज करें",
     nameLabel: "नाम",
     phoneLabel: "फ़ोन नंबर",
+    jyothishyalayamLabel: "\u091C\u094D\u092F\u094B\u0924\u093F\u0937\u093E\u0932\u092F",
+    jyothishyalayamPlaceholder: "\u092C\u093E. \u0936\u094D\u0930\u0940 \u091C\u094D\u092F\u094B\u0924\u093F\u0937\u093E\u0932\u092F",
+    namePlaceholder: "\u092C\u093E. \u0928\u093E\u092E",
+    phonePlaceholder: "\u092C\u093E. 9949598627",
+  },
+  login: {
+    welcomeBack: "\u0935\u093E\u092A\u0938\u0940 \u092A\u0930 \u0938\u094D\u0935\u0C3E\u0917\u0924 \u0939\u0942",
+    subtitle: "\u0905\u092A\u0928\u0947 \u0916\u093E\u0924\u0947 \u092E\u0947\u0902 \u0938\u093E\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902",
+    emailLabel: "\u0908\u092E\u0947\u0932 \u092A\u0924\u093E",
+    emailPlaceholder: "\u0905\u092A\u0928\u093E \u0908\u092E\u0947\u0932 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902",
+    passwordLabel: "\u092A\u093E\u0938\u0935\u0930\u094D\u0921",
+    passwordPlaceholder: "\u0905\u092A\u0928\u093E \u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902",
+    signIn: "\u0938\u093E\u0907\u0928 \u0907\u0928",
+    noAccount: "\u0916\u093E\u0924\u093E \u0928\u0939\u0940\u0902 \u0939\u0948? ",
+    registerNow: "\u0905\u092d\u0940 \u092A\u0902\u091C\u0940\u0915\u0930\u0923 \u0915\u0930\u0947\u0902",
+  },
+  profile: {
+    title: "\u0905\u092A\u0928\u0940 \u0925\u094B\u0921\u093C\u0940 \u092A\u094D\u0930\u094B\u092B\u093E\u0907\u0932",
+    subtitle: "\u0905\u092A\u0928\u0947 \u0935\u093F\u0935\u0930\u0923, \u0938\u0941\u0930\u0915\u094D\u0937\u093E \u0914\u0930 \u092B\u094B\u091F\u094B \u0915\u093E \u092A\u094D\u0930\u092C\u0902\u0925\u0928 \u0915\u0930\u0947\u0902",
+    personalDetails: "\u0935\u094D\u092F\u0915\u0C4D\u0924\u093F\u0917\u0924 \u0935\u093F\u0935\u0930\u0923",
+    fullName: "\u092A\u0942\u0930\u093E \u0928\u093E\u092E",
+    namePlaceholder: "\u0905\u092A\u0928\u093E \u0928\u093E\u092E \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902",
+    phoneNumber: "\u092B\u094B\u0928 \u0928\u0902\u092C\u0930",
+    phonePlaceholder: "\u0905\u092A\u0928\u093E \u092B\u094B\u0928 \u0928\u0902\u092C\u0930 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902",
+    jyothishyalayam: "\u091C\u094D\u092F\u094B\u0924\u093F\u0937\u093E\u0932\u092F",
+    jyothishyalayamPlaceholder: "\u091C\u094D\u092F\u094B\u0924\u093F\u0937\u093E\u0932\u092F \u0915\u093E \u0928\u093E\u092E \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902",
+    saveDetails: "\u0935\u093F\u0935\u0930\u0923 \u0938\u0941\u0930\u0915\u094D\u0937\u093F\u0924 \u0915\u0930\u0947\u0902",
+    editDetails: "\u0935\u093F\u0935\u0930\u0923 \u0938\u0902\u092a\u093E\u0926\u093F\u0924 \u0915\u0930\u0947\u0902",
+    securityTitle: "\u0938\u0941\u0930\u0915\u094D\u0937\u093E / \u092A\u093E\u0938\u0935\u0930\u094D\u0C21 \u092C\u0926\u0932\u0947\u0902",
+    currentPassword: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u092A\u093E\u0938\u0935\u0930\u0C21\u094D",
+    currentPasswordPlaceholder: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902",
+    newPassword: "\u0928\u092F\u093E \u092A\u093E\u0938\u0935\u0930\u094D\u0921",
+    newPasswordPlaceholder: "\u0928\u092F\u093E \u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902",
+    confirmPassword: "\u0928\u092F\u0947 \u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u0C15\u0940 \u092A\u0941\u0937\u094D\u091F\u093F \u0915\u0930\u0947\u0902",
+    confirmPasswordPlaceholder: "\u0928\u092F\u0947 \u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u0915\u0940 \u092A\u0941\u0937\u094D\u091F\u093F \u0915\u0930\u0947\u0902",
+    changePassword: "\u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u092C\u0926\u0932\u0947\u0902",
+    signOut: "\u0938\u093E\u0907\u0928 \u0905\u0909\u091F",
+    verifiedMember: "\u0935\u0947\u0930\u0940\u092B\u093E\u0907\u0921 \u0938\u0926\u0938\u094D\u092F",
+    administrator: "\u092A\u094D\u0930\u0936\u093E\u0938\u0915",
+    photoOptionsTitle: "\u092A\u094D\u0930\u094B\u092B\u093E\u0907\u0932 \u092B\u094B\u091F\u094B \u0935\u093F\u0915\u0932\u094D\u092A",
+    viewPhoto: "\u092A\u094D\u0930\u094B\u092B\u093E\u0907\u0932 \u091A\u093F\u0924\u094D\u0930 \u0926\u0947\u0916\u0947\u0902",
+    uploadPhoto: "\u092A\u094D\u0930\u094B\u092B\u093E\u0907\u0932 \u091A\u093F\u0924\u094D\u0C30 \u0905\u092A\u0932\u094B\u0921 \u0915\u0930\u0947\u0902",
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902",
+    cropTitle: "\u092B\u094B\u091F\u094B \u0915\u094D\u0930\u0949\u092A \u0914\u0930 \u0938\u092E\u093E\u092F\u094B\u091C\u093F\u0924 \u0915\u0930\u0947\u0902",
+    cropSubtitle: "\u092A\u0941\u0928\u0903 \u0938\u094D\u0925\u093F\u0924\u093F \u0915\u0947 \u0932\u093F\u090f \u0916\u0940\u0902\u0C1A\u0947\u0902 \u2022 \u091C\u0942\u092E \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090f \u0938\u094D\u0932\u093E\u0907\u0921\u0930 \u0915\u093E \u0909\u092A\u092F\u094B\u0917 \u0915\u0930\u0947\u0902",
+    zoom: "\u091C\u0942\u092E",
+    reset: "\u0938\u092E\u093E\u092F\u094B\u091C\u0928 \u0930\u0940\u0C38\u0947\u091F \u0915\u0C30\u0947\u0902",
+    cropSave: "\u0915\u094D\u0930\u0949\u092A \u0914\u0930 \u0938\u0941\u0930\u0915\u094D\u0937\u093F\u0924 \u0915\u0930\u0947\u0902",
+    noPhotoUploaded: "\u0915\u094B\u0908 \u092A\u094D\u0930\u094B\u092B\u093E\u0907\u0932 \u091A\u093F\u0924\u094D\u0930 \u0905\u092A\u0932\u094B\u0921 \u0928\u0939\u0940\u0902 \u0915\u093F\u092F\u093E \u0917\u092F\u093E",
+    error: "\u0924\u094D\u0930\u0941\u091F\u093F",
+    success: "\u0938\u092B\u0932\u0924\u093E",
+    profileUpdated: "\u092A\u094D\u0930\u094B\u092B\u093E\u0907\u0932 \u0935\u093F\u0935\u0930\u0923 \u0938\u092B\u0932\u0924\u093E\u092A\u0942\u0930\u094D\u0935\u0915 \u0905\u0926\u094D\u092F\u0924\u0928 \u0915\u093F\u092F\u093E \u0917\u092F\u093E!",
+    photoUpdated: "\u092A\u094D\u0930\u094B\u092B\u093E\u0907\u0932 \u091A\u093F\u0924\u094D\u0930 \u0938\u0C2B\u0932\u0924\u093E\u092A\u0942\u0930\u094D\u0935\u0915 \u0905\u0926\u094D\u092F\u0924\u0928 \u0915\u093F\u092F\u093E \u0917\u092F\u093E!",
+    passwordsDoNotMatch: "\u0928\u092F\u0947 \u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u092E\u0947\u0932 \u0928\u0939\u0940\u0902 \u0916\u093E\u0924\u0947",
+    passwordLengthError: "\u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u0915\u092E \u0938\u0947 \u0915\u092E 6 \u0905\u0915\u094D\u0937\u0930\u094D \u0915\u093E \u0939\u094B\u0928\u093E \u091C\u093E\u0939\u093F\u090F",
+    passwordFieldsEmpty: "\u0915\u0943\u092A\u092F\u093E \u0938\u092d\u0940 \u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u092B\u0940\u0932\u094D\u0921\u0C4D\u0938 \u092D\u0930\u0947\u0902",
+    nameEmptyError: "\u0928\u093E\u092E \u092B\u0940\u0932\u094D\u0921 \u0916\u093E\u0932\u0940 \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u0924\u093E",
   },
   directions: [
     "उत्तर", "ईशान", "पूर्व", "आग्नेय", "दक्षिण", "नैऋत्य", "पश्चिम", "वायव्य"

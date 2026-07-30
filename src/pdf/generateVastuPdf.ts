@@ -114,6 +114,11 @@ const TELEGRAM_ICON = `<svg width="48" height="48" viewBox="0 0 48 48" xmlns="ht
 // Build the 9 main Vastu metric rows in 5 columns: S.No, Aspect, Formula, Result, Phala Analysis
 
 const buildRows = (table: ResultTable, form: VastuFormValues) => {
+  const lang = form.language || "Telugu";
+  const isEN = lang === "English";
+  const isHI = lang === "Hindi";
+  const padamuLabel = isEN ? "Padamu" : isHI ? "\u092A\u0926\u092E" : "\u0C2A\u0C26\u0C2E\u0C41";
+
   if (table.headers && table.rows.some((r) => r.columns)) {
     // Render multi-column Table 3
     let rowsHtml = "";
@@ -146,7 +151,7 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
          document.addEventListener("DOMContentLoaded", function() {
            const thead = document.querySelector(".main-table thead tr");
              if(thead) {
-               thead.innerHTML = '<th style="width:60px; padding: 10px 4px; font-size:calc(12px * var(--fs-factor)); font-weight: bold; color: #FFCDD2; text-align: center; border: 1px solid rgba(212,175,55,0.35);">Padamu</th>' + \`${headersHtml}\`;
+               thead.innerHTML = '<th style="width:60px; padding: 10px 4px; font-size:calc(12px * var(--fs-factor)); font-weight: bold; color: #FFCDD2; text-align: center; border: 1px solid rgba(212,175,55,0.35);">${padamuLabel}</th>' + \`${headersHtml}\`;
              }
          });
       </script>
@@ -161,10 +166,6 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
 
   const dhanamRaw = findVal("Dhanamu").rounded;
   const runamRaw = findVal("Runamu").rounded;
-
-  const lang = form.language || "Telugu";
-  const isEN = lang === "English";
-  const isHI = lang === "Hindi";
 
   const getLabel = (te: string, hi: string, en: string) => isEN ? en : isHI ? hi : te;
 
@@ -346,6 +347,8 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
 const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
   if (lang === 'Telugu') {
     return {
+      jyothishyalayam: '\u0C1C\u0C4D\u0C2F\u0C4B\u0C24\u0C3F\u0C37\u0C4D\u0C2F\u0C3E\u0C32\u0C2F\u0C02',
+      consultantName: '\u0C38\u0C3F\u0C26\u0C4D\u0C27\u0C3E\u0C02\u0C24\u0C3F \u0C2A\u0C47\u0C30\u0C41',
       title: 'విశ్వకర్మ వాస్తు సర్వస్వం',
       subtitle: 'దేవో వాస్తు ప్రజావతే',
       headerDesc: 'వాస్తు శాస్త్ర ప్రామాణిక విశ్లేషణ వివరాలు',
@@ -385,6 +388,8 @@ const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
   }
   if (lang === 'Hindi') {
     return {
+      jyothishyalayam: '\u091C\u094D\u092F\u094B\u0924\u093F\u0937\u093E\u0932\u092F',
+      consultantName: '\u0938\u0932\u093E\u0939\u0915\u093E\u0930 \u0915\u093E \u0928\u093E\u092E',
       title: 'विश्वकर्मा वास्तु सर्वस्वम',
       subtitle: 'देवो वास्तु प्रजापते',
       headerDesc: 'वास्तु शास्त्र प्रामाणिक विश्लेषण विवरण',
@@ -423,6 +428,8 @@ const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
     };
   }
   return {
+    jyothishyalayam: 'Jyothishyalayam',
+    consultantName: 'Consultant Name',
     title: 'Viswakarma Vastu Sarvaswam',
     subtitle: 'Devo Vastu Prajapate',
     headerDesc: 'Vastu Shastra Standard Analysis Details',
@@ -493,6 +500,42 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
   const varguMap = form.language === 'English' ? varguMapEN : form.language === 'Hindi' ? varguMapHI : varguMapTE;
   const ownerVarguDisplay = form.vargu ? (varguMap[form.vargu] || form.vargu) : "—";
   const wifeVarguDisplay = form.wifeVargu ? (varguMap[form.wifeVargu] || form.wifeVargu) : "—";
+
+  const translateNakshatram = (nakStr?: string) => {
+    if (!nakStr) return "—";
+    const enNak = [
+      "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra",
+      "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni",
+      "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha",
+      "Jyeshtha", "Moola", "Purva Ashadha", "Uttara Ashadha", "Shravana",
+      "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+    ];
+    const teNak = [
+      "అశ్విని", "భరణి", "కృత్తిక", "రోహిణి", "మృగశిర", "ఆరుద్ర",
+      "పునర్వసు", "పుష్యమి", "ఆశ్లేష", "మఖ", "పూర్వ ఫల్గుణి",
+      "ఉత్తర ఫల్గుణి", "హస్త", "చిత్త", "స్వాతి", "విశాఖ", "అనూరాధ",
+      "జ్యేష్ఠ", "మూల", "పూర్వాషాఢ", "ఉత్తరాషాఢ", "శ్రవణం",
+      "ధనిష్ఠ", "శతభిషం", "పూర్వాభాద్ర", "ఉత్తరాభాద్ర", "రేవతి"
+    ];
+    const hiNak = [
+      "अश्विनी", "भरणी", "कृत्तिका", "रोहिणी", "मृगशीर्षा", "आर्द्रा",
+      "पुनर्वसु", "पुष्य", "आश्लेषा", "मघा", "पूर्वा फाल्गुनी",
+      "उत्तरा फाल्गुनी", "हस्त", "चित्रा", "स्वाति", "विशाखा", "अनुराधा",
+      "ज्येष्ठा", "मूल", "पूर्वाषाढ़ा", "उत्तराषाढ़ा", "श्रवण",
+      "धनिष्ठा", "शतभीषा", "पूर्वा भाद्रपद", "उत्तरा भाद्रपद", "रेवती"
+    ];
+
+    let idx = enNak.indexOf(nakStr);
+    if (idx === -1) idx = teNak.indexOf(nakStr);
+    if (idx === -1) idx = hiNak.indexOf(nakStr);
+
+    if (idx === -1) return nakStr;
+
+    const lang = form.language || "Telugu";
+    if (lang === "English") return enNak[idx];
+    if (lang === "Hindi") return hiNak[idx];
+    return teNak[idx];
+  };
 
   let lengthStr = "—";
   let widthStr = "—";
@@ -853,13 +896,13 @@ body {
 <div class="client">
   <div class="client-row">
     <div class="client-col"><div class="client-lbl">${T.clientName}</div><div class="client-val">${owner}</div></div>
-    <div class="client-col"><div class="client-lbl">${T.nakshatram}</div><div class="client-val">${form.nakshatram || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.nakshatram}</div><div class="client-val">${translateNakshatram(form.nakshatram)}</div></div>
     <div class="client-col"><div class="client-lbl">${T.vargu}</div><div class="client-val">${ownerVarguDisplay}</div></div>
     <div class="client-col"><div class="client-lbl">${T.date}</div><div class="client-val">${dateStr}</div></div>
   </div>
   <div class="client-row">
     <div class="client-col"><div class="client-lbl">${T.wifeName}</div><div class="client-val">${form.wifeName || "—"}</div></div>
-    <div class="client-col"><div class="client-lbl">${T.wifeNakshatram}</div><div class="client-val">${form.wifeNakshatram || "—"}</div></div>
+    <div class="client-col"><div class="client-lbl">${T.wifeNakshatram}</div><div class="client-val">${translateNakshatram(form.wifeNakshatram)}</div></div>
     <div class="client-col"><div class="client-lbl">${T.wifeVargu}</div><div class="client-val">${wifeVarguDisplay}</div></div>
     <div class="client-col"><div class="client-lbl">${T.dayTitle}</div><div class="client-val">${dayStr}</div></div>
   </div>
@@ -899,7 +942,7 @@ body {
       <th style="width:160px;text-align:center;padding-left:4px;">${T.col3}</th>
       <th style="width:80px;">${T.col4}</th>
       <th style="width:95px;">${T.col5}</th>
-      <th style="width:175px;">ఫల విశ్లేషణ</th>
+      <th style="width:175px;">${T.phalaHeader}</th>
     </tr>
   </thead>
   <tbody>
@@ -943,13 +986,13 @@ body {
   <div class="contact-right">
     ${form.jyothishyalayam ? `
     <div style="margin-bottom: 4px;">
-      <div class="contact-name-lbl">Jyothishyalayam</div>
+      <div class="contact-name-lbl">${T.jyothishyalayam}</div>
       <div class="contact-name-val" style="color:#7B0A10; font-size:calc(24px * var(--fs-factor)); margin-bottom: 2px;">${form.jyothishyalayam}</div>
       <div class="contact-divider"></div>
     </div>
     ` : ''}
     <div>
-      <div class="contact-name-lbl">Consultant Name</div>
+      <div class="contact-name-lbl">${T.consultantName}</div>
       <div class="contact-name-val" style="${form.jyothishyalayam ? 'font-size:calc(20px * var(--fs-factor));' : ''}">${form.clientName || '—'}</div>
       <div class="contact-divider"></div>
     </div>
