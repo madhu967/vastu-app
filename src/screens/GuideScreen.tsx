@@ -8,6 +8,7 @@ import {
   View,
   Pressable,
   Linking,
+  Image,
 } from "react-native";
 import { PhoneFAB } from "@/components/FooterSection";
 import { LinearGradient } from "expo-linear-gradient";
@@ -39,6 +40,35 @@ const pageIcons: Record<string, string> = {
   vargu:           "🔠",
   "shanku-sthapana": "🏗️",
 };
+
+// ── page image map ────────────────────────────────────────────────────────────
+const pageImages: Record<string, any> = {
+  "soil-testing":    require("../../assets/soiltesting.jpg"),
+  "main-entrance":   require("../../assets/main entrance.jpg"),
+  bedroom:           require("../../assets/bedroom.jpg"),
+  trees:             require("../../assets/Lawn.jpg"),
+  about:             require("../../assets/icon3.jpeg"),
+  bathroom:          require("../../assets/bathroom.jpg"),
+  kitchen:           require("../../assets/kitchen.jpg"),
+  "pooja-room":      require("../../assets/ganapati.jpg"),
+  "dining-room":     require("../../assets/dining.jpg"),
+  staircase:         require("../../assets/staicase.jpg"),
+  parking:           require("../../assets/parking.jpg"),
+  borewell:          require("../../assets/borewell.jpg"),
+  "shanku-sthapana": require("../../assets/vastupurusha.jpg"),
+};
+
+// ── secondary images (shown rotated below the main image) ──────────────────────────
+const secondaryImages: Record<string, { source: any; rotate: string; label: string }> = {
+  "shanku-sthapana": {
+    source: require("../../assets/shanku.jpg"),
+    rotate: "-90deg",
+    label: "Shanku (Construction Peg)",
+  },
+};
+
+// pages that should show the FULL image without cropping
+const fullImagePages = new Set(["shanku-sthapana", "about"]);
 
 // ── section number labels ─────────────────────────────────────────────────────
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI"];
@@ -124,6 +154,51 @@ export const GuideScreen = () => {
             <Text style={s.heroSubtitle}>{page.subtitle}</Text>
           </LinearGradient>
         </Animated.View>
+
+        {/* ══════════ PAGE IMAGE ══════════ */}
+        {pageImages[page.key] && (
+          <Animated.View style={[s.imageCardWrap, { opacity: heroFade, transform: [{ translateY: heroShift }] }]}>
+            <View style={[
+              s.imageCard,
+              fullImagePages.has(page.key) && s.imageCardFull,
+            ]}>
+              <Image
+                source={pageImages[page.key]}
+                style={fullImagePages.has(page.key) ? s.pageImageFull : s.pageImage}
+                resizeMode={fullImagePages.has(page.key) ? "contain" : "cover"}
+              />
+              {/* Gold shimmer overlay at bottom */}
+              <View style={s.imageOverlay} />
+              {/* Caption bar */}
+              <View style={s.imageCaptionBar}>
+                <Text style={s.imageCaptionIcon}>{pageIcons[page.key] ?? "ॐ"}</Text>
+                <Text style={s.imageCaptionText}>{page.title}</Text>
+                <View style={s.imageCaptionDot} />
+              </View>
+            </View>
+          </Animated.View>
+        )}
+
+        {/* ══════════ SECONDARY IMAGE (rotated) ══════════ */}
+        {secondaryImages[page.key] && (
+          <Animated.View style={[s.imageCardWrap, { opacity: heroFade, transform: [{ translateY: heroShift }] }]}>
+            <View style={[s.imageCard, s.imageCardFull]}>
+              <Image
+                source={secondaryImages[page.key].source}
+                style={[
+                  s.pageImageFull,
+                  { transform: [{ rotate: secondaryImages[page.key].rotate }] },
+                ]}
+                resizeMode="contain"
+              />
+              <View style={s.imageCaptionBar}>
+                <Text style={s.imageCaptionIcon}>🏗️</Text>
+                <Text style={s.imageCaptionText}>{secondaryImages[page.key].label}</Text>
+                <View style={s.imageCaptionDot} />
+              </View>
+            </View>
+          </Animated.View>
+        )}
 
         {/* ══════════ CONTENT PARAGRAPHS ══════════ */}
         <View style={s.content}>
@@ -348,6 +423,71 @@ const s = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     letterSpacing: 0.5,
+  },
+
+  // ══ PAGE IMAGE CARD ══
+  imageCardWrap: {
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.xl,
+    borderRadius: cornerRadius.xl,
+    overflow: "hidden",
+    shadowColor: "#8B000F",
+    shadowOpacity: 0.22,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+  },
+  imageCard: {
+    borderRadius: cornerRadius.xl,
+    overflow: "hidden",
+    borderWidth: 1.5,
+    borderColor: "rgba(255,217,92,0.45)",
+    backgroundColor: "#1a0305",
+  },
+  pageImage: {
+    width: "100%",
+    height: 220,
+  },
+  imageCardFull: {
+    backgroundColor: "#0d0103",
+  },
+  pageImageFull: {
+    width: "100%",
+    height: 340,
+  },
+  imageOverlay: {
+    position: "absolute",
+    bottom: 44,
+    left: 0,
+    right: 0,
+    height: 60,
+    backgroundColor: "transparent",
+  },
+  imageCaptionBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 10,
+    backgroundColor: "rgba(90,0,8,0.92)",
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255,217,92,0.3)",
+  },
+  imageCaptionIcon: {
+    fontSize: 18,
+  },
+  imageCaptionText: {
+    flex: 1,
+    fontFamily: "CormorantGaramond_700Bold",
+    fontSize: 17,
+    color: "#FFD95C",
+    letterSpacing: 0.4,
+  },
+  imageCaptionDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(255,217,92,0.6)",
   },
 
   // ══ HERO ══
