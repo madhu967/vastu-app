@@ -271,14 +271,14 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
 
         const label = i === 0 ? `${n}` : `${n} ${i}/16`;
         const columns = [
-          formatDisplayTable3(dhanamu.actual),
-          formatDisplayTable3(runamu.actual),
-          formatDisplayTable3(tithi.actual),
-          formatDisplayTable3(vaaramu.actual),
-          formatDisplayTable3(nakshatram.actual),
-          formatDisplayTable3(ayurdayamu.actual),
-          formatDisplayTable3(amsa.actual),
-          formatDisplayTable3(dikpati.actual),
+          formatDisplayTable3(dhanamu.rounded),
+          formatDisplayTable3(runamu.rounded),
+          formatDisplayTable3(tithi.rounded),
+          formatDisplayTable3(vaaramu.rounded),
+          formatDisplayTable3(nakshatram.rounded),
+          formatDisplayTable3(ayurdayamu.rounded),
+          formatDisplayTable3(amsa.rounded),
+          formatDisplayTable3(dikpati.rounded),
           formatDisplayTable3(aayamu.actual),
           formatDisplayTable3(aayamu.rounded)
         ];

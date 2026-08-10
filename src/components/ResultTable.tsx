@@ -148,8 +148,9 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                 const translatedLabel = strings.resultTableLabels?.[row.label] || row.label;
                 const isTara = row.label === "Owner Tara Phalam" || row.label === "Wife Tara Phalam";
                 const translateTara = (v: string) => {
+                  if (!isTara) return v;
                   const idx = parseInt(v, 10) - 1;
-                  const res = (isTara && idx >= 0 && idx <= 8) ? (strings.taraPhalam?.[idx] || v) : v;
+                  const res = (idx >= 0 && idx <= 8) ? (strings.taraPhalam?.[idx] || v) : v;
                   return res.replace(/^\d+\.\s*/, "");
                 };
                 return (
@@ -161,7 +162,7 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                     index % 2 === 0 ? styles.rowEven : styles.rowOdd,
                   ]}
                 >
-                  <Text style={[styles.label, { width: 80, textAlign: "center", fontSize: 12 }]}>{translatedLabel}</Text>
+                  <Text style={[styles.value, { width: 80, textAlign: "center", fontSize: 12, color: "#8B0000", fontWeight: "bold" }]}>{translatedLabel}</Text>
                   {row.columns?.map((col, i) => (
                     <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontSize: 12 }]}>
                       {translateTara(col)}

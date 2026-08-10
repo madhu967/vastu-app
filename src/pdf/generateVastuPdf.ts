@@ -4,6 +4,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import { Platform, Alert, Image, PixelRatio } from "react-native";
 import { Asset } from 'expo-asset';
 import { VastuFormValues, VastuReport, ResultTable } from "@/types/vastu";
+import { getAppStrings } from "@/i18n/strings";
 import { yantraBase64, compassBase64, icon4Base64, icon5Base64 } from "./assetsBase64";
 
 // ──────────────────────────────────────────────────────────────
@@ -117,7 +118,8 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
   const lang = form.language || "Telugu";
   const isEN = lang === "English";
   const isHI = lang === "Hindi";
-  const padamuLabel = isEN ? "Padamu" : isHI ? "\u092A\u0926\u092E" : "\u0C2A\u0C26\u0C2E\u0C41";
+  const padamuLabel = isEN ? "Padamu" : isHI ? "पादम" : "పదము";
+  const strings = getAppStrings(lang);
 
   if (table.headers && table.rows.some((r) => r.columns)) {
     // Render multi-column Table 3
@@ -139,10 +141,11 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
     });
 
     const headersHtml = table.headers
-      .map(
-        (header) =>
-          `<th style="padding: 10px 4px; font-size:calc(11px * var(--fs-factor)); font-weight: 700; color: #FFFDF8; text-align: center; border: 1px solid rgba(212,175,55,0.35);">${header}</th>`
-      )
+      .slice(1) // Skip the first header because it is manually prepended below as padamuLabel
+      .map((header) => {
+        const translatedHeader = strings.resultTableLabels?.[header] || header;
+        return `<th style="padding: 10px 4px; font-size:calc(11px * var(--fs-factor)); font-weight: 700; color: #FFFDF8; text-align: center; border: 1px solid rgba(212,175,55,0.35);">${translatedHeader}</th>`;
+      })
       .join("");
 
     return `
