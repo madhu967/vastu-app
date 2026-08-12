@@ -20,6 +20,7 @@ export default function MainScreen() {
   const [user, setUser] = useState<any>(auth.currentUser);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [userStatus, setUserStatus] = useState<string>('pending');
+  const [userRole, setUserRole] = useState<string>('user');
 
   useEffect(() => {
     let unsubscribeSnapshot: () => void;
@@ -29,15 +30,17 @@ export default function MainScreen() {
       if (u) {
         if (u.email === 'admin@vastuapp.com') {
           setActiveTab('home');
+          setUserRole('admin');
         } else {
-          // Listen to status in real-time
+          // Listen to status and role in real-time
           unsubscribeSnapshot = onSnapshot(doc(db, 'users', u.uid), (docSnap) => {
             if (docSnap.exists()) {
-              const status = docSnap.data().status;
-              setUserStatus(status);
+              const data = docSnap.data();
+              setUserStatus(data.status);
+              setUserRole(data.role || 'user');
               
               // Only approved users can see Profile, everyone else gets Status
-              if (status === 'approved') {
+              if (data.status === 'approved') {
                 // If they were stuck on status page, move them to home when approved
                 setActiveTab(prev => prev === 'status' ? 'home' : prev);
               } else {
@@ -49,6 +52,7 @@ export default function MainScreen() {
               // The user document was deleted from Firestore database
               console.log("User document deleted. Initiating account deletion from Firebase Auth...");
               setUserStatus('deleted');
+              setUserRole('user');
               // Run account deletion asynchronously
               (async () => {
                 try {
@@ -65,6 +69,7 @@ export default function MainScreen() {
         }
       } else {
         setActiveTab('home');
+        setUserRole('user');
         if (unsubscribeSnapshot) unsubscribeSnapshot();
       }
     });
@@ -75,7 +80,7 @@ export default function MainScreen() {
     };
   }, []);
 
-  const isAdmin = user?.email === 'admin@vastuapp.com';
+  const isAdmin = user?.email === 'admin@vastuapp.com' || userRole === 'admin';
   const isApproved = userStatus === 'approved';
   const isUnapproved = user && !isAdmin && !isApproved;
 

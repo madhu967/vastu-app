@@ -250,15 +250,26 @@ export const HomeScreen = () => {
             }
           });
         } else {
-          setIsAdmin(false);
-          // Listen to their approval status in real-time
+          // Listen to their role and approval status in real-time
           unsubscribeSnapshot = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
             if (docSnap.exists()) {
               const data = docSnap.data();
               setUserName(data.name || 'User');
               setUserProfilePic(data.profilePicUrl || '');
-              if (data.status === 'approved') {
+              
+              if (data.role === 'admin') {
+                setIsAdmin(true);
                 setIsApproved(true);
+              } else if (data.status === 'approved') {
+                setIsApproved(true);
+                setIsAdmin(false);
+              } else {
+                // If they become suspended, rejected, or deleted, instantly revoke access
+                setIsApproved(false);
+                setIsAdmin(false);
+              }
+
+              if (data.role === 'admin' || data.status === 'approved') {
                 if (!hasAutoFilledRef.current) {
                   hasAutoFilledRef.current = true;
                   setForm(prev => ({
@@ -268,12 +279,10 @@ export const HomeScreen = () => {
                     jyothishyalayam: data.jyothishyalayam || '',
                   }));
                 }
-              } else {
-                // If they become suspended, rejected, or deleted, instantly revoke access
-                setIsApproved(false);
               }
             } else {
               setIsApproved(false);
+              setIsAdmin(false);
             }
           });
         }

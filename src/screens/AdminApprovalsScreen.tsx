@@ -14,6 +14,7 @@ type UserData = {
   profilePicUrl?: string;
   status: 'pending' | 'approved' | 'rejected' | 'suspended';
   requestDate: string;
+  role?: 'admin' | 'user';
 };
 
 type TabType = 'pending' | 'active' | 'blocked';
@@ -98,6 +99,33 @@ export default function AdminApprovalsScreen() {
     );
   };
 
+  const handleToggleAdmin = (userId: string, currentRole: string | undefined, userName: string) => {
+    const isPromoting = currentRole !== 'admin';
+    Alert.alert(
+      isPromoting ? "Promote to Admin" : "Revoke Admin",
+      isPromoting 
+        ? `Are you sure you want to promote ${userName} to an Administrator? They will receive full permissions.`
+        : `Are you sure you want to revoke Admin privileges from ${userName}?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: isPromoting ? "Promote" : "Revoke",
+          onPress: async () => {
+            const newRole = isPromoting ? 'admin' : 'user';
+            try {
+              await updateDoc(doc(db, 'users', userId), {
+                role: newRole
+              });
+              Alert.alert('Success', `${userName} is now a ${newRole}.`);
+            } catch (error: any) {
+              Alert.alert('Error', `Failed to update role: ${error.message || error}`);
+            }
+          }
+        }
+      ]
+    );
+  };
+
   const filteredUsers = users.filter(u => {
     if (activeTab === 'pending') return u.status === 'pending';
     if (activeTab === 'active') return u.status === 'approved';
@@ -139,7 +167,12 @@ export default function AdminApprovalsScreen() {
             )}
           </TouchableOpacity>
           <View style={styles.userInfoCol}>
-            <Text style={styles.userName} numberOfLines={1}>{item.name || 'Unknown User'}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flexWrap: 'wrap', marginBottom: 2 }}>
+              <Text style={[styles.userName, { marginBottom: 0 }]} numberOfLines={1}>{item.name || 'Unknown User'}</Text>
+              {item.role === 'admin' && (
+                <View style={styles.badgeAdmin}><Text style={styles.badgeAdminText}>ADMIN</Text></View>
+              )}
+            </View>
             <Text style={styles.userEmail} numberOfLines={1}>{item.email}</Text>
             {item.phone && <Text style={styles.userPhone}>{item.phone}</Text>}
           </View>
@@ -180,20 +213,39 @@ export default function AdminApprovalsScreen() {
           )}
 
           {activeTab === 'active' && (
-            <>
+            <View style={{ flex: 1, flexDirection: 'column', gap: spacing.sm, width: '100%' }}>
+              <View style={{ flexDirection: 'row', gap: spacing.md, width: '100%' }}>
+                <TouchableOpacity 
+                  style={[styles.button, styles.suspendBtn]}
+                  onPress={() => handleUpdateStatus(item.id, 'suspended')}
+                >
+                  <Text style={styles.warningSolidButtonText}>Suspend</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={[styles.button, styles.deleteBtn]}
+                  onPress={() => handleDeleteUser(item.id)}
+                >
+                  <Text style={styles.dangerSolidButtonText}>Delete</Text>
+                </TouchableOpacity>
+              </View>
               <TouchableOpacity 
-                style={[styles.button, styles.suspendBtn]}
-                onPress={() => handleUpdateStatus(item.id, 'suspended')}
+                style={[
+                  styles.button, 
+                  { 
+                    backgroundColor: item.role === 'admin' ? '#FEF2F2' : '#FFFDF9', 
+                    borderWidth: 1, 
+                    borderColor: item.role === 'admin' ? '#FECACA' : '#F4C430', 
+                    paddingVertical: 10,
+                    width: '100%'
+                  }
+                ]}
+                onPress={() => handleToggleAdmin(item.id, item.role, item.name || 'User')}
               >
-                <Text style={styles.warningSolidButtonText}>Suspend</Text>
+                <Text style={{ fontFamily: 'Manrope_700Bold', color: item.role === 'admin' ? '#B91C1C' : '#8B000F', fontSize: 13 }}>
+                  {item.role === 'admin' ? 'Revoke Admin Privileges' : 'Promote to Administrator'}
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.button, styles.deleteBtn]}
-                onPress={() => handleDeleteUser(item.id)}
-              >
-                <Text style={styles.dangerSolidButtonText}>Delete</Text>
-              </TouchableOpacity>
-            </>
+            </View>
           )}
 
           {activeTab === 'blocked' && (
@@ -490,6 +542,20 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope_700Bold',
     fontSize: 10,
     color: '#B91C1C',
+    letterSpacing: 0.5,
+  },
+  badgeAdmin: {
+    backgroundColor: '#FEF08A',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#FACC15',
+  },
+  badgeAdminText: {
+    fontFamily: 'Manrope_700Bold',
+    fontSize: 10,
+    color: '#854D0E',
     letterSpacing: 0.5,
   },
   actionsDivider: {

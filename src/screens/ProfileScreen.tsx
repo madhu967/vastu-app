@@ -63,7 +63,7 @@ export default function ProfileScreen() {
 
   const panRef = useRef({ x: 0, y: 0 });
   const user = auth.currentUser;
-  const isAdmin = user?.email === 'admin@vastuapp.com';
+  const isAdmin = user?.email === 'admin@vastuapp.com' || userData?.role === 'admin';
 
 
   // Initialize and track PanResponder for image cropping
