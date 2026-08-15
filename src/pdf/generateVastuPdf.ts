@@ -477,7 +477,12 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
   const isTable2 = table.title === "Result Table 2";
 
   const dataRows = buildRows(table, form);
-  const isAllGood = (isTable1 || isTable2) ? !dataRows.includes("#B71C1C") : true;
+  const tableWithoutWife = {
+    ...table,
+    rows: table.rows.filter(r => r.label !== "Wife Tara Phalam")
+  };
+  const dataRowsWithoutWife = buildRows(tableWithoutWife, form);
+  const isAllGood = (isTable1 || isTable2) ? !dataRowsWithoutWife.includes("#B71C1C") : true;
 
   const YANTRA = `<img src="${yantraBase64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />`;
   const COMPASS = `<img src="${compassBase64}" style="height: 108px; width: auto; max-width: 125px; border-radius: 4px; border: 2px solid #D4AF37; background: #D4AF37;" />`;

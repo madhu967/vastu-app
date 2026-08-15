@@ -810,6 +810,46 @@ const guideTranslations: Record<
         }
       ]
     },
+    "tara-chandra-chakra": {
+      title: "Tara & Chandra Bala Chakra",
+      subtitle: "Day Lords, Tarabalam, and Chandrabalam Calculation Table",
+      paragraphs: [
+        "👉 Arrow pointing right (→) indicates the Nakshatram in Panchanga (Daily Nakshatram).\n👇 Arrow pointing down (↓) indicates your Birth (Janma) or Name Nakshatram.",
+        "Day Lords (Dinadhipathi) - The ruling lord changes as the day's star (Dina Nakshatram) or birth star (Janma Nakshatram) changes."
+      ],
+      multiColumnTables: [
+        {
+          title: "Day Lords, Tara & Chandra Bala Calculation Table",
+          headers: [
+            "Birth \\ Daily Star",
+            "Ashwini / Magha / Moola",
+            "Bharani / P.Phalguni / P.Ashadha",
+            "Krittika / U.Phalguni / U.Ashadha",
+            "Rohini / Hasta / Shravana",
+            "Mrigashirsha / Chitra / Dhanishta",
+            "Ardra / Swati / Shatabhisha",
+            "Punarvasu / Vishakha / P.Bhadrapada",
+            "Pushya / Anuradha / U.Bhadrapada",
+            "Ashlesha / Jyeshtha / Revati"
+          ],
+          rows: [
+            ["Ashwini / Magha / Moola", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9"],
+            ["Bharani / P.Phalguni / P.Ashadha", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8"],
+            ["Krittika / U.Phalguni / U.Ashadha", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7"],
+            ["Rohini / Hasta / Shravana", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6"],
+            ["Mrigashirsha / Chitra / Dhanishta", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5"],
+            ["Ardra / Swati / Shatabhisha", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4"],
+            ["Punarvasu / Vishakha / P.Bhadrapada", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3"],
+            ["Pushya / Anuradha / U.Bhadrapada", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2"],
+            ["Ashlesha / Jyeshtha / Revati", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1"]
+          ]
+        }
+      ],
+      bottomContent: [
+        { heading: "Tarabalam Table", text: "1) Janma Tara (Inauspicious), 2) Sampat Tara (Auspicious), 3) Vipat Tara (Inauspicious), 4) Kshema Tara (Auspicious), 5) Pratyak Tara (Inauspicious), 6) Sadhana Tara (Auspicious), 7) Naidhana Tara (Inauspicious), 8) Mitra Tara (Auspicious), 9) Parama Mitra Tara (Auspicious)." },
+        { heading: "Chandrabalam Rules", text: "• Shukla Paksha: Moon in 2, 5, 9 houses from your Janma Rasi is good.\n• Krishna Paksha: Moon in 4, 8, 12 houses from your Janma Rasi is good.\n• Both Pakshas: Moon in 1, 3, 6, 7, 10, 11 houses is highly favorable." }
+      ]
+    },
   },
   Telugu: {
 
@@ -1069,6 +1109,46 @@ const guideTranslations: Record<
         { heading: "7. ఆయుర్దాయం :", text: "మొత్తం 120 సంవత్సరాల ఆయుర్దాయంలో కనీసం 60 సంవత్సరాలు పైన ఉండవలెను." },
         { heading: "8. అంశ :", text: "మొత్తం అంశాలు 9. ఇందులో 1 స్వాంశం, 4 కులాంశం, 5 ధనాంశం, 6 చోరాంశం కాకుండా 2,3,7,8,9 సంఖ్యలు శుభ ఫలితాలనిస్తాయి." },
         { heading: "9. దిక్పతి :", text: "దిక్కులకు 8 మంది. ఇందులో 2,4,6,8 రాకుండా 1,3,5,7 వచ్చినట్లు ఉండాలి. (ఆయంలో వచ్చిన సంఖ్యలే ఇక్కడ గణితం అవ్వవు.)" }
+      ]
+    },
+    "tara-chandra-chakra": {
+      title: "దినాధిపతులు - తారాబలం-చంద్రబలం గణనచక్రం",
+      subtitle: "దినాధిపతి, తారాబలము మరియు చంద్రబలము తెలుసుకొను చక్రము",
+      paragraphs: [
+        "👉 కుడివైపు బాణం గుర్తు (→) పంచాంగములోని నక్షత్రమును సూచిస్తుంది.\n👇 క్రిందివైపు బాణం గుర్తు (↓) మీ జన్మ నక్షత్రము లేదా నామ నక్షత్రమును సూచిస్తుంది.",
+        "దినాధిపతులు - దిన నక్షత్రము - జన్మ నక్షత్రము మారగానే అధినాధిపతి మారును."
+      ],
+      multiColumnTables: [
+        {
+          title: "దినాధిపతులు, తారాబలము మరియు చంద్రబలము గణన పట్టిక",
+          headers: [
+            "జన్మ నక్షత్రం \\ దిన నక్షత్రం",
+            "అశ్విని / మఖ / మూల",
+            "భరణి / పుబ్బ / పూ.షాఢ",
+            "కృత్తిక / ఉత్తర / ఉ.షాఢ",
+            "రోహిణి / హస్త / శ్రవణం",
+            "మృగశిర / చిత్త / ధనిష్ఠ",
+            "ఆరుద్ర / స్వాతి / శతభిషం",
+            "పునర్వసు / విశాఖ / పూ.భాద్ర",
+            "పుష్యమి / అనూరాధ / ఉ.భాద్ర",
+            "ఆశ్లేష / జ్యేష్ఠ / రేవతి"
+          ],
+          rows: [
+            ["అశ్విని / మఖ / మూల", "రవి 1", "బుధ 2", "రాహు 3", "గురు 4", "కేతు 5", "చంద్ర 6", "శని 7", "శుక్ర 8", "కుజ 9"],
+            ["భరణి / పుబ్బ / పూ.షాఢ", "కుజ 9", "రవి 1", "బుధ 2", "రాహు 3", "గురు 4", "కేతు 5", "చంద్ర 6", "శని 7", "శుక్ర 8"],
+            ["కృత్తిక / ఉత్తర / ఉ.షాఢ", "శుక్ర 8", "కుజ 9", "రవి 1", "బుధ 2", "రాహు 3", "గురు 4", "కేతు 5", "చంద్ర 6", "శని 7"],
+            ["రోహిణి / హస్త / శ్రవణం", "శని 7", "శుక్ర 8", "కుజ 9", "రవి 1", "బుధ 2", "రాహు 3", "గురు 4", "కేతు 5", "చంద్ర 6"],
+            ["మృగశిర / చిత్త / ధనిష్ఠ", "చంద్ర 6", "శని 7", "శుక్ర 8", "కుజ 9", "రవి 1", "బుధ 2", "రాహు 3", "గురు 4", "కేతు 5"],
+            ["ఆరుద్ర / స్వాతి / శతభిషం", "కేతు 5", "చంద్ర 6", "శని 7", "శుక్ర 8", "కుజ 9", "రవి 1", "బుధ 2", "రాహు 3", "గురు 4"],
+            ["పునర్వసు / విశాఖ / పూ.భాద్ర", "గురు 4", "కేతు 5", "చంద్ర 6", "శని 7", "శుక్ర 8", "కుజ 9", "రవి 1", "బుధ 2", "రాహు 3"],
+            ["పుష్యమి / అనూరాధ / ఉ.భాద్ర", "రాహు 3", "గురు 4", "కేతు 5", "చంద్ర 6", "శని 7", "శుక్ర 8", "కుజ 9", "రవి 1", "బుధ 2"],
+            ["ఆశ్లేష / జ్యేష్ఠ / రేవతి", "బుధ 2", "రాహు 3", "గురు 4", "కేతు 5", "చంద్ర 6", "శని 7", "శుక్ర 8", "కుజ 9", "రవి 1"]
+          ]
+        }
+      ],
+      bottomContent: [
+        { heading: "తారాబలముల పట్టిక", text: "1) జన్మతార (అశుభం), 2) సంపత్తార (శుభం), 3) విపత్తార (అశుభం), 4) క్షేమతార (శుభం), 5) ప్రత్యక్తార (అశుభం), 6) సాధనతార (శుభం), 7) నైధనతార (అశుభం), 8) మిత్రతార (శుభం), 9) పరమమిత్రతార (శుభం)." },
+        { heading: "చంద్రబలము నియమములు", text: "• శుక్లపక్షములో: మీ జన్మరాశికి 2-5-9 స్థానాలలో ఉన్న చంద్రుడు శుభుడు.\n• కృష్ణపక్షములో: 4-8-12 స్థానాలలో ఉన్న చంద్రుడు శుభుడు.\n• ఉభయ పక్షములందు: 1-3-6-7-10-11 రాశులయందు ఉన్న చంద్రుడు అత్యంత శుభుడు మరియు బలవంతుడు." }
       ]
     },
     "trees": {
@@ -1361,6 +1441,46 @@ const guideTranslations: Record<
       bottomContent: [
         { heading: "Important Rules", text: "The Vargu containing the first letter of the name is called 'Swavargu' and is highly favorable. In conjunct consonants, the last consonant should be considered. The 5th Vargu from Swavargu is the enemy (Shatru) Vargu and must be avoided. Other friendly Vargus (Mitra Vargu) yield positive results." },
         { heading: "Direction Groupings", text: "• South, South-East - South direction\n• West, South-West - West direction\n• North, North-West - North direction\n• East, North-East - East direction" }
+      ]
+    },
+    "tara-chandra-chakra": {
+      title: "ताराबल - चंद्रबल गणना चक्र",
+      subtitle: "दिनाधिपति, ताराबल और चंद्रबल गणना चक्र",
+      paragraphs: [
+        "👉 दाईं ओर इशारा करने वाला तीर (→) पंचांग में नक्षत्र (दैनिक नक्षत्र) को दर्शाता है।\n👇 नीचे की ओर इशारा करने वाला तीर (↓) आपका जन्म या नाम नक्षत्र दर्शाता है।",
+        "दिनाधिपति - दिन का नक्षत्र या जन्म नक्षत्र बदलते ही दिनाधिपति बदल जाता है।"
+      ],
+      multiColumnTables: [
+        {
+          title: "दिनाधिपति, ताराबल और चंद्रबल गणना तालिका",
+          headers: [
+            "जन्म नक्षत्र \\ दैनिक नक्षत्र",
+            "अश्विनी / मघा / मूल",
+            "भरणी / पूर्वा फाल्गुनी / पूर्वाषाढ़ा",
+            "कृत्तिका / उत्तरा फाल्गुनी / उत्तराषाढ़ा",
+            "रोहिणी / हस्त / श्रवण",
+            "मृगशीर्षा / चित्रा / धनिष्ठा",
+            "आर्द्रा / स्वाति / शतभीषा",
+            "पुनर्वसु / विशाखा / पूर्वा भाद्रपद",
+            "पुष्य / अनुराधा / उत्तरा भाद्रपद",
+            "आश्लेषा / ज्येष्ठा / रेवती"
+          ],
+          rows: [
+            ["अश्विनी / मघा / मूल", "सूर्य 1", "बुध 2", "राहु 3", "गुरु 4", "केतु 5", "चंद्र 6", "शनि 7", "शुक्र 8", "मंगल 9"],
+            ["भरणी / पूर्वा फाल्गुनी / पूर्वाषाढ़ा", "मंगल 9", "सूर्य 1", "बुध 2", "राहु 3", "गुरु 4", "केतु 5", "चंद्र 6", "शनि 7", "शुक्र 8"],
+            ["कृत्तिका / उत्तरा फाल्गुनी / उत्तराषाढ़ा", "शुक्र 8", "मंगल 9", "सूर्य 1", "बुध 2", "राहु 3", "गुरु 4", "केतु 5", "चंद्र 6", "शनि 7"],
+            ["रोहिणी / हस्त / श्रवण", "शनि 7", "शुक्र 8", "मंगल 9", "सूर्य 1", "बुध 2", "राहु 3", "गुरु 4", "केतु 5", "चंद्र 6"],
+            ["मृगशीर्षा / चित्रा / धनिष्ठा", "चंद्र 6", "शनि 7", "शुक्र 8", "मंगल 9", "सूर्य 1", "बुध 2", "राहु 3", "गुरु 4", "केतु 5"],
+            ["आर्द्रा / स्वाति / शतभीषा", "केतु 5", "चंद्र 6", "शनि 7", "शुक्र 8", "मंगल 9", "सूर्य 1", "बुध 2", "राहु 3", "गुरु 4"],
+            ["पुनर्वसु / विशाखा / पूर्वा भाद्रपद", "गुरु 4", "केतु 5", "चंद्र 6", "शनि 7", "शुक्र 8", "मंगल 9", "सूर्य 1", "बुध 2", "राहु 3"],
+            ["पुष्य / अनुराधा / उत्तरा भाद्रपद", "राहु 3", "गुरु 4", "केतु 5", "चंद्र 6", "शनि 7", "शुक्र 8", "मंगल 9", "सूर्य 1", "बुध 2"],
+            ["आश्लेषा / ज्येष्ठा / रेवती", "बुध 2", "राहु 3", "गुरु 4", "केतु 5", "चंद्र 6", "शनि 7", "शुक्र 8", "मंगल 9", "सूर्य 1"]
+          ]
+        }
+      ],
+      bottomContent: [
+        { heading: "ताराबल तालिका", text: "1) जन्म तारा (अशुभ), 2) सम्पत तारा (शुभ), 3) विपत तारा (अशुभ), 4) क्षेम तारा (शुभ), 5) प्रत्यक तारा (अशुभ), 6) साधन तारा (शुभ), 7) नैधन तारा (अशुभ), 8) मित्र तारा (शुभ), 9) परम मित्र तारा (शुभ)।" },
+        { heading: "चंद्रबल के नियम", text: "• शुक्ल पक्ष: आपकी जन्म राशि से 2, 5, 9 वें भाव में स्थित चंद्रमा शुभ है।\n• कृष्ण पक्ष: आपकी जन्म राशि से 4, 8, 12 वें भाव में स्थित चंद्रमा शुभ है।\n• दोनों पक्ष: 1, 3, 6, 7, 10, 11 वें भाव में चंद्रमा का होना अत्यंत शुभ व बलशाली माना जाता है।" }
       ]
     },
   },

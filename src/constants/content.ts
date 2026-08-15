@@ -334,6 +334,48 @@ export const guidePages: GuidePage[] = [
     ],
   },
   {
+    key: "tara-chandra-chakra",
+    title: "Tara & Chandra Bala Chakra",
+    subtitle: "Day Lords, Tarabalam, and Chandrabalam Calculation Table",
+    sections: [],
+    paragraphs: [
+      "👉 Arrow pointing right (→) indicates the Nakshatram in Panchanga (Daily Nakshatram).\n👇 Arrow pointing down (↓) indicates your Birth (Janma) or Name Nakshatram.",
+      "Day Lords (Dinadhipathi) - The ruling lord changes as the day's star (Dina Nakshatram) or birth star (Janma Nakshatram) changes."
+    ],
+    multiColumnTables: [
+      {
+        title: "Day Lords, Tara & Chandra Bala Calculation Table",
+        headers: [
+          "Birth \\ Daily Star",
+          "Ashwini / Magha / Moola",
+          "Bharani / P.Phalguni / P.Ashadha",
+          "Krittika / U.Phalguni / U.Ashadha",
+          "Rohini / Hasta / Shravana",
+          "Mrigashirsha / Chitra / Dhanishta",
+          "Ardra / Swati / Shatabhisha",
+          "Punarvasu / Vishakha / P.Bhadrapada",
+          "Pushya / Anuradha / U.Bhadrapada",
+          "Ashlesha / Jyeshtha / Revati"
+        ],
+        rows: [
+          ["Ashwini / Magha / Moola", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9"],
+          ["Bharani / P.Phalguni / P.Ashadha", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8"],
+          ["Krittika / U.Phalguni / U.Ashadha", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7"],
+          ["Rohini / Hasta / Shravana", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6"],
+          ["Mrigashirsha / Chitra / Dhanishta", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5"],
+          ["Ardra / Swati / Shatabhisha", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3", "Jupiter 4"],
+          ["Punarvasu / Vishakha / P.Bhadrapada", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2", "Rahu 3"],
+          ["Pushya / Anuradha / U.Bhadrapada", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1", "Mercury 2"],
+          ["Ashlesha / Jyeshtha / Revati", "Mercury 2", "Rahu 3", "Jupiter 4", "Ketu 5", "Moon 6", "Saturn 7", "Venus 8", "Mars 9", "Sun 1"]
+        ]
+      }
+    ],
+    bottomContent: [
+      { heading: "Tarabalam Table", text: "1) Janma Tara (Inauspicious), 2) Sampat Tara (Auspicious), 3) Vipat Tara (Inauspicious), 4) Kshema Tara (Auspicious), 5) Pratyak Tara (Inauspicious), 6) Sadhana Tara (Auspicious), 7) Naidhana Tara (Inauspicious), 8) Mitra Tara (Auspicious), 9) Parama Mitra Tara (Auspicious)." },
+      { heading: "Chandrabalam Rules", text: "• Shukla Paksha: Moon in 2, 5, 9 houses from your Janma Rasi is good.\n• Krishna Paksha: Moon in 4, 8, 12 houses from your Janma Rasi is good.\n• Both Pakshas: Moon in 1, 3, 6, 7, 10, 11 houses is highly favorable." }
+    ]
+  },
+  {
     key: "faq",
     title: "FAQ",
     subtitle: "Frequently asked questions about Viswakarma Vastu Sarvaswam and how it works.",

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, Image, Modal } from 'react-native';
 import { collection, query, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { LinearGradient } from 'expo-linear-gradient';
 import { palette, spacing, cornerRadius } from '@/constants/theme';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -59,7 +59,10 @@ export default function AdminApprovalsScreen() {
       setUsers(usersData);
       setLoading(false);
     }, (error) => {
-      console.error("Firestore approvals query error:", error);
+      if (auth.currentUser) {
+        console.error("Firestore approvals query error:", error);
+      }
+      setLoading(false);
     });
 
     return () => unsubscribe();

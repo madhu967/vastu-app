@@ -18,7 +18,7 @@ import { useAppLanguage } from "@/context/AppLanguageContext";
 //  Phone FAB  (floating action button – bottom right, separate from footer)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const getContacts = (lang: string) => {
+export const getContacts = (lang: string) => {
   if (lang === "English") {
     return [
       { title: "Almanac Maker", name: "Brahmasri Pedagadi Mohan Ravishankar Daivagna", location: "Andhra Pradesh", phone: "9949598627" },

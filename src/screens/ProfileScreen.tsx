@@ -16,7 +16,8 @@ import {
 } from 'react-native';
 import { signOut, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { palette, spacing, cornerRadius } from '@/constants/theme';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -82,34 +83,64 @@ export default function ProfileScreen() {
     })
   ).current;
 
-  const fetchUser = async () => {
+  const loadCachedUser = async () => {
     if (user) {
-      const docRef = doc(db, 'users', user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setUserData(data);
-        setName(data.name || '');
-        setPhone(data.phone || '');
-        setJyothishyalayam(data.jyothishyalayam || '');
-      } else if (isAdmin) {
-        // Initialize admin profile document if not exists
-        const defaultAdmin = {
-          name: 'Administrator',
-          phone: '',
-          jyothishyalayam: '',
-          email: user.email,
-          status: 'approved',
-          requestDate: new Date().toISOString()
-        };
-        await setDoc(docRef, defaultAdmin);
-        setUserData(defaultAdmin);
-        setName('Administrator');
-        setPhone('');
-        setJyothishyalayam('');
+      try {
+        const cached = await AsyncStorage.getItem(`user_profile_${user.uid}`);
+        if (cached) {
+          const data = JSON.parse(cached);
+          setUserData(data);
+          setName(data.name || '');
+          setPhone(data.phone || '');
+          setJyothishyalayam(data.jyothishyalayam || '');
+          setLoading(false);
+        }
+      } catch (e) {
+        console.log("ProfileScreen load cache error:", e);
       }
     }
-    setLoading(false);
+  };
+
+  const fetchUser = async () => {
+    try {
+      if (user) {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setUserData(data);
+          setName(data.name || '');
+          setPhone(data.phone || '');
+          setJyothishyalayam(data.jyothishyalayam || '');
+          
+          // Save to cache
+          await AsyncStorage.setItem(`user_profile_${user.uid}`, JSON.stringify(data));
+        } else if (isAdmin) {
+          // Initialize admin profile document if not exists
+          const defaultAdmin = {
+            name: 'Administrator',
+            phone: '',
+            jyothishyalayam: '',
+            email: user.email,
+            status: 'approved',
+            role: 'admin',
+            requestDate: new Date().toISOString()
+          };
+          await setDoc(docRef, defaultAdmin);
+          setUserData(defaultAdmin);
+          setName('Administrator');
+          setPhone('');
+          setJyothishyalayam('');
+          
+          // Save to cache
+          await AsyncStorage.setItem(`user_profile_${user.uid}`, JSON.stringify(defaultAdmin));
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -119,7 +150,50 @@ export default function ProfileScreen() {
       apiSecretLength: CLOUDINARY_API_SECRET ? CLOUDINARY_API_SECRET.length : 0,
       apiSecretPrefix: CLOUDINARY_API_SECRET ? CLOUDINARY_API_SECRET.substring(0, 3) : 'none'
     });
-    fetchUser();
+    loadCachedUser();
+
+    let unsubscribeSnapshot: (() => void) | null = null;
+    if (user) {
+      const docRef = doc(db, 'users', user.uid);
+      unsubscribeSnapshot = onSnapshot(docRef, async (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setUserData(data);
+          setName(data.name || '');
+          setPhone(data.phone || '');
+          setJyothishyalayam(data.jyothishyalayam || '');
+          await AsyncStorage.setItem(`user_profile_${user.uid}`, JSON.stringify(data));
+        } else if (isAdmin) {
+          const defaultAdmin = {
+            name: 'Administrator',
+            phone: '',
+            jyothishyalayam: '',
+            email: user.email,
+            status: 'approved',
+            role: 'admin',
+            requestDate: new Date().toISOString()
+          };
+          await setDoc(docRef, defaultAdmin);
+          setUserData(defaultAdmin);
+          setName('Administrator');
+          setPhone('');
+          setJyothishyalayam('');
+          await AsyncStorage.setItem(`user_profile_${user.uid}`, JSON.stringify(defaultAdmin));
+        }
+        setLoading(false);
+      }, (error) => {
+        if (auth.currentUser) {
+          console.error("Error listening to user profile:", error);
+        }
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
+
+    return () => {
+      if (unsubscribeSnapshot) unsubscribeSnapshot();
+    };
   }, [user]);
 
   const handleLogout = async () => {
@@ -135,6 +209,16 @@ export default function ProfileScreen() {
     try {
       setSavingDetails(true);
       if (user) {
+        // Optimistically update AsyncStorage cache
+        const updatedData = {
+          ...userData,
+          name: name.trim(),
+          phone: phone.trim(),
+          jyothishyalayam: jyothishyalayam.trim(),
+        };
+        await AsyncStorage.setItem(`user_profile_${user.uid}`, JSON.stringify(updatedData));
+        setUserData(updatedData);
+
         await setDoc(doc(db, 'users', user.uid), {
           name: name.trim(),
           phone: phone.trim(),

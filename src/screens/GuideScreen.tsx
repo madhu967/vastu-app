@@ -10,7 +10,7 @@ import {
   Linking,
   Image,
 } from "react-native";
-import { PhoneFAB } from "@/components/FooterSection";
+import { PhoneFAB, getContacts } from "@/components/FooterSection";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRoute } from "@react-navigation/native";
 import { ScreenHeader } from "@/components/ScreenHeader";
@@ -39,6 +39,7 @@ const pageIcons: Record<string, string> = {
   "soil-testing":  "🌱",
   vargu:           "🔠",
   "shanku-sthapana": "🏗️",
+  "tara-chandra-chakra": "🕉️",
 };
 
 // ── page image map ────────────────────────────────────────────────────────────
@@ -55,14 +56,14 @@ const pageImages: Record<string, any> = {
   staircase:         require("../../assets/staicase.jpg"),
   parking:           require("../../assets/parking.jpg"),
   borewell:          require("../../assets/borewell.jpg"),
-  "shanku-sthapana": require("../../assets/vastupurusha.jpg"),
+  "shanku-sthapana": require("../../assets/vastupurusha.jpeg"),
 };
 
 // ── secondary images (shown rotated below the main image) ──────────────────────────
 const secondaryImages: Record<string, { source: any; rotate: string; label: string }> = {
   "shanku-sthapana": {
-    source: require("../../assets/shanku.jpg"),
-    rotate: "-90deg",
+    source: require("../../assets/shanku.png"),
+    rotate: "0deg",
     label: "Shanku (Construction Peg)",
   },
 };
@@ -302,22 +303,55 @@ export const GuideScreen = () => {
                 <Text style={s.contactIcon}>📞</Text>
               </View>
               <View style={s.contactTextWrap}>
-                <Text style={s.premiumContactTitle}>Expert Vastu Consultation</Text>
-                <Text style={s.premiumContactSub}>Speak directly with our Siddhanti</Text>
+                <Text style={s.premiumContactTitle}>
+                  {language === "English"
+                    ? "Expert Vastu Consultation"
+                    : language === "Hindi"
+                    ? "विशेषज्ञ वास्तु परामर्श"
+                    : "నిపుణులైన వాస్తు సంప్రదింపులు"}
+                </Text>
+                <Text style={s.premiumContactSub}>
+                  {language === "English"
+                    ? "Speak directly with our experts"
+                    : language === "Hindi"
+                    ? "हमारे विशेषज्ञों से सीधे बात करें"
+                    : "మా నిపుణులతో నేరుగా మాట్లాడండి"}
+                </Text>
               </View>
-              <Pressable
-                style={({ pressed }) => [s.premiumContactBtn, pressed && s.premiumContactBtnPressed]}
-                onPress={() => Linking.openURL('tel:9949753939')}
-              >
-                <LinearGradient
-                  colors={["#B71C1C", "#8B000F"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={s.premiumContactBtnGrad}
-                >
-                  <Text style={s.premiumContactNumber}>Call Now: +91 99497 53939</Text>
-                </LinearGradient>
-              </Pressable>
+
+              <View style={s.contactList}>
+                {getContacts(language).map((contact, idx, arr) => (
+                  <View
+                    key={idx}
+                    style={[
+                      s.contactItem,
+                      idx === arr.length - 1 && s.contactItemLast,
+                    ]}
+                  >
+                    <View style={s.contactDetails}>
+                      <Text style={s.contactRoleText}>{contact.title}</Text>
+                      <Text style={s.contactNameText}>{contact.name}</Text>
+                      <Text style={s.contactLocText}>{contact.location}</Text>
+                    </View>
+                    <Pressable
+                      style={({ pressed }) => [
+                        s.contactCallBtn,
+                        pressed && s.premiumContactBtnPressed,
+                      ]}
+                      onPress={() => Linking.openURL(`tel:${contact.phone}`)}
+                    >
+                      <LinearGradient
+                        colors={["#B71C1C", "#8B000F"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={s.contactCallBtnGrad}
+                      >
+                        <Text style={{ fontSize: 18 }}>📞</Text>
+                      </LinearGradient>
+                    </Pressable>
+                  </View>
+                ))}
+              </View>
             </LinearGradient>
           </View>
         )}
@@ -404,25 +438,61 @@ const s = StyleSheet.create({
     color: "#8B000F",
     opacity: 0.8,
   },
-  premiumContactBtn: {
-    width: "100%",
-    borderRadius: cornerRadius.pill,
-    overflow: "hidden",
-  },
   premiumContactBtnPressed: {
     opacity: 0.85,
     transform: [{ scale: 0.98 }],
   },
-  premiumContactBtnGrad: {
-    paddingVertical: spacing.md + 2,
+  contactList: {
+    width: "100%",
+    marginTop: spacing.xs,
+  },
+  contactItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(139, 0, 15, 0.1)",
+  },
+  contactItemLast: {
+    borderBottomWidth: 0,
+    paddingBottom: 0,
+  },
+  contactDetails: {
+    flex: 1,
+    paddingRight: spacing.md,
+  },
+  contactRoleText: {
+    fontFamily: typography.bold,
+    fontSize: 12,
+    color: "#85581A",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  contactNameText: {
+    fontFamily: typography.bold,
+    fontSize: 14,
+    color: "#5A0008",
+    marginBottom: 2,
+  },
+  contactLocText: {
+    fontFamily: typography.medium,
+    fontSize: 12,
+    color: "#7A4A20",
+    opacity: 0.8,
+  },
+  contactCallBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    overflow: "hidden",
+  },
+  contactCallBtnGrad: {
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
-  },
-  premiumContactNumber: {
-    fontFamily: typography.bold,
-    fontSize: 16,
-    color: "#FFFFFF",
-    letterSpacing: 0.5,
   },
 
   // ══ PAGE IMAGE CARD ══

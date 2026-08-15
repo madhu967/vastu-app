@@ -8,7 +8,8 @@ import StatusScreen from './StatusScreen';
 import SignupScreen from './SignupScreen';
 import CompassScreen from './CompassScreen';
 import { auth, db } from '../firebase';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { palette } from '@/constants/theme';
 import { useAppLanguage } from '@/context/AppLanguageContext';
 import { getAppStrings } from '@/i18n/strings';
@@ -23,15 +24,50 @@ export default function MainScreen() {
   const [userRole, setUserRole] = useState<string>('user');
 
   useEffect(() => {
-    let unsubscribeSnapshot: () => void;
+    let unsubscribeSnapshot: (() => void) | null = null;
+
+    const loadCachedAuth = async (uid: string) => {
+      try {
+        const cached = await AsyncStorage.getItem(`user_profile_${uid}`);
+        if (cached) {
+          const data = JSON.parse(cached);
+          setUserStatus(data.status || 'pending');
+          setUserRole(data.role || 'user');
+          if (data.status === 'approved') {
+            setActiveTab(prev => prev === 'status' ? 'home' : prev);
+          }
+        }
+      } catch (e) {
+        console.log("MainScreen load cache error:", e);
+      }
+    };
 
     const unsubscribeAuth = auth.onAuthStateChanged((u) => {
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot();
+        unsubscribeSnapshot = null;
+      }
+
       setUser(u);
       if (u) {
         if (u.email === 'admin@vastuapp.com') {
           setActiveTab('home');
           setUserRole('admin');
+          setUserStatus('approved');
+          
+          // Auto-repair admin document with role: 'admin' and status: 'approved'
+          setDoc(doc(db, 'users', u.uid), {
+            role: 'admin',
+            status: 'approved',
+            email: u.email,
+            name: 'Administrator'
+          }, { merge: true }).catch(err => {
+            console.log("Admin auto-repair error:", err);
+          });
         } else {
+          // Load cache first
+          loadCachedAuth(u.uid);
+
           // Listen to status and role in real-time
           unsubscribeSnapshot = onSnapshot(doc(db, 'users', u.uid), (docSnap) => {
             if (docSnap.exists()) {
@@ -50,6 +86,15 @@ export default function MainScreen() {
               }
             } else {
               // The user document was deleted from Firestore database
+              // Wait, check if the user is newly registered (within last 15 seconds) to avoid signup race condition
+              const creationTime = u.metadata?.creationTime ? new Date(u.metadata.creationTime).getTime() : 0;
+              const isVeryNew = Date.now() - creationTime < 15000; // 15 seconds
+              
+              if (isVeryNew) {
+                console.log("User is newly created, skipping auto-deletion during registration window.");
+                return;
+              }
+
               console.log("User document deleted. Initiating account deletion from Firebase Auth...");
               setUserStatus('deleted');
               setUserRole('user');
@@ -65,12 +110,13 @@ export default function MainScreen() {
                 }
               })();
             }
+          }, (error) => {
+            console.log("MainScreen snapshot error caught:", error);
           });
         }
       } else {
         setActiveTab('home');
         setUserRole('user');
-        if (unsubscribeSnapshot) unsubscribeSnapshot();
       }
     });
 

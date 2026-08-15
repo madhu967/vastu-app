@@ -33,6 +33,7 @@ import { digitsOnly } from "@/utils/number";
 
 import { auth, db } from "../firebase";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialForm: VastuFormValues = {
   language: "English",
@@ -212,41 +213,80 @@ export const HomeScreen = () => {
 
   // Check admin and approved status in real-time
   useEffect(() => {
-    let unsubscribeSnapshot: () => void;
+    let unsubscribeSnapshot: (() => void) | null = null;
+
+    const loadCachedUser = async (uid: string) => {
+      try {
+        const cached = await AsyncStorage.getItem(`user_profile_${uid}`);
+        if (cached) {
+          const data = JSON.parse(cached);
+          setUserName(data.name || (data.email === 'admin@vastuapp.com' ? 'Administrator' : 'User'));
+          setUserProfilePic(data.profilePicUrl || '');
+          if (data.role === 'admin' || data.email === 'admin@vastuapp.com') {
+            setIsAdmin(true);
+            setIsApproved(true);
+          } else if (data.status === 'approved') {
+            setIsApproved(true);
+            setIsAdmin(false);
+          }
+          
+          setForm(prev => {
+            const nameIsDefault = !prev.clientName || prev.clientName === 'User' || prev.clientName === 'Administrator';
+            const phoneIsDefault = !prev.phoneNumber;
+            const jyothishyalayamIsDefault = !prev.jyothishyalayam;
+            return {
+              ...prev,
+              clientName: nameIsDefault ? (data.name || (data.email === 'admin@vastuapp.com' ? 'Administrator' : 'User')) : prev.clientName,
+              phoneNumber: phoneIsDefault ? (data.phone || '') : prev.phoneNumber,
+              jyothishyalayam: jyothishyalayamIsDefault ? (data.jyothishyalayam || '') : prev.jyothishyalayam,
+            };
+          });
+        }
+      } catch (e) {
+        console.log("HomeScreen load cache error:", e);
+      }
+    };
 
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot();
+        unsubscribeSnapshot = null;
+      }
+
       if (user) {
         setIsLoggedIn(true);
+        // Load cache first so we are immediately responsive offline
+        loadCachedUser(user.uid);
+
         if (user.email === 'admin@vastuapp.com') {
           setIsAdmin(true);
           setIsApproved(true);
           setUserName('Administrator');
           
-           unsubscribeSnapshot = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
+          unsubscribeSnapshot = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
             if (docSnap.exists()) {
               const data = docSnap.data();
               setUserName(data.name || 'Administrator');
               setUserProfilePic(data.profilePicUrl || '');
-              if (!hasAutoFilledRef.current) {
-                hasAutoFilledRef.current = true;
-                setForm(prev => ({
+              
+              // Save to cache
+              AsyncStorage.setItem(`user_profile_${user.uid}`, JSON.stringify({ ...data, email: user.email })).catch(e => console.log(e));
+
+              setForm(prev => {
+                const nameIsDefault = !prev.clientName || prev.clientName === 'User' || prev.clientName === 'Administrator';
+                const phoneIsDefault = !prev.phoneNumber;
+                const jyothishyalayamIsDefault = !prev.jyothishyalayam;
+                return {
                   ...prev,
-                  clientName: data.name || 'Administrator',
-                  phoneNumber: data.phone || '',
-                  jyothishyalayam: data.jyothishyalayam || '',
-                }));
-              }
-            } else {
-              setUserProfilePic('');
-              if (!hasAutoFilledRef.current) {
-                hasAutoFilledRef.current = true;
-                setForm(prev => ({
-                  ...prev,
-                  clientName: 'Administrator',
-                  phoneNumber: '',
-                  jyothishyalayam: '',
-                }));
-              }
+                  clientName: nameIsDefault ? (data.name || 'Administrator') : prev.clientName,
+                  phoneNumber: phoneIsDefault ? (data.phone || '') : prev.phoneNumber,
+                  jyothishyalayam: jyothishyalayamIsDefault ? (data.jyothishyalayam || '') : prev.jyothishyalayam,
+                };
+              });
+            }
+          }, (error) => {
+            if (auth.currentUser) {
+              console.log("HomeScreen admin snapshot error:", error);
             }
           });
         } else {
@@ -257,6 +297,9 @@ export const HomeScreen = () => {
               setUserName(data.name || 'User');
               setUserProfilePic(data.profilePicUrl || '');
               
+              // Save to cache
+              AsyncStorage.setItem(`user_profile_${user.uid}`, JSON.stringify(data)).catch(e => console.log(e));
+
               if (data.role === 'admin') {
                 setIsAdmin(true);
                 setIsApproved(true);
@@ -264,25 +307,30 @@ export const HomeScreen = () => {
                 setIsApproved(true);
                 setIsAdmin(false);
               } else {
-                // If they become suspended, rejected, or deleted, instantly revoke access
                 setIsApproved(false);
                 setIsAdmin(false);
               }
 
               if (data.role === 'admin' || data.status === 'approved') {
-                if (!hasAutoFilledRef.current) {
-                  hasAutoFilledRef.current = true;
-                  setForm(prev => ({
+                setForm(prev => {
+                  const nameIsDefault = !prev.clientName || prev.clientName === 'User' || prev.clientName === 'Administrator';
+                  const phoneIsDefault = !prev.phoneNumber;
+                  const jyothishyalayamIsDefault = !prev.jyothishyalayam;
+                  return {
                     ...prev,
-                    clientName: data.name || '',
-                    phoneNumber: data.phone || '',
-                    jyothishyalayam: data.jyothishyalayam || '',
-                  }));
-                }
+                    clientName: nameIsDefault ? (data.name || '') : prev.clientName,
+                    phoneNumber: phoneIsDefault ? (data.phone || '') : prev.phoneNumber,
+                    jyothishyalayam: jyothishyalayamIsDefault ? (data.jyothishyalayam || '') : prev.jyothishyalayam,
+                  };
+                });
               }
             } else {
               setIsApproved(false);
               setIsAdmin(false);
+            }
+          }, (error) => {
+            if (auth.currentUser) {
+              console.log("HomeScreen user snapshot error:", error);
             }
           });
         }
@@ -293,7 +341,6 @@ export const HomeScreen = () => {
         setUserProfilePic('');
         hasAutoFilledRef.current = false;
         setForm(initialForm);
-        if (unsubscribeSnapshot) unsubscribeSnapshot();
       }
     });
     return () => {
