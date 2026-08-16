@@ -272,12 +272,37 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
         return [displayStr, s, getColor(s)];
       }
       case "Aayamu": {
+        if (val < 1 || val > 8) return ["—", "", "#4A4A4A"];
+        
+        const ownerVarguNum = parseInt(form.vargu, 10);
+        const wifeVarguNum = parseInt(form.wifeVargu, 10);
+        
+        const hasOwnerVargu = !isNaN(ownerVarguNum) && ownerVarguNum >= 1 && ownerVarguNum <= 8;
+        const hasWifeVargu = !isNaN(wifeVarguNum) && wifeVarguNum >= 1 && wifeVarguNum <= 8;
+        
+        const getShatruvargus = (vNum: number): number[] => {
+          if (vNum === 1 || vNum === 2) return [5, 6];
+          if (vNum === 3 || vNum === 4) return [7, 8];
+          if (vNum === 5 || vNum === 6) return [1, 2];
+          if (vNum === 7 || vNum === 8) return [3, 4];
+          return [];
+        };
+
+        const ownerShatrus = hasOwnerVargu ? getShatruvargus(ownerVarguNum) : [];
+        const wifeShatrus = hasWifeVargu ? getShatruvargus(wifeVarguNum) : [];
+
+        const isShatru = ownerShatrus.includes(val) || wifeShatrus.includes(val);
+
+        if (isShatru) {
+          const shatruText = isEN ? "Shatruvargu" : isHI ? "शत्रुवर्ग" : "శత్రువర్గం";
+          return [shatruText, T_ASHUBHAM, "#B71C1C"];
+        }
+
         const enAay = ["Dhwajayam", "Dhumayam", "Simhayam", "Shvanayam", "Vrishabhayam", "Kharayam", "Gajayam", "Kakayam"];
         const hiAay = ["ध्वजायम", "धुमायम", "सिंहायम", "श्वानायम", "वृषभायम", "खरायम", "गजायम", "काकायम"];
         const teAay = ["ధ్వజాయం", "ధూమాయం", "సింహాయం", "శ్వానాయం", "వృషభాయం", "ఖరాయం", "గజాయం", "కాకాయం"];
         const outAay = isEN ? enAay : isHI ? hiAay : teAay;
         const statuses = [T_SHUBHAM, T_AGNI, T_SHUBHAM, T_RAJA, T_SHUBHAM, T_ROGA, T_SHUBHAM, T_DEHA];
-        if (val < 1 || val > 8) return ["—", "", "#4A4A4A"];
         const s = statuses[val - 1];
         return [outAay[val - 1], s, getColor(s)];
       }
