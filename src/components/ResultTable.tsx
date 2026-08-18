@@ -1,96 +1,19 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, Modal } from "react-native";
 import { cornerRadius, palette, spacing, typography } from "@/constants/theme";
 import { ResultTable as ResultTableType } from "@/types/vastu";
 import { useAppLanguage } from "@/context/AppLanguageContext";
 import { getAppStrings } from "@/i18n/strings";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 type ResultTableProps = {
   table: ResultTableType;
 };
 
-const AayamuFilterDropdown = ({ initialSelected, onChange }: { initialSelected: string[], onChange: (s: string[]) => void }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [localSelected, setLocalSelected] = useState<string[]>(initialSelected);
-
-  const toggleVal = (val: string) => {
-    let newVal;
-    if (localSelected.includes(val)) {
-      newVal = localSelected.filter(item => item !== val);
-    } else {
-      newVal = [...localSelected, val].sort();
-    }
-    setLocalSelected(newVal);
-    
-    // Defer the heavy update to let the UI frame paint the checkbox immediately
-    setTimeout(() => {
-      onChange(newVal);
-    }, 10);
-  };
-
-  return (
-    <View style={{ marginTop: spacing.md, zIndex: 10 }}>
-      <TouchableOpacity 
-        style={{
-          backgroundColor: "#fff",
-          borderWidth: 1,
-          borderColor: palette.borderLight,
-          borderRadius: cornerRadius.md,
-          padding: spacing.sm,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}
-        onPress={() => setIsOpen(!isOpen)}
-      >
-        <Text style={{ fontSize: 14, color: palette.textPrimary }}>
-          Filter Aayamu: {localSelected.length > 0 ? localSelected.join(", ") : "None"}
-        </Text>
-        <Text style={{ color: palette.textSecondary }}>▼</Text>
-      </TouchableOpacity>
-      
-      {isOpen && (
-        <View style={{
-          backgroundColor: "#fff",
-          borderWidth: 1,
-          borderColor: palette.borderLight,
-          borderRadius: cornerRadius.md,
-          marginTop: 4,
-          padding: spacing.sm,
-        }}>
-          {['1', '3', '5', '7'].map((val) => {
-            const isSelected = localSelected.includes(val);
-            return (
-              <TouchableOpacity
-                key={val}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingVertical: 8,
-                }}
-                onPress={() => toggleVal(val)}
-              >
-                <View style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: 4,
-                  borderWidth: 1,
-                  borderColor: isSelected ? palette.primary : palette.borderLight,
-                  backgroundColor: isSelected ? palette.primary : "transparent",
-                  marginRight: 10,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}>
-                  {isSelected && <Text style={{ color: "#fff", fontSize: 12 }}>✓</Text>}
-                </View>
-                <Text style={{ fontSize: 14, color: palette.textPrimary }}>Aayamu {val}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      )}
-    </View>
-  );
+const getColWidth = (hdr: string) => {
+  if (hdr === "Nakshatram Name") return 110;
+  if (hdr === "Padamu Decimal") return 95;
+  return 80;
 };
 
 export const ResultTable = ({ table }: ResultTableProps) => {
@@ -98,11 +21,25 @@ export const ResultTable = ({ table }: ResultTableProps) => {
   const strings = getAppStrings(language);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAayamu, setSelectedAayamu] = useState<string[]>(['1', '3', '5', '7']);
+  const [selectedNakshatram, setSelectedNakshatram] = useState<string[]>(
+    Array.from({ length: 27 }, (_, i) => String(i + 1))
+  );
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [tempAayamu, setTempAayamu] = useState<string[]>(selectedAayamu);
+  const [tempNakshatram, setTempNakshatram] = useState<string[]>(selectedNakshatram);
   const rowsPerPage = 50;
+
+  // Sync state when modal is opened
+  useEffect(() => {
+    if (filterModalVisible) {
+      setTempAayamu(selectedAayamu);
+      setTempNakshatram(selectedNakshatram);
+    }
+  }, [filterModalVisible, selectedAayamu, selectedNakshatram]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [table, selectedAayamu]);
+  }, [table, selectedAayamu, selectedNakshatram]);
 
   if (!table.visible) {
     return null;
@@ -113,13 +50,13 @@ export const ResultTable = ({ table }: ResultTableProps) => {
       if (table.title !== "Result Table 3") return true;
       if (!row.columns || row.columns.length === 0) return true;
       
-      // Aayamu Rounded is the last column (index 9)
       const aayamuRounded = row.columns[row.columns.length - 1];
+      const nakshatramVal = row.columns[5]; // Nakshatram index in columns list is 5 (decimal, dhan, run, tith, vaar, nakshatram)
       
-      // Check if the aayamuRounded value is exactly equal to one of the selected options
-      return selectedAayamu.includes(aayamuRounded.trim());
+      return selectedAayamu.includes(aayamuRounded.trim()) &&
+             selectedNakshatram.includes(nakshatramVal.trim());
     }) || [];
-  }, [table, selectedAayamu]);
+  }, [table, selectedAayamu, selectedNakshatram]);
 
   const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
@@ -137,7 +74,7 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                   const translatedHeader = strings.resultTableLabels?.[header] || header;
                   const isPadamu = header === "Padamu" || translatedHeader === "పదము" || translatedHeader === "पदम";
                   return (
-                    <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontWeight: "bold", fontSize: 12 }, isPadamu && { color: "#8B0000" }]}>
+                    <Text key={i} style={[styles.value, { width: getColWidth(header), textAlign: "center", fontWeight: "bold", fontSize: 12 }, isPadamu && { color: "#8B0000" }]}>
                       {translatedHeader}
                     </Text>
                   );
@@ -167,11 +104,14 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                   ]}
                 >
                   <Text style={[styles.value, { width: 80, textAlign: "center", fontSize: 12, color: "#8B0000", fontWeight: "bold" }]}>{translatedLabel}</Text>
-                  {row.columns?.map((col, i) => (
-                    <Text key={i} style={[styles.value, { width: 80, textAlign: "center", fontSize: 12 }]}>
-                      {translateTara(col)}
-                    </Text>
-                  ))}
+                  {row.columns?.map((col, i) => {
+                    const headerKey = table.headers[i + 1] || "";
+                    return (
+                      <Text key={i} style={[styles.value, { width: getColWidth(headerKey), textAlign: "center", fontSize: 12 }]}>
+                        {translateTara(col)}
+                      </Text>
+                    );
+                  })}
                 </View>
                 );
               })}</View>
@@ -241,10 +181,15 @@ export const ResultTable = ({ table }: ResultTableProps) => {
         </View>
         <Text style={styles.title}>{table.title}</Text>
         {table.title === "Result Table 3" && (
-          <AayamuFilterDropdown 
-            initialSelected={selectedAayamu} 
-            onChange={setSelectedAayamu} 
-          />
+          <TouchableOpacity 
+            style={styles.filterBtn}
+            onPress={() => setFilterModalVisible(true)}
+          >
+            <FontAwesome name="filter" size={14} color="#FFFFFF" />
+            <Text style={styles.filterBtnText}>
+              Filters ({selectedAayamu.length} Aayamu, {selectedNakshatram.length === 27 ? "All" : `${selectedNakshatram.length}`} Nakshatram)
+            </Text>
+          </TouchableOpacity>
         )}
       </View>
 
@@ -277,6 +222,109 @@ export const ResultTable = ({ table }: ResultTableProps) => {
         <Text style={styles.footerDot}>✦</Text>
         <View style={styles.footerLine} />
       </View>
+
+      {/* Bottom Sheet Filter Modal */}
+      <Modal
+        visible={filterModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setFilterModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {/* Header */}
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filter Table 3 Results</Text>
+              <TouchableOpacity onPress={() => setFilterModalVisible(false)}>
+                <Text style={styles.closeBtn}>✕</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
+              {/* Aayamu Section */}
+              <Text style={styles.filterSectionTitle}>Aayamu</Text>
+              <View style={styles.chipContainer}>
+                {['1', '3', '5', '7'].map((val) => {
+                  const isSelected = tempAayamu.includes(val);
+                  return (
+                    <TouchableOpacity
+                      key={val}
+                      style={[
+                        styles.chip,
+                        isSelected && styles.chipSelected,
+                      ]}
+                      onPress={() => {
+                        if (tempAayamu.includes(val)) {
+                          setTempAayamu(tempAayamu.filter(item => item !== val));
+                        } else {
+                          setTempAayamu([...tempAayamu, val].sort());
+                        }
+                      }}
+                    >
+                      <Text style={[styles.chipText, isSelected && styles.chipTextSelected]}>
+                        Aayamu {val}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              {/* Nakshatram Section */}
+              <View style={styles.shortcutRow}>
+                <Text style={[styles.filterSectionTitle, { marginTop: 0 }]}>Nakshatram</Text>
+                <View style={{ flexDirection: "row", gap: 12 }}>
+                  <TouchableOpacity onPress={() => setTempNakshatram(Array.from({ length: 27 }, (_, i) => String(i + 1)))}>
+                    <Text style={styles.shortcutText}>Select All</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setTempNakshatram([])}>
+                    <Text style={styles.shortcutText}>Clear All</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.gridContainer}>
+                {Array.from({ length: 27 }, (_, i) => String(i + 1)).map((val) => {
+                  const isSelected = tempNakshatram.includes(val);
+                  return (
+                    <TouchableOpacity
+                      key={val}
+                      style={[
+                        styles.gridChip,
+                        isSelected && styles.gridChipSelected,
+                      ]}
+                      onPress={() => {
+                        if (tempNakshatram.includes(val)) {
+                          setTempNakshatram(tempNakshatram.filter(item => item !== val));
+                        } else {
+                          setTempNakshatram([...tempNakshatram, val].sort((a, b) => parseInt(a) - parseInt(b)));
+                        }
+                      }}
+                    >
+                      <Text style={[styles.gridChipText, isSelected && styles.gridChipTextSelected]}>
+                        {val}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </ScrollView>
+
+            {/* Apply Button */}
+            <View style={styles.modalFooter}>
+              <TouchableOpacity 
+                style={styles.applyBtn}
+                onPress={() => {
+                  setSelectedAayamu(tempAayamu);
+                  setSelectedNakshatram(tempNakshatram);
+                  setFilterModalVisible(false);
+                }}
+              >
+                <Text style={styles.applyBtnText}>Apply Filters</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -398,5 +446,161 @@ const styles = StyleSheet.create({
   pageInfo: {
     color: palette.textMedium,
     fontSize: 14,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    backgroundColor: "#FFF8F0",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 28,
+    maxHeight: "85%",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#EFE3C7",
+    paddingBottom: 12,
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#5A0008",
+  },
+  closeBtn: {
+    fontSize: 20,
+    color: "#8C6A6A",
+    fontWeight: "bold",
+    paddingHorizontal: 8,
+  },
+  modalBody: {
+    flexGrow: 0,
+  },
+  filterSectionTitle: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#C9830A",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 10,
+    marginTop: 8,
+  },
+  chipContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 16,
+  },
+  chip: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 99,
+    borderWidth: 1,
+    borderColor: "#EFE3C7",
+    backgroundColor: "#FFFFFF",
+  },
+  chipSelected: {
+    borderColor: "#B71C1C",
+    backgroundColor: "#FFEBEE",
+  },
+  chipText: {
+    fontSize: 13,
+    color: "#5C3D3D",
+    fontWeight: "500",
+  },
+  chipTextSelected: {
+    color: "#B71C1C",
+    fontWeight: "bold",
+  },
+  shortcutRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 12,
+    marginBottom: 10,
+  },
+  shortcutText: {
+    fontSize: 12,
+    color: "#B71C1C",
+    fontWeight: "bold",
+  },
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 16,
+  },
+  gridChip: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    borderWidth: 1,
+    borderColor: "#EFE3C7",
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  gridChipSelected: {
+    borderColor: "#B71C1C",
+    backgroundColor: "#FFEBEE",
+  },
+  gridChipText: {
+    fontSize: 12,
+    color: "#5C3D3D",
+    fontWeight: "600",
+  },
+  gridChipTextSelected: {
+    color: "#B71C1C",
+    fontWeight: "bold",
+  },
+  modalFooter: {
+    borderTopWidth: 1,
+    borderTopColor: "#EFE3C7",
+    paddingTop: 16,
+    marginTop: 12,
+  },
+  applyBtn: {
+    backgroundColor: "#B71C1C",
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#B71C1C",
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  applyBtnText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  filterBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255,255,255,0.15)",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.25)",
+    marginTop: 8,
+    alignSelf: "flex-start",
+  },
+  filterBtnText: {
+    color: "#FFFFFF",
+    fontSize: 11,
+    fontWeight: "bold",
+    marginLeft: 6,
   }
 });

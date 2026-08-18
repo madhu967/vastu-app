@@ -276,6 +276,8 @@ const englishStrings: AppStrings = {
     { label: "8. 'శ' వర్గం (శ, ష, స, హ)", value: "8" },
   ],
   resultTableLabels: {
+    "Padamu Decimal": "Padam Decimal",
+    "Nakshatram Name": "Nakshatram Name",
     "Plot Length": "Plot Length",
     "Plot Width": "Plot Width",
     "Plot Area": "Plot Area",
@@ -458,6 +460,8 @@ const teluguStrings: AppStrings = {
     { label: "8. 'శ' వర్గం (శ, ష, స, హ)", value: "8" },
   ],
   resultTableLabels: {
+    "Padamu Decimal": "పదము డెసిమల్",
+    "Nakshatram Name": "నక్షత్రం పేరు",
     "Plot Length": "ప్లాట్ పొడవు",
     "Plot Width": "ప్లాట్ వెడల్పు",
     "Plot Area": "ప్లాట్ విస్తీర్ణం",
@@ -640,6 +644,8 @@ const hindiStrings: AppStrings = {
     { label: "8. 'శ' వర్గం (శ, ష, స, హ)", value: "8" },
   ],
   resultTableLabels: {
+    "Padamu Decimal": "पादम् दशमलव",
+    "Nakshatram Name": "नक्षत्र नाम",
     "Plot Length": "प्लॉट लंबाई",
     "Plot Width": "प्लॉट चौड़ाई",
     "Plot Area": "प्लॉट का क्षेत्रफल",

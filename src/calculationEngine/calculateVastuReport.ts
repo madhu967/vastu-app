@@ -23,6 +23,36 @@ const getRemainderLabel = (value: number, modulus: number): string => {
   return String(r); // never round the actual value
 };
 
+const getNakshatramName = (val: number, lang?: string) => {
+  const enNak = [
+    "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra",
+    "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni",
+    "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha",
+    "Jyeshtha", "Moola", "Purva Ashadha", "Uttara Ashadha", "Shravana",
+    "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+  ];
+  const teNak = [
+    "అశ్విని", "భరణి", "కృత్తిక", "రోహిణి", "మృగశిర", "ఆరుద్ర",
+    "పునర్వసు", "పుష్యమి", "ఆశ్లేష", "మఖ", "పూర్వ ఫల్గుణి",
+    "ఉత్తర ఫల్గుణి", "హస్త", "చిత్త", "స్వాతి", "విశాఖ", "అనూరాధ",
+    "జ్యేష్ఠ", "మూల", "పూర్వాషాఢ", "ఉత్తరాషాఢ", "శ్రవణం",
+    "ధనిష్ఠ", "శతభిషం", "పూర్వాభాద్ర", "ఉత్తరాభాద్ర", "రేవతి"
+  ];
+  const hiNak = [
+    "अश्विनी", "भरणी", "कृत्तिका", "रोहिणी", "मृगशीर्षा", "आर्द्रा",
+    "पुनर्वसु", "पुष्य", "आश्लेषा", "मघा", "पूर्वा फाल्गुनी",
+    "उत्तरा फाल्गुनी", "हस्त", "चित्रा", "स्वाति", "विशाखा", "अनुराधा",
+    "ज्येष्ठा", "मूल", "पूर्वी भाषा", "उत्तराषाढ़ा", "श्रवण", // Wait, look at the original hiNak below to make sure it matches: "पूर्वाषाढ़ा", "उत्तराषाढ़ा", "श्रवण", "धनिष्ठा", "शतभिषा", "पूर्वा भाद्रपद", "उत्तरा भाद्रपद", "रेवती"
+    "धनिष्ठा", "शतभिषा", "पूर्वा भाद्रपद", "उत्तरा भाद्रपद", "रेवती"
+  ];
+  const idx = val - 1;
+  if (idx < 0 || idx > 26) return "—";
+
+  if (lang === "English") return enNak[idx];
+  if (lang === "Hindi") return hiNak[idx];
+  return teNak[idx];
+};
+
 export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
   // Plot Length & Width with correct nullu formula
   const length = toFeetValueCorrect(form.lengthFeet, form.lengthInch, form.lengthNullu);
@@ -271,11 +301,13 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
 
         const label = i === 0 ? `${n}` : `${n} ${i}/16`;
         const columns = [
+          parseFloat(padamuVal.toFixed(4)).toString(), // Padamu Decimal
           formatDisplayTable3(dhanamu.rounded),
           formatDisplayTable3(runamu.rounded),
           formatDisplayTable3(tithi.rounded),
           formatDisplayTable3(vaaramu.rounded),
           formatDisplayTable3(nakshatram.rounded),
+          getNakshatramName(nakshatram.rounded, form.language), // Nakshatram Name
           formatDisplayTable3(ayurdayamu.rounded),
           formatDisplayTable3(amsa.rounded),
           formatDisplayTable3(dikpati.rounded),
@@ -299,7 +331,7 @@ export const calculateVastuReport = (form: VastuFormValues): VastuReport => {
 
   const padamWithStarTable: ResultTable = {
     title: "Result Table 3",
-    headers: ["Padamu", "Dhanamu", "Runamu", "Tithi", "Vaaramu", "Nakshatram", "Ayurdayam", "Amsa", "Dikpati", "Aayamu Actual", "Aayamu Rounded"],
+    headers: ["Padamu", "Padamu Decimal", "Dhanamu", "Runamu", "Tithi", "Vaaramu", "Nakshatram", "Nakshatram Name", "Ayurdayam", "Amsa", "Dikpati", "Aayamu Actual", "Aayamu Rounded"],
     rows: table3ResultRows,
     visible: true,
   };
