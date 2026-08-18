@@ -7,14 +7,14 @@ export const languageOptions: OptionItem[] = [
 ];
 
 export const directionOptions: OptionItem[] = [
-  { label: "North", value: "North" },
-  { label: "North-East", value: "North-East" },
-  { label: "East", value: "East" },
-  { label: "South-East", value: "South-East" },
-  { label: "South", value: "South" },
-  { label: "South-West", value: "South-West" },
-  { label: "West", value: "West" },
-  { label: "North-West", value: "North-West" },
+  { label: "1. North", value: "North" },
+  { label: "2. North-East", value: "North-East" },
+  { label: "3. East", value: "East" },
+  { label: "4. South-East", value: "South-East" },
+  { label: "5. South", value: "South" },
+  { label: "6. South-West", value: "South-West" },
+  { label: "7. West", value: "West" },
+  { label: "8. North-West", value: "North-West" },
 ];
 
 export const padhamOptions: OptionItem[] = [
@@ -30,7 +30,7 @@ export const nakshatramOptions: OptionItem[] = [
   "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha",
   "Jyeshtha", "Moola", "Purva Ashadha", "Uttara Ashadha", "Shravana",
   "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati",
-].map((item) => ({ label: item, value: item }));
+].map((item, index) => ({ label: `${index + 1}. ${item}`, value: item }));
 
 export const varguOptions: OptionItem[] = [
   { label: "1 (a, aa, i, ee...)", value: "1" },

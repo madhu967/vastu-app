@@ -9,9 +9,11 @@ import {
   Pressable,
   Linking,
   Image,
+  Alert,
 } from "react-native";
 import { PhoneFAB, getContacts } from "@/components/FooterSection";
 import { LinearGradient } from "expo-linear-gradient";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRoute } from "@react-navigation/native";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { guidePages } from "@/constants/content";
@@ -333,22 +335,53 @@ export const GuideScreen = () => {
                       <Text style={s.contactNameText}>{contact.name}</Text>
                       <Text style={s.contactLocText}>{contact.location}</Text>
                     </View>
-                    <Pressable
-                      style={({ pressed }) => [
-                        s.contactCallBtn,
-                        pressed && s.premiumContactBtnPressed,
-                      ]}
-                      onPress={() => Linking.openURL(`tel:${contact.phone}`)}
-                    >
-                      <LinearGradient
-                        colors={["#B71C1C", "#8B000F"]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 1 }}
-                        style={s.contactCallBtnGrad}
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <Pressable
+                        style={({ pressed }) => [
+                          s.contactCallBtn,
+                          pressed && s.premiumContactBtnPressed,
+                        ]}
+                        onPress={() => Linking.openURL(`tel:${contact.phone}`)}
                       >
-                        <Text style={{ fontSize: 18 }}>📞</Text>
-                      </LinearGradient>
-                    </Pressable>
+                        <LinearGradient
+                          colors={["#F4C430", "#C9830A"]}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 1 }}
+                          style={s.contactCallBtnGrad}
+                        >
+                          <FontAwesome name="phone" size={18} color="#FFFFFF" />
+                        </LinearGradient>
+                      </Pressable>
+
+                      <Pressable
+                        style={({ pressed }) => [
+                          s.contactCallBtn,
+                          { marginLeft: 8 },
+                          pressed && s.premiumContactBtnPressed,
+                        ]}
+                        onPress={() => {
+                          let message = "Hello, I would like to inquire about Vastu consultation.";
+                          if (language === "Telugu") {
+                            message = "నమస్కారం, నేను వాస్తు సంప్రదింపుల గురించి తెలుసుకోవాలనుకుంటున్నాను.";
+                          } else if (language === "Hindi") {
+                            message = "नमस्ते, मैं वास्तु परामर्श के बारे में पूछताछ करना चाहता हूँ।";
+                          }
+                          const url = `https://wa.me/91${contact.phone}?text=${encodeURIComponent(message)}`;
+                          Linking.openURL(url).catch(() => {
+                            Alert.alert("Error", "Could not open WhatsApp");
+                          });
+                        }}
+                      >
+                        <LinearGradient
+                          colors={["#25D366", "#128C7E"]}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 1 }}
+                          style={s.contactCallBtnGrad}
+                        >
+                          <FontAwesome name="whatsapp" size={20} color="#FFFFFF" />
+                        </LinearGradient>
+                      </Pressable>
+                    </View>
                   </View>
                 ))}
               </View>

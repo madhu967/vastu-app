@@ -81,37 +81,37 @@ export const HomeScreen = () => {
 
   const dynamicDirectionOptions = useMemo(() => {
     let baseList = [
-      { label: "East (West Main Door)", value: "East", index: 1 },
-      { label: "South-East (West Main Door)", value: "South-East", index: 2 },
-      { label: "South (North Main Door)", value: "South", index: 3 },
-      { label: "South-West (North Main Door)", value: "South-West", index: 4 },
-      { label: "West (East Main Door)", value: "West", index: 5 },
-      { label: "North-West (East Main Door)", value: "North-West", index: 6 },
-      { label: "North (South Main Door)", value: "North", index: 7 },
-      { label: "North-East (South Main Door)", value: "North-East", index: 8 },
+      { label: "1. East (West Main Door)", value: "East", index: 1 },
+      { label: "2. South-East (West Main Door)", value: "South-East", index: 2 },
+      { label: "3. South (North Main Door)", value: "South", index: 3 },
+      { label: "4. South-West (North Main Door)", value: "South-West", index: 4 },
+      { label: "5. West (East Main Door)", value: "West", index: 5 },
+      { label: "6. North-West (East Main Door)", value: "North-West", index: 6 },
+      { label: "7. North (South Main Door)", value: "North", index: 7 },
+      { label: "8. North-East (South Main Door)", value: "North-East", index: 8 },
     ];
 
     if (language === "Telugu") {
       baseList = [
-        { label: "\u0C24\u0C42\u0C30\u0C4D\u0C2A\u0C41 (\u0C2A\u0C21\u0C41\u0C2E\u0C30 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C24\u0C42\u0C30\u0C4D\u0C2A\u0C41", index: 1 },
-        { label: "\u0C06\u0C17\u0C4D\u0C28\u0C47\u0C2F\u0C02 (\u0C2A\u0C21\u0C41\u0C2E\u0C30 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C06\u0C17\u0C4D\u0C28\u0C47\u0C2F\u0C02", index: 2 },
-        { label: "\u0C26\u0C15\u0C4D\u0C37\u0C3F\u0C23\u0C02 (\u0C09\u0C24\u0C4D\u0C24\u0C30 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C26\u0C15\u0C4D\u0C37\u0C3F\u0C23\u0C02", index: 3 },
-        { label: "\u0C28\u0C48\u0C30\u0C41\u0C24\u0C3F (\u0C09\u0C24\u0C4D\u0C24\u0C30 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C28\u0C48\u0C30\u0C41\u0C24\u0C3F", index: 4 },
-        { label: "\u0C2A\u0C21\u0C41\u0C2E\u0C30 (\u0C24\u0C42\u0C30\u0C4D\u0C2A\u0C41 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C2A\u0C21\u0C2E\u0C30", index: 5 },
-        { label: "\u0C35\u0C3E\u0C2F\u0C41\u0C35\u0C4D\u0C2F\u0C02 (\u0C24\u0C42\u0C30\u0C4D\u0C2A\u0C41 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C35\u0C3E\u0C2F\u0C41\u0C35\u0C4D\u0C2F\u0C02", index: 6 },
-        { label: "\u0C09\u0C24\u0C4D\u0C24\u0C30\u0C02 (\u0C26\u0C15\u0C4D\u0C37\u0C3F\u0C23 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C09\u0C24\u0C4D\u0C24\u0C30\u0C02", index: 7 },
-        { label: "\u0C08\u0C36\u0C3E\u0C28\u0C4D\u0C2F\u0C02 (\u0C26\u0C15\u0C4D\u0C37\u0C3F\u0C23 \u0C38\u0C3F\u0C02\u0C39\u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C02)", value: "\u0C08\u0C36\u0C3E\u0C28\u0C4D\u0C2F\u0C02", index: 8 },
+        { label: "1. తూర్పు (పడమర సింహద్వారం)", value: "తూర్పు", index: 1 },
+        { label: "2. ఆగ్నేయం (పడమర సింహద్వారం)", value: "ఆగ్నేయం", index: 2 },
+        { label: "3. దక్షిణం (ఉత్తర సింహద్వారం)", value: "దక్షిణం", index: 3 },
+        { label: "4. నైరుతి (ఉత్తర సింహద్వారం)", value: "నైరుతి", index: 4 },
+        { label: "5. పడమర (తూర్పు సింహద్వారం)", value: "పడమర", index: 5 },
+        { label: "6. వాయువ్యం (తూర్పు సింహద్వారం)", value: "వాయువ్యం", index: 6 },
+        { label: "7. ఉత్తరం (దక్షిణ సింహద్వారం)", value: "ఉత్తరం", index: 7 },
+        { label: "8. ఈశాన్యం (దక్షిణ సింహద్వారం)", value: "ఈశాన్యం", index: 8 },
       ];
     } else if (language === "Hindi") {
       baseList = [
-        { label: "\u092a\u0942\u0930\u094d\u0935 (\u092a\u0936\u094d\u091a\u093f\u092e \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u092a\u0942\u0930\u094d\u0935", index: 1 },
-        { label: "\u0906\u0917\u094d\u0928\u0947\u092f (\u092a\u0936\u094d\u091a\u093f\u092e \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0906\u0917\u094d\u0928\u0947\u092f", index: 2 },
-        { label: "\u0926\u0915\u094d\u0937\u093f\u0923 (\u0909\u0924\u094d\u0924\u0930 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0926\u0915\u094d\u0937\u093f\u0923", index: 3 },
-        { label: "\u0928\u0948\u090b\u0924\u094d\u092f (\u0909\u0924\u094d\u0924\u0930 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0928\u0948\u090b\u0924\u094d\u092f", index: 4 },
-        { label: "\u092a\u0936\u094d\u091a\u093f\u092e (\u092a\u0942\u0930\u094d\u0935 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u092a\u0936\u094d\u091a\u093f\u092e", index: 5 },
-        { label: "\u0935\u093e\u092f\u0935\u094d\u092f (\u092a\u0942\u0930\u094d\u0935 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0935\u093e\u092f\u0935\u094d\u092f", index: 6 },
-        { label: "\u0909\u0924\u094d\u0924\u0930 (\u0926\u0915\u094d\u0937\u093f\u0923 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0909\u0924\u094d\u0924\u0930", index: 7 },
-        { label: "\u0908\u0936\u093e\u0928 (\u0926\u0915\u094d\u0937\u093f\u0923 \u092e\u0941\u0916\u094d\u092f \u0926\u094d\u0935\u093e\u0930)", value: "\u0908\u0936\u093e\u0928", index: 8 },
+        { label: "1. पूर्व (पश्चिम मुख्य द्वार)", value: "पूर्व", index: 1 },
+        { label: "2. आग्नेय (पश्चिम मुख्य द्वार)", value: "आग्नेय", index: 2 },
+        { label: "3. दक्षिण (उत्तर मुख्य द्वार)", value: "दक्षिण", index: 3 },
+        { label: "4. नैऋत्य (उत्तर मुख्य द्वार)", value: "नैऋत्य", index: 4 },
+        { label: "5. पश्चिम (पूर्व मुख्य द्वार)", value: "पश्चिम", index: 5 },
+        { label: "6. वायव्य (पूर्व मुख्य द्वार)", value: "वायव्य", index: 6 },
+        { label: "7. उत्तर (दक्षिण मुख्य द्वार)", value: "उत्तर", index: 7 },
+        { label: "8. ईशान (दक्षिण मुख्य द्वार)", value: "ईशान", index: 8 },
       ];
     }
 

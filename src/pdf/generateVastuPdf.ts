@@ -269,6 +269,10 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
         
         const statuses = [T_ASHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_ASHUBHAM, T_SHUBHAM, T_SHUBHAM];
         const s = statuses[idx];
+        if (key === "Wife Tara Phalam") {
+          const cleanDisplay = displayStr.split(/\s*[-–]\s*/)[0];
+          return [cleanDisplay, "", getColor(s)];
+        }
         return [displayStr, s, getColor(s)];
       }
       case "Aayamu": {

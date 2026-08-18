@@ -8,11 +8,13 @@ import {
   Linking,
   Pressable,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { spacing } from "@/constants/theme";
 import { useAppLanguage } from "@/context/AppLanguageContext";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  Phone FAB  (floating action button – bottom right, separate from footer)
@@ -118,7 +120,24 @@ export const PhoneFAB = () => {
                   style={fab.phoneBtn}
                   onPress={() => Linking.openURL(`tel:${contact.phone}`)}
                 >
-                  <Text style={fab.phoneBtnIcon}>📞</Text>
+                  <FontAwesome name="phone" size={18} color="#FFFFFF" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[fab.phoneBtn, { backgroundColor: "#25D366", marginLeft: 8 }]}
+                  onPress={() => {
+                    let message = "Hello, I would like to inquire about Vastu consultation.";
+                    if (language === "Telugu") {
+                      message = "నమస్కారం, నేను వాస్తు సంప్రదింపుల గురించి తెలుసుకోవాలనుకుంటున్నాను.";
+                    } else if (language === "Hindi") {
+                      message = "नमस्ते, मैं वास्तु परामर्श के बारे में पूछताछ करना चाहता हूँ।";
+                    }
+                    const url = `https://wa.me/91${contact.phone}?text=${encodeURIComponent(message)}`;
+                    Linking.openURL(url).catch(() => {
+                      Alert.alert("Error", "Could not open WhatsApp");
+                    });
+                  }}
+                >
+                  <FontAwesome name="whatsapp" size={20} color="#FFFFFF" />
                 </TouchableOpacity>
               </View>
             ))}

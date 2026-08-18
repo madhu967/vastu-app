@@ -150,8 +150,12 @@ export const ResultTable = ({ table }: ResultTableProps) => {
                 const translateTara = (v: string) => {
                   if (!isTara) return v;
                   const idx = parseInt(v, 10) - 1;
-                  const res = (idx >= 0 && idx <= 8) ? (strings.taraPhalam?.[idx] || v) : v;
-                  return res.replace(/^\d+\.\s*/, "");
+                  let res = (idx >= 0 && idx <= 8) ? (strings.taraPhalam?.[idx] || v) : v;
+                  res = res.replace(/^\d+\.\s*/, "");
+                  if (row.label === "Wife Tara Phalam") {
+                    res = res.split(/\s*[-–]\s*/)[0];
+                  }
+                  return res;
                 };
                 return (
                 <View
@@ -194,8 +198,12 @@ export const ResultTable = ({ table }: ResultTableProps) => {
             const translateTara = (v?: string) => {
               if (!isTara || !v) return v;
               const idx = parseInt(v, 10) - 1;
-              const res = (idx >= 0 && idx <= 8) ? (strings.taraPhalam?.[idx] || v) : v;
-              return res.replace(/^\d+\.\s*/, "");
+              let res = (idx >= 0 && idx <= 8) ? (strings.taraPhalam?.[idx] || v) : v;
+              res = res.replace(/^\d+\.\s*/, "");
+              if (row.label === "Wife Tara Phalam") {
+                res = res.split(/\s*[-–]\s*/)[0];
+              }
+              return res;
             };
             return (
               <View
