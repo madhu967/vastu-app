@@ -57,7 +57,7 @@ export const guidePages: GuidePage[] = [
       { heading: "2. Smell Test", text: "Land with a pleasant fragrance and delightful environment is auspicious." },
       { heading: "3. Taste Test", text: "Land with sweet, sour, or astringent taste is favorable." },
       { heading: "4. Touch Test", text: "The chosen land is auspicious if it feels soft, light, or heavy when touched." },
-      { heading: "Prohibited Land", text: "1. Graveyard land\n2. Place where a temple existed (and was removed)\n3. Land with anthills\n4. Land where water always stagnates (muddy land)\n5. Saline / Barren land\n6. Land containing bones, charcoal, or ash\n7. Land with potter's kilns\n8. Land with oil mills\n9. Land filled over ponds/lakes" },
+      { heading: "Prohibited Land", text: "1. Graveyard land\n2. Place where a temple existed (and was removed)\n3. Temple encroached lands\n4. Land with anthills\n5. Land where water always stagnates (muddy land)\n6. Saline / Barren land\n7. Land containing bones, charcoal, or ash\n8. Land with potter's kilns\n9. Land with oil mills\n10. Land filled over ponds/lakes" },
       { heading: "", text: "Such lands should be avoided for all constructions.\n\nFor complete details, please consult a Siddhanti (Vastu expert)." }
     ]
   },
@@ -85,7 +85,7 @@ export const guidePages: GuidePage[] = [
       }
     ],
     bottomContent: [
-      { heading: "Important Rules", text: "The Vargu containing the first letter of the name is called 'Swavargu' and is highly favorable, strong, and excellent.\n\nIn the case of conjunct consonants, the last consonant should be considered. Ex: Sri - S + r + i - 'ya' vargu.\n\nThe 5th Vargu from the Swavargu is the enemy vargu (Shatruvargu). It causes deathly suffering, ill health, losses, and financial difficulties. It must be avoided.\n\n③ The remaining friendly vargus (Mitra Vargu) yield positive results, bringing friendship and financial gain." },
+      { heading: "Important Rules", text: "The Vargu containing the first letter of the name is called 'Swavargu' and is highly favorable, strong, and excellent.\n\nIn the case of conjunct consonants, the last consonant should be considered. Ex: Sri = Sa + ri  = 'ya' vargu.\n\nThe 5th Vargu from the Swavargu is the enemy vargu (Shatruvargu). It causes deathly suffering, ill health, losses, and financial difficulties. It must be avoided.\n\n③ The remaining friendly vargus (Mitra Vargu) yield positive results, bringing friendship and financial gain." },
       { heading: "Direction Groupings", text: "East, South-East — Considered as East direction\nSouth, South-West — Considered as South direction\nWest, North-West — Considered as West direction\nNorth, North-East — Considered as North direction" },
       { heading: "", text: "For complete details, please consult a Siddhanti (Vastu expert)." }
     ]
@@ -215,7 +215,7 @@ export const guidePages: GuidePage[] = [
     sections: [],
     paragraphs: [
       "In all constructions, the kitchen should be set up in the South-East corner, which is the place of fire (Agni).",
-      "A kitchen should never be set up in the North-West, which is considered the enemy position to the South-East.",
+      
       "If the South-East is not possible, the kitchen can be set up in the South, South-West, or East directions."
     ],
   },
