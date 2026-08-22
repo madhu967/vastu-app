@@ -502,24 +502,29 @@ export const PatrikaScreen = () => {
         <head>
           <meta charset="utf-8">
           <style>
+            @page {
+              size: A4 portrait;
+              margin: 8mm;
+            }
             body {
               font-family: 'Georgia', 'serif', 'Arial';
               background-color: #ffffff;
               margin: 0;
-              padding: 24px;
+              padding: 0;
               display: flex;
               justify-content: center;
+              align-items: center;
             }
             .patrika-card {
               position: relative;
               overflow: hidden;
-              width: 720px;
+              width: 660px; /* Reduced width */
+              min-height: 940px; /* Taller height to fill A4 print */
               border: 2px solid #000000;
               background-color: #fffb15;
-              padding: 24px 30px;
+              padding: 35px 30px;
               box-sizing: border-box;
               text-align: center;
-              box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             }
             .watermark {
               position: absolute;

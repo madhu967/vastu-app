@@ -25,20 +25,20 @@ export const getContacts = (lang: string) => {
     return [
       { title: "Almanac Maker", name: "Brahmasri Pedagadi Mohan Ravishankar Daivagna", location: "Andhra Pradesh", phone: "9949598627" },
       { title: "Vastu Ratna", name: "Sri Namana Siddhanti", location: "Andhra Pradesh", phone: "9949250888" },
-      { title: "Yuvaratna", name: "Sri Namana Pavan, Civil B.Tech", location: "Andhra Pradesh", phone: "9949753939" },
+      { title: "Yuvapanditha", name: "Sri Namana Pavan, Civil B.Tech", location: "Andhra Pradesh", phone: "9949753939" },
     ];
   }
   if (lang === "Hindi") {
     return [
       { title: "पंचांगकर्ता", name: "ब्रह्मश्री पेदगाडी मोहन रविशंकर दैवज्ञ", location: "आंध्र प्रदेश", phone: "9949598627" },
       { title: "वास्तुरत्न", name: "श्री नामन सिद्धान्ती", location: "आंध्र प्रदेश", phone: "9949250888" },
-      { title: "युवरत्न", name: "श्री नामन पवन, सिविल बी.टेक", location: "आंध्र प्रदेश", phone: "9949753939" },
+      { title: "युवापंडित", name: "श्री नामन पवन, सिविल बी.टेक", location: "आंध्र प्रदेश", phone: "9949753939" },
     ];
   }
   return [
     { title: "పంచాంగకర్త", name: "బ్రహ్మశ్రీ పెదగాడి మోహన్ రవిశంకర్ దైవజ్ఞ", location: "ఆంధ్రప్రదేశ్", phone: "9949598627" },
     { title: "వాస్తురత్న", name: "శ్రీ నామన సిద్ధాంతి", location: "ఆంధ్ర ప్రదేశ్", phone: "9949250888" },
-    { title: "యువరత్న", name: "శ్రీనామన పవన్, సివిల్ బి.టెక్", location: "ఆంధ్ర ప్రదేశ్", phone: "9949753939" },
+    { title: "యువపండిత", name: "శ్రీనామన పవన్, సివిల్ బి.టెక్", location: "ఆంధ్ర ప్రదేశ్", phone: "9949753939" },
   ];
 };
 
