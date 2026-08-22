@@ -6,6 +6,7 @@ import {
   ScrollView,
   FlatList,
   Pressable,
+  ActivityIndicator,
   TouchableOpacity,
   TextInput,
   Image,
@@ -392,6 +393,7 @@ export const PatrikaScreen = () => {
 
   // Toggle Edit/View Mode
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
 
   // Form Fields
   const [headerText, setHeaderText] = useState<string>(
@@ -666,6 +668,9 @@ export const PatrikaScreen = () => {
 
   // Share/Export to PDF
   const handleExportPDF = async () => {
+    if (isExporting) return;
+    setIsExporting(true);
+
     try {
       // React Native safe base64 converter — uses ONLY expo-file-system (no FileReader, no AbortController)
       const getBase64 = async (
@@ -1081,6 +1086,8 @@ export const PatrikaScreen = () => {
         "PDF Error",
         `${error?.message || "Unknown error"}. Please try again.`,
       );
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -1521,10 +1528,18 @@ export const PatrikaScreen = () => {
 
             {/* Print/Share PDF Button */}
             <TouchableOpacity
-              style={styles.pdfButton}
+              style={[styles.pdfButton, isExporting && styles.pdfButtonBusy]}
               onPress={handleExportPDF}
+              disabled={isExporting}
             >
-              <Text style={styles.pdfButtonText}>{labels.downloadPdf}</Text>
+              {isExporting ? (
+                <>
+                  <ActivityIndicator color="#ffffff" size="small" />
+                  <Text style={styles.pdfButtonText}>Generating PDF...</Text>
+                </>
+              ) : (
+                <Text style={styles.pdfButtonText}>{labels.downloadPdf}</Text>
+              )}
             </TouchableOpacity>
           </View>
         )}
@@ -2039,7 +2054,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
     marginTop: 20,
+  },
+  pdfButtonBusy: {
+    backgroundColor: palette.primaryDark,
   },
   pdfButtonText: {
     color: "#ffffff",
