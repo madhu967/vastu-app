@@ -10,6 +10,7 @@ import {
   Linking,
   Image,
   Alert,
+  Dimensions,
 } from "react-native";
 import { PhoneFAB, getContacts } from "@/components/FooterSection";
 import { LinearGradient } from "expo-linear-gradient";
@@ -42,6 +43,8 @@ const pageIcons: Record<string, string> = {
   vargu:           "🔠",
   "shanku-sthapana": "🏗️",
   "tara-chandra-chakra": "🕉️",
+  gruharambham:      "🏗️",
+  gruhapravesam:     "🔑",
 };
 
 // ── page image map ────────────────────────────────────────────────────────────
@@ -59,6 +62,8 @@ const pageImages: Record<string, any> = {
   parking:           require("../../assets/parking.jpg"),
   borewell:          require("../../assets/borewell.jpg"),
   "shanku-sthapana": require("../../assets/vastupurusha.jpeg"),
+  gruharambham:      require("../../assets/gruharambam.jpeg"),
+  gruhapravesam:     require("../../assets/gruhapravesam.jpeg"),
 };
 
 // ── secondary images (shown rotated below the main image) ──────────────────────────
@@ -71,7 +76,7 @@ const secondaryImages: Record<string, { source: any; rotate: string; label: stri
 };
 
 // pages that should show the FULL image without cropping
-const fullImagePages = new Set(["shanku-sthapana", "about"]);
+const fullImagePages = new Set(["shanku-sthapana", "about", "gruharambham", "gruhapravesam"]);
 
 // ── section number labels ─────────────────────────────────────────────────────
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI"];
@@ -121,10 +126,19 @@ export const GuideScreen = () => {
     <View style={s.container}>
       <ScreenHeader title={page.title} />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={s.scrollContent}
-      >
+      {page.key === "gruharambham" || page.key === "gruhapravesam" ? (
+        <View style={s.fullScreenImageContainer}>
+          <Image
+            source={pageImages[page.key]}
+            style={s.fullScreenImage}
+            resizeMode="contain"
+          />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={s.scrollContent}
+        >
         {/* ══════════ HERO BANNER ══════════ */}
         <Animated.View style={[s.heroWrap, { opacity: heroFade, transform: [{ translateY: heroShift }] }]}>
           <LinearGradient
@@ -404,11 +418,14 @@ export const GuideScreen = () => {
         </View>
         <Text style={s.footerShanti}>ॐ शान्तिः शान्तिः शान्तिः</Text>
 
-      </ScrollView>
+        </ScrollView>
+      )}
       <PhoneFAB />
     </View>
   );
 };
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({
@@ -901,5 +918,18 @@ const s = StyleSheet.create({
     marginTop: spacing.sm,
     marginBottom: spacing.md,
     opacity: 0.65,
+  },
+  fullScreenImageContainer: {
+    width: screenWidth,
+    height: screenHeight - 120,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+    overflow: 'hidden',
+  },
+  fullScreenImage: {
+    width: '100%',
+    height: '100%',
   },
 });

@@ -860,6 +860,22 @@ const guideTranslations: Record<
         { heading: "Chandrabalam Rules", text: "• Shukla Paksha: Moon in 2, 5, 9 houses from your Janma Rasi is good.\n• Krishna Paksha: Moon in 4, 8, 12 houses from your Janma Rasi is good.\n• Both Pakshas: Moon in 1, 3, 6, 7, 10, 11 houses is highly favorable." }
       ]
     },
+    "gruharambham": {
+      title: "Gruharambham",
+      subtitle: "Auspicious timing and rituals for starting house construction.",
+      paragraphs: [
+        "Gruharambham or Shankusthapana is the formal ceremony of laying the foundation stone before initiating the construction of a new house.",
+        "It must be performed during auspicious Muhurtham to ensure prosperity, peace, and longevity of the building."
+      ],
+    },
+    "gruhapravesam": {
+      title: "Gruhapravesam",
+      subtitle: "The sacred housewarming ceremony when entering a new home.",
+      paragraphs: [
+        "Gruhapravesam is a sacred Hindu housewarming ceremony performed before occupying a newly built house or a renovated home.",
+        "Performing proper Vastu Puja, Kalasa Pooja, and boiling milk ensures that positive energy flows throughout the new house."
+      ],
+    },
   },
   Telugu: {
 
@@ -1063,8 +1079,8 @@ const guideTranslations: Record<
       subtitle: "స్తలం యొక్క శుభాశుభాలను నిర్ణయించడంలో వీధి పోట్లు వీధి చూపుల ప్రముఖ పాత్ర వహిస్తాయి.",
       paragraphs: [
         "స్తలం యొక్క శుభాశుభాలను నిర్ణయించడంలో వీధి పోట్లు వీధి చూపుల ప్రముఖ పాత్ర వహిస్తాయి.",
-        "వీధి చూపులు లేని స్థలం అన్ని విధాలా అనుకూలమైనది. తూర్పు, తూర్పు ఉత్తరం, ఉత్తర ఈశాన్యం,",
-        "తూర్పు, పడమర, ఆగ్నేయం, ఉత్తర వాయవ్యం నైరుతి కేంద్రంగా పనిచేసే వాటివల్ల అనారోగ్యాలను, ఆర్థిక నష్టాలను కలుగజేస్తాయి."
+        "వీధి చూపులు లేని స్థలం అన్ని విధాలా అనుకూలమైనది. తూర్పు, తూర్పు ఉత్తరం, ఉత్తర ఈశాన్యం,దక్షిణ ఆగ్నేయం,ఈశాన్యం, పడమర వాయువ్యం,ఈశాన్య కేంద్రంగా పనిచేస్తాయి,అనుకూలతలు కలిగిస్తాయి.",
+        " పడమర, నైరుతి,తూర్పు, ఆగ్నేయం, ఉత్తర వాయవ్యం నైరుతి కేంద్రంగా పనిచేస్తాయి. వాటివల్ల అనారోగ్యాలు, ఆర్థిక నష్టాలు కలుగజేస్తాయి."
       ],
     },
     "faq": {
@@ -1097,16 +1113,16 @@ const guideTranslations: Record<
       subtitle: "వాస్తు గణిత సూత్రాలు మరియు విశ్లేషణ వివరాలు",
       paragraphs: [],
       tableData: [
-        { label: "పదం", formula: "పొడవు × వెడల్పు ÷ 9 (శేషం)" },
-        { label: "ధనం", formula: "పదం × 8 ÷ 12 (శేషం)" },
-        { label: "బుణం", formula: "పదం × 3 ÷ 8 (శేషం)" },
-        { label: "తిథి", formula: "పదం × 6 ÷ 30 (శేషం)" },
-        { label: "వారం", formula: "పదం × 9 ÷ 7 (శేషం)" },
-        { label: "నక్షత్రం", formula: "పదం × 8 ÷ 27 (శేషం)" },
-        { label: "ఆయం", formula: "పదం × 9 ÷ 8 (శేషం)" },
-        { label: "ఆయుర్దాయం", formula: "పదం × 9 ÷ 120 (శేషం)" },
-        { label: "అంశం", formula: "పదం × 6 ÷ 9 (శేషం)" },
-        { label: "దిక్పతి", formula: "పదం × 9 ÷ 8 (శేషం)" },
+        { label: "పదం", formula: "పొడవు × వెడల్పు ÷ 9 " },
+        { label: "ధనం", formula: "పదం × 8 ÷ 12 " },
+        { label: "బుణం", formula: "పదం × 3 ÷ 8 " },
+        { label: "తిథి", formula: "పదం × 6 ÷ 30 " },
+        { label: "వారం", formula: "పదం × 9 ÷ 7 " },
+        { label: "నక్షత్రం", formula: "పదం × 8 ÷ 27 " },
+        { label: "ఆయం", formula: "పదం × 9 ÷ 8 " },
+        { label: "ఆయుర్దాయం", formula: "పదం × 9 ÷ 120 " },
+        { label: "అంశం", formula: "పదం × 6 ÷ 9 " },
+        { label: "దిక్పతి", formula: "పదం × 9 ÷ 8 " },
       ],
       bottomContent: [
         { heading: "గణిత ఫల నిర్ణయారణ", text: "" },
@@ -1167,6 +1183,22 @@ const guideTranslations: Record<
       paragraphs: [
         "ఉద్యానవనములు, చిన్నచిన్న పొదలు ఆవరణలో నిర్మించుటకు తూర్పు ఉత్తర దిశల యందు ఏర్పాటు చేసి కొనవలెను. తగు మాత్రముగా దక్షిణ, పడమర, స్థలముల యందు కూడా ఏర్పాటు చేసుకోవచ్చును.",
         "బలమైనచేట్లు నైరుతి, దక్షిణ పడమరలలో ఉండునట్లు చూసు కొనవలెను. తూర్పు, ఈశాన్య, ఉత్తర ములయందు బలమైన చెట్లు, వృక్షములు ఉండుట అనుకూలము కాదు."
+      ],
+    },
+    "gruharambham": {
+      title: "గృహారంభం",
+      subtitle: "నూతన గృహ నిర్మాణ ప్రారంభమునకు సంబంధించిన ముఖ్యమైన విషయాలు.",
+      paragraphs: [
+        "నూతన గృహ నిర్మాణమును ప్రారంభించుటకు ముందు చేయు శంకుస్థాపనను గృహారంభం అంటారు.",
+        "శ్రేయస్సు, శాంతి మరియు దీర్ఘాయువు కోసం శుభ ముహూర్తమునందే గృహారంభ పూజ మరియు శంకుస్థాపన జరుపవలెను."
+      ],
+    },
+    "gruhapravesam": {
+      title: "గృహప్రవేశం",
+      subtitle: "నూతన గృహములోనికి ప్రవేశించునప్పుడు జరుపుకొను పవిత్ర కార్యక్రమము.",
+      paragraphs: [
+        "గృహ నిర్మాణం పూర్తయిన తర్వాత నూతన గృహంలోనికి తొలిసారి ప్రవేశించు శుభకార్యమును గృహప్రవేశం అంటారు.",
+        "శాస్త్రోక్తంగా వాస్తు పూజ, కలశ స్థాపన, క్షీరాభిషేకం (పాలు పొంగించడం) మరియు హారతి జరిపించుట ద్వారా గృహంలో ధనాత్మక శక్తి వ్యాపిస్తుంది."
       ],
     },
   },
@@ -1492,6 +1524,22 @@ const guideTranslations: Record<
         { heading: "ताराबल तालिका", text: "1) जन्म तारा (अशुभ), 2) सम्पत तारा (शुभ), 3) विपत तारा (अशुभ), 4) क्षेम तारा (शुभ), 5) प्रत्यक तारा (अशुभ), 6) साधन तारा (शुभ), 7) नैधन तारा (अशुभ), 8) मित्र तारा (शुभ), 9) परम मित्र तारा (शुभ)।" },
         { heading: "चंद्रबल के नियम", text: "• शुक्ल पक्ष: आपकी जन्म राशि से 2, 5, 9 वें भाव में स्थित चंद्रमा शुभ है।\n• कृष्ण पक्ष: आपकी जन्म राशि से 4, 8, 12 वें भाव में स्थित चंद्रमा शुभ है।\n• दोनों पक्ष: 1, 3, 6, 7, 10, 11 वें भाव में चंद्रमा का होना अत्यंत शुभ व बलशाली माना जाता है।" }
       ]
+    },
+    "gruharambham": {
+      title: "गृह आरंभ",
+      subtitle: "नए गृह निर्माण की शुरुआत के लिए शुभ समय और नियम।",
+      paragraphs: [
+        "नया घर बनाने से पहले की जाने वाली नींव पूजा (शिलान्यास) को गृह आरंभ कहा जाता है।",
+        "घर के सुख-समृद्धि, शांति और दीर्घायु के लिए शुभ मुहूर्त में ही गृह आरंभ पूजा करनी चाहिए।"
+      ],
+    },
+    "gruhapravesam": {
+      title: "गृह प्रवेश",
+      subtitle: "नए घर में प्रवेश करते समय किया जाने वाला पवित्र गृहप्रवेश समारोह।",
+      paragraphs: [
+        "नए या पुनर्निर्मित घर में प्रवेश करने से पहले की जाने वाली पवित्र गृहप्रवेश पूजा सुख-शांति लाती है।",
+        "शास्त्रोक्त विधि से वास्तु पूजा, कलश पूजन और दूध उबालने से घर में सकारात्मक ऊर्जा का संचार होता है।"
+      ],
     },
   },
 };

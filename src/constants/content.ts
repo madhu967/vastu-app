@@ -398,6 +398,26 @@ export const guidePages: GuidePage[] = [
       "Our contact details are listed below. You can easily reach us. We are always ready to support you."
     ],
   },
+  {
+    key: "gruharambham",
+    title: "Gruharambham",
+    subtitle: "Auspicious timing and rituals for starting house construction.",
+    sections: [],
+    paragraphs: [
+      "Gruharambham or Shankusthapana is the formal ceremony of laying the foundation stone before initiating the construction of a new house.",
+      "It must be performed during auspicious Muhurtham to ensure prosperity, peace, and longevity of the building."
+    ],
+  },
+  {
+    key: "gruhapravesam",
+    title: "Gruhapravesam",
+    subtitle: "The sacred housewarming ceremony when entering a new home.",
+    sections: [],
+    paragraphs: [
+      "Gruhapravesam is a sacred Hindu housewarming ceremony performed before occupying a newly built house or a renovated home.",
+      "Performing proper Vastu Puja, Kalasa Pooja, and boiling milk ensures that positive energy flows throughout the new house."
+    ],
+  },
 ];
 
 export const drawerItems = [
