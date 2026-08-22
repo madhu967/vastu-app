@@ -151,7 +151,7 @@ const englishStrings: AppStrings = {
   statusTab: "Status",
   profileTab: "Profile",
   loginTab: "Login",
-  patrikaTab: "Patrika",
+  patrikaTab: "Muhurtham",
   home: {
     festivalTitle: "Vastu Shastra Analysis",
     festivalSub: "Know your home's Vastu today",
@@ -328,7 +328,7 @@ const teluguStrings: AppStrings = {
   statusTab: "స్థితి",
   profileTab: "ప్రొఫైల్",
   loginTab: "లాగిన్",
-  patrikaTab: "పత్రిక",
+  patrikaTab: "ముహూర్తం",
   home: {
     festivalTitle: "వాస్తు శాస్త్ర విశ్లేషణ",
     festivalSub: "ఈ రోజు మీ ఇంటి వాస్తు తెలుసుకోండి",
@@ -584,7 +584,7 @@ const hindiStrings: AppStrings = {
   statusTab: "स्थिति",
   profileTab: "प्रोफ़ाइल",
   loginTab: "लॉगिन",
-  patrikaTab: "पत्रिका",
+  patrikaTab: "मुहूर्त",
   home: {
     festivalTitle: "वास्तु शास्त्र विश्लेषण",
     festivalSub: "आज अपने घर का वास्तु जानें",

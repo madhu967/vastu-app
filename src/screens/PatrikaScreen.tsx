@@ -1,189 +1,388 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
+  FlatList,
+  Pressable,
   TouchableOpacity,
   TextInput,
   Image,
   Alert,
   Dimensions,
-  Modal
-} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import * as ImagePicker from 'expo-image-picker';
-import * as Print from 'expo-print';
-import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system/legacy';
-import { Asset } from 'expo-asset';
-import { auth, db } from '../firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { palette } from '@/constants/theme';
-import { useAppLanguage } from '@/context/AppLanguageContext';
-import { getAppStrings } from '@/i18n/strings';
-import { ScreenHeader } from '@/components/ScreenHeader';
+  Modal,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system/legacy";
+import { Asset } from "expo-asset";
+import { auth, db } from "../firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { palette } from "@/constants/theme";
+import { useAppLanguage } from "@/context/AppLanguageContext";
+import { getAppStrings } from "@/i18n/strings";
+import { ScreenHeader } from "@/components/ScreenHeader";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 // Default Web URLs for fallbacks in PDF
-const GANESHA_DEFAULT = 'https://i.imgur.com/6P26c9b.png';
-const LAKSHMI_DEFAULT = 'https://i.imgur.com/kP8qQ6r.png';
+const GANESHA_DEFAULT = "https://i.imgur.com/6P26c9b.png";
+const LAKSHMI_DEFAULT = "https://i.imgur.com/kP8qQ6r.png";
 
 // 60 Telugu Samvatsaralu exactly from ChatGPT share
 const TELUGU_YEARS_CLEAN = [
-  "ప్రభవ", "విభవ", "శుక్ల", "ప్రమోదూత", "ప్రజోత్పత్తి", "ఆంగీరస", "శ్రీముఖ", "భావ", "యువ", "ధాత",
-  "ఈశ్వర", "బహుధాన్య", "ప్రమాది", "విక్రమ", "వృష", "చిత్రభాను", "స్వభాను", "తారణ", "పార్థివ", "వ్యయ",
-  "సర్వజిత్తు", "సర్వధారి", "విరోధి", "వికృతి", "ఖర", "నందన", "విజయ", "జయ", "మన్మథ", "దుర్ముఖి",
-  "హేవిళంబి", "విళంబి", "వికారి", "శార్వరి", "ప్లవ", "శుభకృతు", "శోభకృతు", "క్రోధి", "విశ్వావసు", "పరాభవ",
-  "ప్లవంగ", "కీలక", "సౌమ్య", "సాధారణ", "విరోధికృతు", "పరిధావి", "ప్రమాదీచ", "ఆనంద", "రాక్షస", "నల",
-  "పింగళ", "కాళయుక్తి", "సిద్ధార్థి", "రౌద్రి", "దుర్మతి", "దుందుభి", "రుధిరోద్గారి", "రక్తాక్షి", "క్రోధన", "అక్షయ"
+  "ప్రభవ",
+  "విభవ",
+  "శుక్ల",
+  "ప్రమోదూత",
+  "ప్రజోత్పత్తి",
+  "ఆంగీరస",
+  "శ్రీముఖ",
+  "భావ",
+  "యువ",
+  "ధాత",
+  "ఈశ్వర",
+  "బహుధాన్య",
+  "ప్రమాది",
+  "విక్రమ",
+  "వృష",
+  "చిత్రభాను",
+  "స్వభాను",
+  "తారణ",
+  "పార్థివ",
+  "వ్యయ",
+  "సర్వజిత్తు",
+  "సర్వధారి",
+  "విరోధి",
+  "వికృతి",
+  "ఖర",
+  "నందన",
+  "విజయ",
+  "జయ",
+  "మన్మథ",
+  "దుర్ముఖి",
+  "హేవిళంబి",
+  "విళంబి",
+  "వికారి",
+  "శార్వరి",
+  "ప్లవ",
+  "శుభకృతు",
+  "శోభకృతు",
+  "క్రోధి",
+  "విశ్వావసు",
+  "పరాభవ",
+  "ప్లవంగ",
+  "కీలక",
+  "సౌమ్య",
+  "సాధారణ",
+  "విరోధికృతు",
+  "పరిధావి",
+  "ప్రమాదీచ",
+  "ఆనంద",
+  "రాక్షస",
+  "నల",
+  "పింగళ",
+  "కాళయుక్తి",
+  "సిద్ధార్థి",
+  "రౌద్రి",
+  "దుర్మతి",
+  "దుందుభి",
+  "రుధిరోద్గారి",
+  "రక్తాక్షి",
+  "క్రోధన",
+  "అక్షయ",
 ];
 
 // 12 Telugu Masamulu
 const TELUGU_MONTHS = [
-  "చైత్ర", "వైశాఖ", "జ్యేష్ఠ", "ఆషాఢ", "శ్రావణ", "భాద్రపద",
-  "ఆశ్వయుజ", "కార్తీక", "మార్గశిర", "పుష్య", "మాఘ", "ఫాల్గుణ"
+  "చైత్ర",
+  "వైశాఖ",
+  "జ్యేష్ఠ",
+  "ఆషాఢ",
+  "శ్రావణ",
+  "భాద్రపద",
+  "ఆశ్వయుజ",
+  "కార్తీక",
+  "మార్గశిర",
+  "పుష్య",
+  "మాఘ",
+  "ఫాల్గుణ",
 ];
 
 // 27 Nakshatrams
 const NAKSHATRAMS = [
-  "అశ్విని", "భరణి", "కృత్తిక", "రోహిణి", "మృగశిర", "ఆరుద్ర",
-  "పునర్వసు", "పుష్యమి", "ఆశ్లేష", "మఖ", "పుబ్బ", "ఉత్తర",
-  "హస్త", "చిత్త", "స్వాతి", "విశాఖ", "అనూరాధ", "జ్యేష్ఠ",
-  "మూల", "పూర్వాషాఢ", "ఉత్తరాషాఢ", "శ్రవణం", "ధనిష్ఠ",
-  "శతభిషం", "పూర్వాభాద్ర", "ఉత్తరాభాద్ర", "రేవతి"
+  "అశ్విని",
+  "భరణి",
+  "కృత్తిక",
+  "రోహిణి",
+  "మృగశిర",
+  "ఆరుద్ర",
+  "పునర్వసు",
+  "పుష్యమి",
+  "ఆశ్లేష",
+  "మఖ",
+  "పుబ్బ",
+  "ఉత్తర",
+  "హస్త",
+  "చిత్త",
+  "స్వాతి",
+  "విశాఖ",
+  "అనూరాధ",
+  "జ్యేష్ఠ",
+  "మూల",
+  "పూర్వాషాఢ",
+  "ఉత్తరాషాఢ",
+  "శ్రవణం",
+  "ధనిష్ఠ",
+  "శతభిషం",
+  "పూర్వాభాద్ర",
+  "ఉత్తరాభాద్ర",
+  "రేవతి",
 ];
 
 // 7 Telugu Weekdays
 const TELUGU_DAYS = [
-  "ఆదివారం", "సోమవారం", "మంగళవారం", "బుధవారం", "గురువారం", "శుక్రవారం", "శనివారం"
+  "ఆదివారం",
+  "సోమవారం",
+  "మంగళవారం",
+  "బుధవారం",
+  "గురువారం",
+  "శుక్రవారం",
+  "శనివారం",
 ];
 
 // 30 Telugu Tithis (Shukla & Bahula)
 const TELUGU_TITHIS = [
-  "శు.పాడ్యమి", "శు.విదియ", "శు.తదియ", "శు.చవితి", "శు.పంచమి", "శు.షష్ఠి", "శు.సప్తమి", "శు.అష్టమి",
-  "శు.నవమి", "శు.దశమి", "శు.ఏకాదశి", "శు.ద్వాదశి", "శు.త్రయోదశి", "శు.చతుర్దశి", "పౌర్ణమి",
-  "బ.పాడ్యమి", "బ.విదియ", "బ.తదియ", "బ.చవితి", "బ.పంచమి", "బ.షష్ఠి", "బ.సప్తమి", "బ.అష్టమి",
-  "బ.నవమి", "బ.దశమి", "బ.ఏకాదశి", "బ.ద్వాదశి", "బ.త్రయోదశి", "బ.చతుర్దశి", "అమావాస్య"
+  "శు.పాడ్యమి",
+  "శు.విదియ",
+  "శు.తదియ",
+  "శు.చవితి",
+  "శు.పంచమి",
+  "శు.షష్ఠి",
+  "శు.సప్తమి",
+  "శు.అష్టమి",
+  "శు.నవమి",
+  "శు.దశమి",
+  "శు.ఏకాదశి",
+  "శు.ద్వాదశి",
+  "శు.త్రయోదశి",
+  "శు.చతుర్దశి",
+  "పౌర్ణమి",
+  "బ.పాడ్యమి",
+  "బ.విదియ",
+  "బ.తదియ",
+  "బ.చవితి",
+  "బ.పంచమి",
+  "బ.షష్ఠి",
+  "బ.సప్తమి",
+  "బ.అష్టమి",
+  "బ.నవమి",
+  "బ.దశమి",
+  "బ.ఏకాదశి",
+  "బ.ద్వాదశి",
+  "బ.త్రయోదశి",
+  "బ.చతుర్దశి",
+  "అమావాస్య",
 ];
 
 // 12 Telugu Lagnas
 const TELUGU_LAGNAS = [
-  "మేష", "వృషభ", "మిథున", "కర్కాటక", "సింహ", "కన్యా", "తుల", "వృశ్చిక", "ధనుర్", "మకర", "కుంభ", "మీన"
+  "మేష",
+  "వృషభ",
+  "మిథున",
+  "కర్కాటక",
+  "సింహ",
+  "కన్యా",
+  "తుల",
+  "వృశ్చిక",
+  "ధనుర్",
+  "మకర",
+  "కుంభ",
+  "మీన",
 ];
 
 const getPatrikaLabels = (lang: string) => {
-  if (lang === 'Telugu') {
+  if (lang === "Telugu") {
     return {
-      headersSection: 'పత్రిక శీర్షికలు',
-      muhurthamSection: 'ముహూర్త వివరాలు',
-      imagesSection: 'చిత్రాలు (మార్చడానికి నొక్కండి)',
-      contactSection: 'సంప్రదింపు వివరాలు',
-      topTitle: 'పై శీర్షిక (Top Title)',
-      subhead1: 'ఉపశీర్షిక 1',
-      subhead2: 'ఉపశీర్షిక 2',
-      subhead3: 'ఉపశీర్షిక 3',
-      innerHeader1: 'లోపలి శీర్షిక 1 (డ్రాప్‌డౌన్)',
-      innerHeader2: 'లోపలి శీర్షిక 2',
-      yearDropdown: 'సంవత్సరం (డ్రాప్‌డౌన్)',
-      monthDropdown: 'నెల (డ్రాప్‌డౌన్)',
-      tithiDropdown: 'తిథి (డ్రాప్‌డౌన్)',
-      dayDropdown: 'వారం (డ్రాప్‌డౌన్)',
-      datePick: 'తేదీ (తేదీ ఎంచుకోండి)',
-      timePick: 'సమయం (సమయం ఎంచుకోండి)',
-      nakshatramDropdown: 'నక్షత్రం (డ్రాప్‌డౌన్)',
-      lagnaDropdown: 'లగ్నం (డ్రాప్‌డౌన్)',
-      husbandName: 'భర్త పేరు (హోమ్ డిఫాల్ట్)',
-      wifeName: 'భార్య పేరు (హోమ్ డిఫాల్ట్)',
-      selectGanesha: 'గణపతిని ఎంచుకోండి',
-      ganeshaSelected: 'గణపతి ఎంచుకోబడ్డారు ✓',
-      selectLakshmi: 'లక్ష్మిని ఎంచుకోండి',
-      lakshmiSelected: 'లక్ష్మి ఎంచుకోబడ్డారు ✓',
-      phoneNumber: 'ఫోన్ నంబర్',
-      selectAvatar: 'ప్రొఫైల్ చిత్రం ఎంచుకోండి',
-      avatarSelected: 'చిత్రం ఎంచుకోబడింది ✓',
-      downloadPdf: 'పత్రిక PDF డౌన్లోడ్',
-      editFields: 'సవరించండి (Edit Fields)',
-      viewCard: 'కార్డు చూడండి (View Card)',
-      jyothishyalayam: 'జ్యోతిష్యాలయం',
-      consultantName: 'సిద్ధాంతి పేరు',
-      whatsapp: 'సంప్రదించండి (WhatsApp)',
+      headersSection: "పత్రిక శీర్షికలు",
+      muhurthamSection: "ముహూర్త వివరాలు",
+      imagesSection: "చిత్రాలు (మార్చడానికి నొక్కండి)",
+      contactSection: "సంప్రదింపు వివరాలు",
+      topTitle: "పై శీర్షిక (Top Title)",
+      subhead1: "ఉపశీర్షిక 1",
+      subhead2: "ఉపశీర్షిక 2",
+      subhead3: "ఉపశీర్షిక 3",
+      innerHeader1: "లోపలి శీర్షిక 1 (డ్రాప్‌డౌన్)",
+      innerHeader2: "లోపలి శీర్షిక 2",
+      yearDropdown: "సంవత్సరం (డ్రాప్‌డౌన్)",
+      monthDropdown: "నెల (డ్రాప్‌డౌన్)",
+      tithiDropdown: "తిథి (డ్రాప్‌డౌన్)",
+      dayDropdown: "వారం (డ్రాప్‌డౌన్)",
+      datePick: "తేదీ (తేదీ ఎంచుకోండి)",
+      timePick: "సమయం (సమయం ఎంచుకోండి)",
+      nakshatramDropdown: "నక్షత్రం (డ్రాప్‌డౌన్)",
+      lagnaDropdown: "లగ్నం (డ్రాప్‌డౌన్)",
+      husbandName: "భర్త పేరు (హోమ్ డిఫాల్ట్)",
+      wifeName: "భార్య పేరు (హోమ్ డిఫాల్ట్)",
+      selectGanesha: "గణపతిని ఎంచుకోండి",
+      ganeshaSelected: "గణపతి ఎంచుకోబడ్డారు ✓",
+      selectLakshmi: "లక్ష్మిని ఎంచుకోండి",
+      lakshmiSelected: "లక్ష్మి ఎంచుకోబడ్డారు ✓",
+      phoneNumber: "ఫోన్ నంబర్",
+      selectAvatar: "ప్రొఫైల్ చిత్రం ఎంచుకోండి",
+      avatarSelected: "చిత్రం ఎంచుకోబడింది ✓",
+      downloadPdf: "ముహూర్తం PDF డౌన్లోడ్",
+      editFields: "సవరించండి (Edit Fields)",
+      viewCard: "కార్డు చూడండి (View Card)",
+      jyothishyalayam: "జ్యోతిష్యాలయం",
+      consultantName: "సిద్ధాంతి పేరు",
+      whatsapp: "సంప్రదించండి (WhatsApp)",
     };
   }
-  if (lang === 'Hindi') {
+  if (lang === "Hindi") {
     return {
-      headersSection: 'पत्रिका शीर्षक',
-      muhurthamSection: 'मुहूर्त विवरण',
-      imagesSection: 'चित्र चयन (बदलने के लिए टैप करें)',
-      contactSection: 'संपर्क विवरण',
-      topTitle: 'मुख्य शीर्षक',
-      subhead1: 'उपशीर्षक 1',
-      subhead2: 'उपशीर्षक 2',
-      subhead3: 'उपशीर्षक 3',
-      innerHeader1: 'आंतरिक शीर्षक 1 (ड्रॉपडाउन)',
-      innerHeader2: 'आंतरिक शीर्षक 2',
-      yearDropdown: 'वर्ष (ड्रॉपडाउन)',
-      monthDropdown: 'महीना (ड्रॉपडाउन)',
-      tithiDropdown: 'तिथि (ड्रॉपडाउन)',
-      dayDropdown: 'वार / दिन (ड्रॉपडाउन)',
-      datePick: 'दिनांक (चुनने के लिए टैप करें)',
-      timePick: 'समय (चुनने के लिए टैप करें)',
-      nakshatramDropdown: 'नक्षत्र (ड्रॉपडाउन)',
-      lagnaDropdown: 'लग्न (ड्रॉपडाउन)',
-      husbandName: 'पति का नाम (मुख्य पृष्ठ आधारित)',
-      wifeName: 'पत्नी का नाम (मुख्य पृष्ठ आधारित)',
-      selectGanesha: 'गणेश चित्र चुनें',
-      ganeshaSelected: 'गणेश चित्र चयनित ✓',
-      selectLakshmi: 'लक्ष्मी चित्र चुनें',
-      lakshmiSelected: 'लक्ष्मी चित्र चयनित ✓',
-      phoneNumber: 'फ़ोन नंबर',
-      selectAvatar: 'अवतार चित्र चुनें',
-      avatarSelected: 'अवतार चयनित ✓',
-      downloadPdf: 'पत्रिका पीडीएफ डाउनलोड',
-      editFields: 'संपादन करें',
-      viewCard: 'कार्ड देखें',
-      jyothishyalayam: 'ज्योतिष्यालय',
-      consultantName: 'सलाहकार का नाम',
-      whatsapp: 'संपर्क करें (WhatsApp)',
+      headersSection: "पत्रिका शीर्षक",
+      muhurthamSection: "मुहूर्त विवरण",
+      imagesSection: "चित्र चयन (बदलने के लिए टैप करें)",
+      contactSection: "संपर्क विवरण",
+      topTitle: "मुख्य शीर्षक",
+      subhead1: "उपशीर्षक 1",
+      subhead2: "उपशीर्षक 2",
+      subhead3: "उपशीर्षक 3",
+      innerHeader1: "आंतरिक शीर्षक 1 (ड्रॉपडाउन)",
+      innerHeader2: "आंतरिक शीर्षक 2",
+      yearDropdown: "वर्ष (ड्रॉपडाउन)",
+      monthDropdown: "महीना (ड्रॉपडाउन)",
+      tithiDropdown: "तिथि (ड्रॉपडाउन)",
+      dayDropdown: "वार / दिन (ड्रॉपडाउन)",
+      datePick: "दिनांक (चुनने के लिए टैप करें)",
+      timePick: "समय (चुनने के लिए टैप करें)",
+      nakshatramDropdown: "नक्षत्र (ड्रॉपडाउन)",
+      lagnaDropdown: "लग्न (ड्रॉपडाउन)",
+      husbandName: "पति का नाम (मुख्य पृष्ठ आधारित)",
+      wifeName: "पत्नी का नाम (मुख्य पृष्ठ आधारित)",
+      selectGanesha: "गणेश चित्र चुनें",
+      ganeshaSelected: "गणेश चित्र चयनित ✓",
+      selectLakshmi: "लक्ष्मी चित्र चुनें",
+      lakshmiSelected: "लक्ष्मी चित्र चयनित ✓",
+      phoneNumber: "फ़ोन नंबर",
+      selectAvatar: "अवतार चित्र चुनें",
+      avatarSelected: "अवतार चयनित ✓",
+      downloadPdf: "मुहूर्त पीडीएफ डाउनलोड",
+      editFields: "संपादन करें",
+      viewCard: "कार्ड देखें",
+      jyothishyalayam: "ज्योतिष्यालय",
+      consultantName: "सलाहकार का नाम",
+      whatsapp: "संपर्क करें (WhatsApp)",
     };
   }
   return {
-    headersSection: 'Patrika Headers',
-    muhurthamSection: 'Muhurtham Details',
-    imagesSection: 'Image Selectors (Tap to pick custom)',
-    contactSection: 'Contact / Context Info',
-    topTitle: 'Top Title',
-    subhead1: 'Subhead 1',
-    subhead2: 'Subhead 2',
-    subhead3: 'Subhead 3',
-    innerHeader1: 'Inner Header 1 (Dropdown)',
-    innerHeader2: 'Inner Header 2',
-    yearDropdown: 'Year (Samvatsaram Dropdown)',
-    monthDropdown: 'Month (Masam Dropdown)',
-    tithiDropdown: 'Tithi (Dropdown)',
-    dayDropdown: 'Day (Dropdown)',
-    datePick: 'Date (Tap to Pick)',
-    timePick: 'Time (Tap to Pick)',
-    nakshatramDropdown: 'Nakshatram (Dropdown)',
-    lagnaDropdown: 'Lagna (Dropdown)',
+    headersSection: "Patrika Headers",
+    muhurthamSection: "Muhurtham Details",
+    imagesSection: "Image Selectors (Tap to pick custom)",
+    contactSection: "Contact / Context Info",
+    topTitle: "Top Title",
+    subhead1: "Subhead 1",
+    subhead2: "Subhead 2",
+    subhead3: "Subhead 3",
+    innerHeader1: "Inner Header 1 (Dropdown)",
+    innerHeader2: "Inner Header 2",
+    yearDropdown: "Year (Samvatsaram Dropdown)",
+    monthDropdown: "Month (Masam Dropdown)",
+    tithiDropdown: "Tithi (Dropdown)",
+    dayDropdown: "Day (Dropdown)",
+    datePick: "Date (Tap to Pick)",
+    timePick: "Time (Tap to Pick)",
+    nakshatramDropdown: "Nakshatram (Dropdown)",
+    lagnaDropdown: "Lagna (Dropdown)",
     husbandName: "Husband's Name (Home default)",
     wifeName: "Wife's Name (Home default)",
-    selectGanesha: 'Select Ganesha',
-    ganeshaSelected: 'Ganesha Selected ✓',
-    selectLakshmi: 'Select Lakshmi',
-    lakshmiSelected: 'Lakshmi Selected ✓',
-    phoneNumber: 'Phone Number',
-    selectAvatar: 'Select Avatar',
-    avatarSelected: 'Avatar Selected ✓',
-    downloadPdf: 'Download Patrika PDF',
-    editFields: 'Edit Fields',
-    viewCard: 'View Card',
-    jyothishyalayam: 'Jyothishyalayam',
-    consultantName: 'Consultant Name',
-    whatsapp: 'Contact (WhatsApp)',
+    selectGanesha: "Select Ganesha",
+    ganeshaSelected: "Ganesha Selected ✓",
+    selectLakshmi: "Select Lakshmi",
+    lakshmiSelected: "Lakshmi Selected ✓",
+    phoneNumber: "Phone Number",
+    selectAvatar: "Select Avatar",
+    avatarSelected: "Avatar Selected ✓",
+    downloadPdf: "Download Muhurtham PDF",
+    editFields: "Edit Fields",
+    viewCard: "View Card",
+    jyothishyalayam: "Jyothishyalayam",
+    consultantName: "Consultant Name",
+    whatsapp: "Contact (WhatsApp)",
   };
+};
+
+type PatrikaDropdownProps = {
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+};
+
+const PatrikaDropdown = ({
+  value,
+  options,
+  onChange,
+}: PatrikaDropdownProps) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Pressable
+        style={styles.pickerContainer}
+        onPress={() => setOpen(true)}
+        accessibilityRole="button"
+      >
+        <Text style={styles.pickerText} numberOfLines={1}>
+          {value}
+        </Text>
+        <Text style={styles.pickerArrow}>▾</Text>
+      </Pressable>
+      <Modal
+        transparent
+        visible={open}
+        animationType="fade"
+        onRequestClose={() => setOpen(false)}
+      >
+        <Pressable
+          style={styles.dropdownBackdrop}
+          onPress={() => setOpen(false)}
+        >
+          <Pressable
+            style={styles.dropdownCard}
+            onPress={(event) => event.stopPropagation()}
+          >
+            <FlatList
+              data={options}
+              keyExtractor={(item) => item}
+              keyboardShouldPersistTaps="handled"
+              renderItem={({ item }) => (
+                <Pressable
+                  style={[
+                    styles.dropdownOption,
+                    item === value && styles.dropdownOptionSelected,
+                  ]}
+                  onPress={() => {
+                    onChange(item);
+                    setOpen(false);
+                  }}
+                >
+                  <Text style={styles.dropdownOptionText}>{item}</Text>
+                  {item === value ? (
+                    <Text style={styles.dropdownCheck}>✓</Text>
+                  ) : null}
+                </Pressable>
+              )}
+            />
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </>
+  );
 };
 
 export const PatrikaScreen = () => {
@@ -195,50 +394,55 @@ export const PatrikaScreen = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   // Form Fields
-  const [headerText, setHeaderText] = useState<string>('విశ్వకర్మ వాస్తు సర్వస్వం');
-  const [subHeader1, setSubHeader1] = useState<string>('శ్రీరస్తు');
-  const [subHeader2, setSubHeader2] = useState<string>('శుభమస్తు');
-  const [subHeader3, setSubHeader3] = useState<string>('అవిఘ్నమస్తు');
-  const [title1, setTitle1] = useState<string>('గృహారంభం');
-  const [title2, setTitle2] = useState<string>('సుముహూర్త లగ్న పత్రికే');
+  const [headerText, setHeaderText] = useState<string>(
+    "విశ్వకర్మ వాస్తు సర్వస్వం",
+  );
+  const [subHeader1, setSubHeader1] = useState<string>("శ్రీరస్తు");
+  const [subHeader2, setSubHeader2] = useState<string>("శుభమస్తు");
+  const [subHeader3, setSubHeader3] = useState<string>("అవిఘ్నమస్తు");
+  const [title1, setTitle1] = useState<string>("గృహారంభం");
+  const [title2, setTitle2] = useState<string>("సుముహూర్త లగ్న పత్రికే");
 
   // Paragraph components for easy editing
-  const [yearName, setYearName] = useState<string>('శ్రీ పరాభవ');
-  const [monthName, setMonthName] = useState<string>('శ్రావణ');
-  const [tithiName, setTithiName] = useState<string>('శు.ఏకాదశి');
-  const [dayName, setDayName] = useState<string>('ఆదివారం');
-  const [dateValue, setDateValue] = useState<string>('23-08-2026');
-  const [timeValue, setTimeValue] = useState<string>('ఉ 11-21 ని.లకు');
-  const [nakshatram, setNakshatram] = useState<string>('మూల');
-  const [lagna, setLagna] = useState<string>('తుల');
-  const [husbandName, setHusbandName] = useState<string>('');
-  const [wifeName, setWifeName] = useState<string>('');
+  const [yearName, setYearName] = useState<string>("శ్రీ పరాభవ");
+  const [monthName, setMonthName] = useState<string>("శ్రావణ");
+  const [tithiName, setTithiName] = useState<string>("శు.ఏకాదశి");
+  const [dayName, setDayName] = useState<string>("ఆదివారం");
+  const [dateValue, setDateValue] = useState<string>("23-08-2026");
+  const [timeValue, setTimeValue] = useState<string>("ఉ 11-21 ని.లకు");
+  const [nakshatram, setNakshatram] = useState<string>("మూల");
+  const [lagna, setLagna] = useState<string>("తుల");
+  const [husbandName, setHusbandName] = useState<string>("");
+  const [wifeName, setWifeName] = useState<string>("");
 
   // Full Paragraph State (editable)
-  const [paragraphText, setParagraphText] = useState<string>('');
-  const [isParagraphManuallyEdited, setIsParagraphManuallyEdited] = useState<boolean>(false);
+  const [paragraphText, setParagraphText] = useState<string>("");
+  const [isParagraphManuallyEdited, setIsParagraphManuallyEdited] =
+    useState<boolean>(false);
 
   // Custom Images
   const [ganeshaUri, setGaneshaUri] = useState<string | null>(null);
   const [lakshmiUri, setLakshmiUri] = useState<string | null>(null);
 
   // Profile / Contact Info State
-  const [consultantName, setConsultantName] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [jyothishyalayam, setJyothishyalayam] = useState<string>('');
-  const [profilePicUrl, setProfilePicUrl] = useState<string>('');
+  const [consultantName, setConsultantName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [jyothishyalayam, setJyothishyalayam] = useState<string>("");
+  const [profilePicUrl, setProfilePicUrl] = useState<string>("");
 
   // Picker modal states
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState<boolean>(false);
-  const [isTimePickerVisible, setIsTimePickerVisible] = useState<boolean>(false);
+  const [isDatePickerVisible, setIsDatePickerVisible] =
+    useState<boolean>(false);
+  const [isTimePickerVisible, setIsTimePickerVisible] =
+    useState<boolean>(false);
 
   // Temporary picker states
-  const [tempDay, setTempDay] = useState<string>('23');
-  const [tempMonth, setTempMonth] = useState<string>('08');
-  const [tempYear, setTempYear] = useState<string>('2026');
-  const [tempHour, setTempHour] = useState<string>('11');
-  const [tempMinute, setTempMinute] = useState<string>('21');
-  const [tempPeriod, setTempPeriod] = useState<string>('ఉ'); // ఉ, మ, సా, రా
+  const [tempDay, setTempDay] = useState<string>("23");
+  const [tempMonth, setTempMonth] = useState<string>("08");
+  const [tempYear, setTempYear] = useState<string>("2026");
+  const [tempHour, setTempHour] = useState<string>("11");
+  const [tempMinute, setTempMinute] = useState<string>("21");
+  const [tempPeriod, setTempPeriod] = useState<string>("ఉ"); // ఉ, మ, సా, రా
 
   // Helper to split paragraph text into red and blue styled chunks
   const getColoredParagraphChunks = (text: string) => {
@@ -256,22 +460,37 @@ export const PatrikaScreen = () => {
       lagna,
       husbandName,
       wifeName,
-      title1
-    ].map(val => val ? val.trim() : '').filter(val => val.length > 0);
+      title1,
+    ]
+      .map((val) => (val ? val.trim() : ""))
+      .filter((val) => val.length > 0);
+
+    // Keep the couple marker red even when it is next to blue names.
+    const valuesToKeepRed = ["దంపతులు"];
 
     // Remove duplicates and sort by length descending to match longest substring first
-    const uniqueBlues = Array.from(new Set(valuesToBlue)).sort((a, b) => b.length - a.length);
+    const uniqueBlues = Array.from(new Set(valuesToBlue)).sort(
+      (a, b) => b.length - a.length,
+    );
 
-    if (uniqueBlues.length === 0) {
+    if (uniqueBlues.length === 0 && valuesToKeepRed.length === 0) {
       return [{ text, isBlue: false }];
     }
 
     // Escape special regex chars
-    const escapedBlues = uniqueBlues.map(val => val.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
-    const regex = new RegExp(`(${escapedBlues.join('|')})`, 'g');
+    const escapedRed = valuesToKeepRed.map((val) =>
+      val.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"),
+    );
+    const escapedBlues = uniqueBlues.map((val) =>
+      val.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"),
+    );
+    const regex = new RegExp(
+      `(${[...escapedRed, ...escapedBlues].join("|")})`,
+      "g",
+    );
 
     const parts = text.split(regex);
-    return parts.map(part => {
+    return parts.map((part) => {
       const isBlue = uniqueBlues.includes(part);
       return { text: part, isBlue };
     });
@@ -287,23 +506,23 @@ export const PatrikaScreen = () => {
           const cached = await AsyncStorage.getItem(`user_profile_${user.uid}`);
           if (cached) {
             const data = JSON.parse(cached);
-            setConsultantName(data.name || '');
-            setPhoneNumber(data.phone || '');
-            setJyothishyalayam(data.jyothishyalayam || '');
-            setProfilePicUrl(data.profilePicUrl || '');
+            setConsultantName(data.name || "");
+            setPhoneNumber(data.phone || "");
+            setJyothishyalayam(data.jyothishyalayam || "");
+            setProfilePicUrl(data.profilePicUrl || "");
           }
         } catch (e) {
           console.log("PatrikaScreen load cache error:", e);
         }
 
         // Live subscription for profile
-        unsubscribe = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
+        unsubscribe = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
-            setConsultantName(data.name || '');
-            setPhoneNumber(data.phone || '');
-            setJyothishyalayam(data.jyothishyalayam || '');
-            setProfilePicUrl(data.profilePicUrl || '');
+            setConsultantName(data.name || "");
+            setPhoneNumber(data.phone || "");
+            setJyothishyalayam(data.jyothishyalayam || "");
+            setProfilePicUrl(data.profilePicUrl || "");
           }
         });
       }
@@ -312,22 +531,24 @@ export const PatrikaScreen = () => {
     // Load Owner & Wife info defaults from home screen cache
     const loadHomeOwnerInfo = async () => {
       try {
-        const cachedOwner = await AsyncStorage.getItem('current_home_owner_info');
+        const cachedOwner = await AsyncStorage.getItem(
+          "current_home_owner_info",
+        );
         if (cachedOwner) {
           const data = JSON.parse(cachedOwner);
-          setHusbandName(data.ownerName || 'శ్రీ మోహన్ రవి శంకర్');
-          setWifeName(data.wifeName || 'సత్య కుమారి');
-          setNakshatram(data.nakshatram || 'మూల');
+          setHusbandName(data.ownerName || "శ్రీ మోహన్ రవి శంకర్");
+          setWifeName(data.wifeName || "సత్య కుమారి");
+          setNakshatram(data.nakshatram || "మూల");
         } else {
-          setHusbandName('శ్రీ మోహన్ రవి శంకర్');
-          setWifeName('సత్య కుమారి');
-          setNakshatram('మూల');
+          setHusbandName("శ్రీ మోహన్ రవి శంకర్");
+          setWifeName("సత్య కుమారి");
+          setNakshatram("మూల");
         }
       } catch (e) {
         console.log("Failed loading home owner info:", e);
-        setHusbandName('శ్రీ మోహన్ రవి శంకర్');
-        setWifeName('సత్య కుమారి');
-        setNakshatram('మూల');
+        setHusbandName("శ్రీ మోహన్ రవి శంకర్");
+        setWifeName("సత్య కుమారి");
+        setNakshatram("మూల");
       }
     };
 
@@ -336,8 +557,12 @@ export const PatrikaScreen = () => {
     // Load custom images from cache
     const loadCustomImages = async () => {
       try {
-        const savedGanesha = await AsyncStorage.getItem('patrika_custom_ganesha_uri');
-        const savedLakshmi = await AsyncStorage.getItem('patrika_custom_lakshmi_uri');
+        const savedGanesha = await AsyncStorage.getItem(
+          "patrika_custom_ganesha_uri",
+        );
+        const savedLakshmi = await AsyncStorage.getItem(
+          "patrika_custom_lakshmi_uri",
+        );
         if (savedGanesha) setGaneshaUri(savedGanesha);
         if (savedLakshmi) setLakshmiUri(savedLakshmi);
       } catch (e) {
@@ -349,10 +574,14 @@ export const PatrikaScreen = () => {
     // Load custom paragraph from cache
     const loadCustomParagraph = async () => {
       try {
-        const savedText = await AsyncStorage.getItem('patrika_custom_paragraph_text');
-        const savedEdited = await AsyncStorage.getItem('patrika_is_paragraph_manually_edited');
+        const savedText = await AsyncStorage.getItem(
+          "patrika_custom_paragraph_text",
+        );
+        const savedEdited = await AsyncStorage.getItem(
+          "patrika_is_paragraph_manually_edited",
+        );
         if (savedText) setParagraphText(savedText);
-        if (savedEdited === 'true') setIsParagraphManuallyEdited(true);
+        if (savedEdited === "true") setIsParagraphManuallyEdited(true);
       } catch (e) {
         console.log("Failed loading custom paragraph:", e);
       }
@@ -370,28 +599,50 @@ export const PatrikaScreen = () => {
     if (!isParagraphManuallyEdited) {
       setParagraphText(getCompiledParagraph());
     }
-  }, [yearName, monthName, tithiName, dayName, dateValue, timeValue, nakshatram, lagna, husbandName, wifeName, title1, isParagraphManuallyEdited]);
+  }, [
+    yearName,
+    monthName,
+    tithiName,
+    dayName,
+    dateValue,
+    timeValue,
+    nakshatram,
+    lagna,
+    husbandName,
+    wifeName,
+    title1,
+    isParagraphManuallyEdited,
+  ]);
 
   // Handle image pick
-  const handleSelectImage = async (target: 'ganesha' | 'lakshmi' | 'profile') => {
+  const handleSelectImage = async (
+    target: "ganesha" | "lakshmi" | "profile",
+  ) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission Denied', 'We need photo library permissions to change this picture.');
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Denied",
+        "We need photo library permissions to change this picture.",
+      );
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: 'images',
+      mediaTypes: "images",
       allowsEditing: true,
-      quality: 0.2, // Compressed to prevent heavy base64 payloads
+      quality: 1,
     });
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const uri = result.assets[0].uri;
-      if (target === 'ganesha') {
+      if (target === "ganesha") {
         setGaneshaUri(uri);
-        AsyncStorage.setItem('patrika_custom_ganesha_uri', uri).catch(e => console.log(e));
-      } else if (target === 'lakshmi') {
+        AsyncStorage.setItem("patrika_custom_ganesha_uri", uri).catch((e) =>
+          console.log(e),
+        );
+      } else if (target === "lakshmi") {
         setLakshmiUri(uri);
-        AsyncStorage.setItem('patrika_custom_lakshmi_uri', uri).catch(e => console.log(e));
+        AsyncStorage.setItem("patrika_custom_lakshmi_uri", uri).catch((e) =>
+          console.log(e),
+        );
       } else {
         setProfilePicUrl(uri);
       }
@@ -417,83 +668,133 @@ export const PatrikaScreen = () => {
   const handleExportPDF = async () => {
     try {
       // React Native safe base64 converter — uses ONLY expo-file-system (no FileReader, no AbortController)
-      const getBase64 = async (uri: string | null, fallbackRequireOrUrl: any): Promise<string> => {
+      const getBase64 = async (
+        uri: string | null,
+        fallbackRequireOrUrl: any,
+      ): Promise<string> => {
         try {
+          const downloadToCache = async (url: string, filename: string) => {
+            const cachedPath = `${FileSystem.cacheDirectory}${filename}`;
+
+            for (let attempt = 0; attempt < 2; attempt += 1) {
+              try {
+                const info = await FileSystem.getInfoAsync(cachedPath);
+                if (info.exists && (!info.size || info.size > 0)) {
+                  return cachedPath;
+                }
+                if (info.exists) {
+                  await FileSystem.deleteAsync(cachedPath, {
+                    idempotent: true,
+                  });
+                }
+
+                await FileSystem.downloadAsync(url, cachedPath);
+                const downloaded = await FileSystem.getInfoAsync(cachedPath);
+                if (
+                  downloaded.exists &&
+                  downloaded.size &&
+                  downloaded.size > 0
+                ) {
+                  return cachedPath;
+                }
+              } catch {
+                if (attempt === 1) return "";
+                await FileSystem.deleteAsync(cachedPath, {
+                  idempotent: true,
+                }).catch(() => {});
+              }
+            }
+
+            return "";
+          };
+
           let targetUri = uri;
 
           // No user-picked URI — resolve from bundled asset or remote default
           if (!targetUri) {
-            if (typeof fallbackRequireOrUrl === 'number' || (typeof fallbackRequireOrUrl === 'object' && fallbackRequireOrUrl !== null)) {
+            if (
+              typeof fallbackRequireOrUrl === "number" ||
+              (typeof fallbackRequireOrUrl === "object" &&
+                fallbackRequireOrUrl !== null)
+            ) {
               try {
                 const asset = Asset.fromModule(fallbackRequireOrUrl);
                 await asset.downloadAsync();
-                targetUri = asset.localUri || asset.uri || '';
+                targetUri = asset.localUri || asset.uri || "";
               } catch {
-                return '';
+                return "";
               }
-            } else if (typeof fallbackRequireOrUrl === 'string' && fallbackRequireOrUrl.length > 0) {
-              // Remote default (e.g. LAKSHMI_DEFAULT http URL) — download to cache first
-              const filename = fallbackRequireOrUrl.split('/').pop()?.split('?')[0] || 'img.jpg';
-              const cachedPath = `${FileSystem.cacheDirectory}${filename}`;
-              try {
-                const info = await FileSystem.getInfoAsync(cachedPath);
-                if (!info.exists) {
-                  await FileSystem.downloadAsync(fallbackRequireOrUrl, cachedPath);
-                }
-                targetUri = cachedPath;
-              } catch {
-                return '';
-              }
+            } else if (
+              typeof fallbackRequireOrUrl === "string" &&
+              fallbackRequireOrUrl.length > 0
+            ) {
+              const filename =
+                fallbackRequireOrUrl.split("/").pop()?.split("?")[0] ||
+                "img.jpg";
+              targetUri = await downloadToCache(fallbackRequireOrUrl, filename);
             } else {
-              return '';
+              return "";
             }
           }
 
-          if (!targetUri) return '';
+          if (!targetUri) return "";
 
           // Ensure file:// prefix for local paths
           let cleanUri = targetUri;
-          if (!cleanUri.startsWith('file://') && !cleanUri.startsWith('http://') && !cleanUri.startsWith('https://')) {
+          if (
+            !cleanUri.startsWith("file://") &&
+            !cleanUri.startsWith("content://") &&
+            !cleanUri.startsWith("http://") &&
+            !cleanUri.startsWith("https://")
+          ) {
             cleanUri = `file://${cleanUri}`;
           }
 
           // If still a remote URL, download to cache
-          if (cleanUri.startsWith('http://') || cleanUri.startsWith('https://')) {
-            const filename = cleanUri.split('/').pop()?.split('?')[0] || 'img.jpg';
-            const cachedPath = `${FileSystem.cacheDirectory}${filename}`;
-            try {
-              const info = await FileSystem.getInfoAsync(cachedPath);
-              if (!info.exists) {
-                await FileSystem.downloadAsync(cleanUri, cachedPath);
-              }
-              cleanUri = cachedPath;
-            } catch {
-              return '';
-            }
+          if (
+            cleanUri.startsWith("http://") ||
+            cleanUri.startsWith("https://")
+          ) {
+            const filename =
+              cleanUri.split("/").pop()?.split("?")[0] || "img.jpg";
+            const cachedPath = await downloadToCache(cleanUri, filename);
+            if (!cachedPath) return "";
+            cleanUri = cachedPath;
           }
 
           // Read as base64 using FileSystem only
+          const localInfo = await FileSystem.getInfoAsync(cleanUri);
+          if (!localInfo.exists || !localInfo.size || localInfo.size === 0) {
+            return "";
+          }
           const base64 = await FileSystem.readAsStringAsync(cleanUri, {
             encoding: FileSystem.EncodingType.Base64,
           });
-          const mime = cleanUri.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
+          const mime = cleanUri.toLowerCase().endsWith(".png")
+            ? "image/png"
+            : "image/jpeg";
           return `data:${mime};base64,${base64}`;
         } catch (e) {
-          console.log('getBase64 error:', e);
-          return '';
+          console.log("getBase64 error:", e);
+          return "";
         }
       };
 
-      const ganeshaBase64 = await getBase64(ganeshaUri, require('../../assets/ganapati.jpg'));
+      const ganeshaBase64 = await getBase64(
+        ganeshaUri,
+        require("../../assets/ganapati.jpg"),
+      );
       const lakshmiBase64 = await getBase64(lakshmiUri, LAKSHMI_DEFAULT);
-      const profileBase64 = await getBase64(profilePicUrl, '');
+      const profileBase64 = await getBase64(profilePicUrl, "");
 
       // Generate colored paragraph html by tokenizing the paragraph text
       const chunks = getColoredParagraphChunks(paragraphText);
-      const paragraphHtml = chunks.map(chunk => {
-        const cssClass = chunk.isBlue ? 'text-blue' : 'text-red';
-        return `<span class="${cssClass}">${chunk.text}</span>`;
-      }).join('');
+      const paragraphHtml = chunks
+        .map((chunk) => {
+          const cssClass = chunk.isBlue ? "text-blue" : "text-red";
+          return `<span class="${cssClass}">${chunk.text}</span>`;
+        })
+        .join("");
 
       // Setup HTML
       const htmlContent = `
@@ -511,20 +812,18 @@ export const PatrikaScreen = () => {
               background-color: #ffffff;
               margin: 0;
               padding: 0;
-              display: flex;
-              justify-content: center;
-              align-items: center;
             }
             .patrika-card {
               position: relative;
-              overflow: hidden;
-              width: 660px; /* Reduced width */
-              min-height: 940px; /* Taller height to fill A4 print */
+              width: 100%;
+              max-width: 660px;
+              margin: 0 auto;
               border: 2px solid #000000;
               background-color: #fffb15;
-              padding: 35px 30px;
+              padding: 24px 22px;
               box-sizing: border-box;
               text-align: center;
+              overflow: visible;
             }
             .watermark {
               position: absolute;
@@ -598,14 +897,22 @@ export const PatrikaScreen = () => {
               z-index: 2;
               background-color: #ffea79;
               border: 1.8px solid #9e0000;
-              padding: 24px;
-              font-size: 20px;
-              line-height: 2.1;
+              padding: 16px;
+              font-size: 17px;
+              line-height: 1.8;
               color: #000000;
               font-weight: 600;
               text-align: justify;
               margin-bottom: 30px;
               border-radius: 6px;
+              overflow: visible;
+              overflow-wrap: anywhere;
+              word-break: break-word;
+              white-space: pre-wrap;
+            }
+            .paragraph-box span {
+              overflow-wrap: anywhere;
+              word-break: break-word;
             }
             .text-red {
               color: #9e0000 !important;
@@ -692,29 +999,34 @@ export const PatrikaScreen = () => {
             <div class="contact">
               <!-- LEFT: Image only -->
               <div class="contact-left">
-                ${profileBase64
-                  ? `<img src="${profileBase64}" style="width: 100%; height: 100%; object-fit: cover;" />`
-                  : `<div style="width:100%; height:100%; background:#F5F0E8; display:flex; align-items:center; justify-content:center; font-size:56px; color:#7A4A20;">👤</div>`
+                ${
+                  profileBase64
+                    ? `<img src="${profileBase64}" style="width: 100%; height: 100%; object-fit: cover;" />`
+                    : `<div style="width:100%; height:100%; background:#F5F0E8; display:flex; align-items:center; justify-content:center; font-size:56px; color:#7A4A20;">👤</div>`
                 }
               </div>
               <!-- RIGHT: Name + WhatsApp + Jyothishyalayam -->
               <div class="contact-right">
-                ${jyothishyalayam ? `
+                ${
+                  jyothishyalayam
+                    ? `
                 <div>
                   <div class="contact-name-lbl">${labels.jyothishyalayam}</div>
                   <div class="contact-name-val" style="color:#7B0A10; font-size:22px;">${jyothishyalayam}</div>
                   <div class="contact-divider"></div>
                 </div>
-                ` : ''}
+                `
+                    : ""
+                }
                 <div>
                   <div class="contact-name-lbl">${labels.consultantName}</div>
-                  <div class="contact-name-val" style="${jyothishyalayam ? 'font-size:20px;' : ''}">${consultantName || '—'}</div>
+                  <div class="contact-name-val" style="${jyothishyalayam ? "font-size:20px;" : ""}">${consultantName || "—"}</div>
                   <div class="contact-divider"></div>
                 </div>
                 <div>
                   <div class="contact-phone-lbl">${labels.whatsapp}</div>
                   <div style="display:flex;align-items:center;gap:12px;margin-top:2px;">
-                    <div class="contact-phone-val">${phoneNumber || '9949598627'}</div>
+                    <div class="contact-phone-val">${phoneNumber || "9949598627"}</div>
                   </div>
                 </div>
               </div>
@@ -727,7 +1039,7 @@ export const PatrikaScreen = () => {
       `;
 
       const printResult = await Print.printToFileAsync({ html: htmlContent });
-      const customPath = `${FileSystem.documentDirectory}Lagna_Patrika.pdf`;
+      const customPath = `${FileSystem.documentDirectory}Muhurtham.pdf`;
       let sharePath = printResult.uri;
 
       try {
@@ -736,31 +1048,39 @@ export const PatrikaScreen = () => {
         if (fileInfo.exists) {
           await FileSystem.deleteAsync(customPath, { idempotent: true });
         }
-        
+
         // Copy to custom path for professional WhatsApp file name display
         await FileSystem.copyAsync({
           from: printResult.uri,
-          to: customPath
+          to: customPath,
         });
         sharePath = customPath;
       } catch (copyErr) {
-        console.warn('Failed to rename PDF to Lagna_Patrika.pdf, falling back to temp URI:', copyErr);
+        console.warn(
+          "Failed to rename PDF to Muhurtham.pdf, falling back to temp URI:",
+          copyErr,
+        );
         sharePath = printResult.uri;
       }
-      
+
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(sharePath, {
-          mimeType: 'application/pdf',
-          dialogTitle: 'Share Lagna Patrika',
-          UTI: 'com.adobe.pdf'
+          mimeType: "application/pdf",
+          dialogTitle: "Share Muhurtham PDF",
+          UTI: "com.adobe.pdf",
         });
       } else {
-        Alert.alert('PDF Exported', 'Lagna Patrika PDF was generated, but sharing is not available on this device.');
+        Alert.alert(
+          "PDF Exported",
+          "Muhurtham PDF was generated, but sharing is not available on this device.",
+        );
       }
-
     } catch (error: any) {
-      console.warn('PDF export failed:', error);
-      Alert.alert('PDF Error', `${error?.message || 'Unknown error'}. Please try again.`);
+      console.warn("PDF export failed:", error);
+      Alert.alert(
+        "PDF Error",
+        `${error?.message || "Unknown error"}. Please try again.`,
+      );
     }
   };
 
@@ -831,16 +1151,11 @@ export const PatrikaScreen = () => {
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.label}>{labels.innerHeader1}</Text>
-                <View style={styles.pickerContainer}>
-                  <Picker
-                    selectedValue={title1}
-                    onValueChange={(itemValue) => setTitle1(itemValue)}
-                    style={styles.picker}
-                  >
-                    <Picker.Item label="గృహారంభం" value="గృహారంభం" />
-                    <Picker.Item label="శంకుస్థాపన" value="శంకుస్థాపన" />
-                  </Picker>
-                </View>
+                <PatrikaDropdown
+                  value={title1}
+                  options={["గృహారంభం", "శంకుస్థాపన"]}
+                  onChange={setTitle1}
+                />
               </View>
               <View style={styles.col}>
                 <Text style={styles.label}>{labels.innerHeader2}</Text>
@@ -856,62 +1171,38 @@ export const PatrikaScreen = () => {
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.label}>{labels.yearDropdown}</Text>
-                <View style={styles.pickerContainer}>
-                  <Picker
-                    selectedValue={yearName.replace("శ్రీ ", "")}
-                    onValueChange={(itemValue) => setYearName(`శ్రీ ${itemValue}`)}
-                    style={styles.picker}
-                  >
-                    {TELUGU_YEARS_CLEAN.map((yr) => (
-                      <Picker.Item key={yr} label={yr} value={yr} />
-                    ))}
-                  </Picker>
-                </View>
+                <PatrikaDropdown
+                  value={yearName.replace("శ్రీ ", "")}
+                  options={TELUGU_YEARS_CLEAN}
+                  onChange={(itemValue) => setYearName(`శ్రీ ${itemValue}`)}
+                />
               </View>
               <View style={styles.col}>
                 <Text style={styles.label}>{labels.monthDropdown}</Text>
-                <View style={styles.pickerContainer}>
-                  <Picker
-                    selectedValue={monthName}
-                    onValueChange={(itemValue) => setMonthName(itemValue)}
-                    style={styles.picker}
-                  >
-                    {TELUGU_MONTHS.map((mth) => (
-                      <Picker.Item key={mth} label={mth} value={mth} />
-                    ))}
-                  </Picker>
-                </View>
+                <PatrikaDropdown
+                  value={monthName}
+                  options={TELUGU_MONTHS}
+                  onChange={setMonthName}
+                />
               </View>
             </View>
 
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.label}>{labels.tithiDropdown}</Text>
-                <View style={styles.pickerContainer}>
-                  <Picker
-                    selectedValue={tithiName}
-                    onValueChange={(itemValue) => setTithiName(itemValue)}
-                    style={styles.picker}
-                  >
-                    {TELUGU_TITHIS.map((tith) => (
-                      <Picker.Item key={tith} label={tith} value={tith} />
-                    ))}
-                  </Picker>
-                </View>
+                <PatrikaDropdown
+                  value={tithiName}
+                  options={TELUGU_TITHIS}
+                  onChange={setTithiName}
+                />
               </View>
               <View style={styles.col}>
                 <Text style={styles.label}>{labels.dayDropdown}</Text>
-                <View style={styles.pickerContainer}>
-                  <Picker
-                    selectedValue={dayName}
-                    onValueChange={(itemValue) => setDayName(itemValue)}
-                    style={styles.picker}
-                  >
-                    {TELUGU_DAYS.map((d) => (
-                      <Picker.Item key={d} label={d} value={d} />
-                    ))}
-                  </Picker>
-                </View>
+                <PatrikaDropdown
+                  value={dayName}
+                  options={TELUGU_DAYS}
+                  onChange={setDayName}
+                />
               </View>
             </View>
 
@@ -939,31 +1230,19 @@ export const PatrikaScreen = () => {
             <View style={styles.row}>
               <View style={styles.col}>
                 <Text style={styles.label}>{labels.nakshatramDropdown}</Text>
-                <View style={styles.pickerContainer}>
-                  <Picker
-                    selectedValue={nakshatram}
-                    onValueChange={(itemValue) => setNakshatram(itemValue)}
-                    style={styles.picker}
-                  >
-                    {NAKSHATRAMS.map((nak) => (
-                      <Picker.Item key={nak} label={nak} value={nak} />
-                    ))}
-                  </Picker>
-                </View>
+                <PatrikaDropdown
+                  value={nakshatram}
+                  options={NAKSHATRAMS}
+                  onChange={setNakshatram}
+                />
               </View>
               <View style={styles.col}>
                 <Text style={styles.label}>{labels.lagnaDropdown}</Text>
-                <View style={styles.pickerContainer}>
-                  <Picker
-                    selectedValue={lagna}
-                    onValueChange={(itemValue) => setLagna(itemValue)}
-                    style={styles.picker}
-                  >
-                    {TELUGU_LAGNAS.map((lag) => (
-                      <Picker.Item key={lag} label={lag} value={lag} />
-                    ))}
-                  </Picker>
-                </View>
+                <PatrikaDropdown
+                  value={lagna}
+                  options={TELUGU_LAGNAS}
+                  onChange={setLagna}
+                />
               </View>
             </View>
 
@@ -992,7 +1271,7 @@ export const PatrikaScreen = () => {
             <View style={styles.row}>
               <TouchableOpacity
                 style={styles.imagePickerBtn}
-                onPress={() => handleSelectImage('ganesha')}
+                onPress={() => handleSelectImage("ganesha")}
               >
                 <Text style={styles.imagePickerBtnText}>
                   {ganeshaUri ? labels.ganeshaSelected : labels.selectGanesha}
@@ -1000,7 +1279,7 @@ export const PatrikaScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.imagePickerBtn}
-                onPress={() => handleSelectImage('lakshmi')}
+                onPress={() => handleSelectImage("lakshmi")}
               >
                 <Text style={styles.imagePickerBtnText}>
                   {lakshmiUri ? labels.lakshmiSelected : labels.selectLakshmi}
@@ -1041,7 +1320,7 @@ export const PatrikaScreen = () => {
               </View>
               <TouchableOpacity
                 style={styles.imagePickerBtn}
-                onPress={() => handleSelectImage('profile')}
+                onPress={() => handleSelectImage("profile")}
               >
                 <Text style={styles.imagePickerBtnText}>
                   {profilePicUrl ? labels.avatarSelected : labels.selectAvatar}
@@ -1051,27 +1330,44 @@ export const PatrikaScreen = () => {
 
             {/* ===== EDITABLE PARAGRAPH ===== */}
             <Text style={styles.sectionTitle}>
-              {language === 'Telugu' ? 'పత్రిక వచనం (సవరించండి)' : language === 'Hindi' ? 'पत्रिका पाठ (संपादित करें)' : 'Patrika Paragraph (Edit)'}
+              {language === "Telugu"
+                ? "పత్రిక వచనం (సవరించండి)"
+                : language === "Hindi"
+                  ? "पत्रिका पाठ (संपादित करें)"
+                  : "Patrika Paragraph (Edit)"}
             </Text>
-            <Text style={[styles.label, { color: '#555', marginBottom: 4 }]}>
-              {language === 'Telugu' ? 'వచనాన్ని నేరుగా సవరించవచ్చు:' : language === 'Hindi' ? 'पाठ को सीधे संपादित करें:' : 'Edit the paragraph text directly:'}
+            <Text style={[styles.label, { color: "#555", marginBottom: 4 }]}>
+              {language === "Telugu"
+                ? "వచనాన్ని నేరుగా సవరించవచ్చు:"
+                : language === "Hindi"
+                  ? "पाठ को सीधे संपादित करें:"
+                  : "Edit the paragraph text directly:"}
             </Text>
             <TextInput
-              style={[styles.input, {
-                minHeight: 200,
-                textAlignVertical: 'top',
-                fontSize: 15,
-                lineHeight: 24,
-                paddingTop: 12,
-                paddingBottom: 12,
-                color: '#1a0000',
-              }]}
+              style={[
+                styles.input,
+                {
+                  minHeight: 200,
+                  textAlignVertical: "top",
+                  fontSize: 15,
+                  lineHeight: 24,
+                  paddingTop: 12,
+                  paddingBottom: 12,
+                  color: "#1a0000",
+                },
+              ]}
               value={paragraphText}
               onChangeText={(text) => {
                 setParagraphText(text);
                 setIsParagraphManuallyEdited(true);
-                AsyncStorage.setItem('patrika_custom_paragraph_text', text).catch(() => {});
-                AsyncStorage.setItem('patrika_is_paragraph_manually_edited', 'true').catch(() => {});
+                AsyncStorage.setItem(
+                  "patrika_custom_paragraph_text",
+                  text,
+                ).catch(() => {});
+                AsyncStorage.setItem(
+                  "patrika_is_paragraph_manually_edited",
+                  "true",
+                ).catch(() => {});
               }}
               multiline={true}
               placeholder="పత్రిక వచనం ఇక్కడ సవరించండి..."
@@ -1079,11 +1375,11 @@ export const PatrikaScreen = () => {
             {isParagraphManuallyEdited && (
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#9e0000',
+                  backgroundColor: "#9e0000",
                   borderRadius: 8,
                   paddingVertical: 9,
                   paddingHorizontal: 18,
-                  alignSelf: 'flex-end',
+                  alignSelf: "flex-end",
                   marginTop: 6,
                   marginBottom: 4,
                 }}
@@ -1091,12 +1387,23 @@ export const PatrikaScreen = () => {
                   const auto = getCompiledParagraph();
                   setParagraphText(auto);
                   setIsParagraphManuallyEdited(false);
-                  AsyncStorage.removeItem('patrika_custom_paragraph_text').catch(() => {});
-                  AsyncStorage.setItem('patrika_is_paragraph_manually_edited', 'false').catch(() => {});
+                  AsyncStorage.removeItem(
+                    "patrika_custom_paragraph_text",
+                  ).catch(() => {});
+                  AsyncStorage.setItem(
+                    "patrika_is_paragraph_manually_edited",
+                    "false",
+                  ).catch(() => {});
                 }}
               >
-                <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 13 }}>
-                  {language === 'Telugu' ? '↺ అసలు వచనానికి రీసెట్' : language === 'Hindi' ? '↺ मूल पाठ पर रीसेट' : '↺ Reset to Original'}
+                <Text
+                  style={{ color: "#fff", fontWeight: "bold", fontSize: 13 }}
+                >
+                  {language === "Telugu"
+                    ? "↺ అసలు వచనానికి రీసెట్"
+                    : language === "Hindi"
+                      ? "↺ मूल पाठ पर रीसेट"
+                      : "↺ Reset to Original"}
                 </Text>
               </TouchableOpacity>
             )}
@@ -1105,7 +1412,6 @@ export const PatrikaScreen = () => {
           /* View mode - Render the high-fidelity Patrika Card */
           <View style={styles.cardWrapper}>
             <View style={styles.patrikaCard}>
-
               {/* Dark Red Header */}
               <View style={styles.cardHeaderRed}>
                 <Text style={styles.cardHeaderRedText}>{headerText}</Text>
@@ -1121,7 +1427,11 @@ export const PatrikaScreen = () => {
               {/* God Images Section */}
               <View style={styles.godSection}>
                 <Image
-                  source={ganeshaUri ? { uri: ganeshaUri } : require('../../assets/ganapati.jpg')}
+                  source={
+                    ganeshaUri
+                      ? { uri: ganeshaUri }
+                      : require("../../assets/ganapati.jpg")
+                  }
                   style={styles.godImage}
                   resizeMode="contain"
                 />
@@ -1130,7 +1440,9 @@ export const PatrikaScreen = () => {
                   <Text style={styles.innerTitleRed}>{title2}</Text>
                 </View>
                 <Image
-                  source={lakshmiUri ? { uri: lakshmiUri } : { uri: LAKSHMI_DEFAULT }}
+                  source={
+                    lakshmiUri ? { uri: lakshmiUri } : { uri: LAKSHMI_DEFAULT }
+                  }
                   style={styles.godImage}
                   resizeMode="contain"
                 />
@@ -1139,11 +1451,16 @@ export const PatrikaScreen = () => {
               {/* Paragraph Box — automatically styled red and blue using tokenization */}
               <View style={styles.paragraphBox}>
                 <Text style={styles.paragraphText}>
-                  {getColoredParagraphChunks(paragraphText).map((chunk, idx) => (
-                    <Text key={idx} style={chunk.isBlue ? styles.textBlue : styles.textRed}>
-                      {chunk.text}
-                    </Text>
-                  ))}
+                  {getColoredParagraphChunks(paragraphText).map(
+                    (chunk, idx) => (
+                      <Text
+                        key={idx}
+                        style={chunk.isBlue ? styles.textBlue : styles.textRed}
+                      >
+                        {chunk.text}
+                      </Text>
+                    ),
+                  )}
                 </Text>
               </View>
 
@@ -1152,10 +1469,13 @@ export const PatrikaScreen = () => {
                 {/* Left: Avatar/Profile picture - fills exactly 110px width and 130px height, no overflow */}
                 <View style={styles.contactLeft}>
                   {profilePicUrl ? (
-                    <Image source={{ uri: profilePicUrl }} style={styles.contactAvatar} />
+                    <Image
+                      source={{ uri: profilePicUrl }}
+                      style={styles.contactAvatar}
+                    />
                   ) : (
                     <View style={styles.contactAvatarPlaceholder}>
-                      <Text style={{ fontSize: 32, color: '#7a4a20' }}>👤</Text>
+                      <Text style={{ fontSize: 32, color: "#7a4a20" }}>👤</Text>
                     </View>
                   )}
                 </View>
@@ -1164,21 +1484,31 @@ export const PatrikaScreen = () => {
                 <View style={styles.contactRight}>
                   {jyothishyalayam ? (
                     <View style={styles.contactItem}>
-                      <Text style={styles.contactLabel}>{labels.jyothishyalayam}</Text>
-                      <Text style={styles.contactValueMain}>{jyothishyalayam}</Text>
+                      <Text style={styles.contactLabel}>
+                        {labels.jyothishyalayam}
+                      </Text>
+                      <Text style={styles.contactValueMain}>
+                        {jyothishyalayam}
+                      </Text>
                       <View style={styles.contactDivider} />
                     </View>
                   ) : null}
                   <View style={styles.contactItem}>
-                    <Text style={styles.contactLabel}>{labels.consultantName}</Text>
-                    <Text style={styles.contactValueSub}>{consultantName || '—'}</Text>
+                    <Text style={styles.contactLabel}>
+                      {labels.consultantName}
+                    </Text>
+                    <Text style={styles.contactValueSub}>
+                      {consultantName || "—"}
+                    </Text>
                     <View style={styles.contactDivider} />
                   </View>
                   <View style={styles.contactItem}>
                     <Text style={styles.contactLabel}>{labels.whatsapp}</Text>
                     <View style={styles.whatsappRow}>
                       <Text style={styles.whatsappIcon}>💬</Text>
-                      <Text style={styles.contactPhone}>{phoneNumber || '9949598627'}</Text>
+                      <Text style={styles.contactPhone}>
+                        {phoneNumber || "9949598627"}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -1209,7 +1539,9 @@ export const PatrikaScreen = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>సరియైన తేదీని ఎంచుకోండి (Select Date)</Text>
+            <Text style={styles.modalTitle}>
+              సరియైన తేదీని ఎంచుకోండి (Select Date)
+            </Text>
             <View style={styles.pickersRow}>
               {/* Day Picker */}
               <View style={styles.modalPickerCol}>
@@ -1218,7 +1550,9 @@ export const PatrikaScreen = () => {
                   selectedValue={tempDay}
                   onValueChange={(v) => setTempDay(v)}
                 >
-                  {Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0')).map(d => (
+                  {Array.from({ length: 31 }, (_, i) =>
+                    String(i + 1).padStart(2, "0"),
+                  ).map((d) => (
                     <Picker.Item key={d} label={d} value={d} />
                   ))}
                 </Picker>
@@ -1230,7 +1564,9 @@ export const PatrikaScreen = () => {
                   selectedValue={tempMonth}
                   onValueChange={(v) => setTempMonth(v)}
                 >
-                  {Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')).map(m => (
+                  {Array.from({ length: 12 }, (_, i) =>
+                    String(i + 1).padStart(2, "0"),
+                  ).map((m) => (
                     <Picker.Item key={m} label={m} value={m} />
                   ))}
                 </Picker>
@@ -1242,9 +1578,11 @@ export const PatrikaScreen = () => {
                   selectedValue={tempYear}
                   onValueChange={(v) => setTempYear(v)}
                 >
-                  {Array.from({ length: 11 }, (_, i) => String(2025 + i)).map(y => (
-                    <Picker.Item key={y} label={y} value={y} />
-                  ))}
+                  {Array.from({ length: 11 }, (_, i) => String(2025 + i)).map(
+                    (y) => (
+                      <Picker.Item key={y} label={y} value={y} />
+                    ),
+                  )}
                 </Picker>
               </View>
             </View>
@@ -1275,7 +1613,9 @@ export const PatrikaScreen = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>సరియైన సమయాన్ని ఎంచుకోండి (Select Time)</Text>
+            <Text style={styles.modalTitle}>
+              సరియైన సమయాన్ని ఎంచుకోండి (Select Time)
+            </Text>
             <View style={styles.pickersRow}>
               {/* Period Picker */}
               <View style={styles.modalPickerCol}>
@@ -1297,7 +1637,9 @@ export const PatrikaScreen = () => {
                   selectedValue={tempHour}
                   onValueChange={(v) => setTempHour(v)}
                 >
-                  {Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')).map(h => (
+                  {Array.from({ length: 12 }, (_, i) =>
+                    String(i + 1).padStart(2, "0"),
+                  ).map((h) => (
                     <Picker.Item key={h} label={h} value={h} />
                   ))}
                 </Picker>
@@ -1309,7 +1651,9 @@ export const PatrikaScreen = () => {
                   selectedValue={tempMinute}
                   onValueChange={(v) => setTempMinute(v)}
                 >
-                  {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map(m => (
+                  {Array.from({ length: 60 }, (_, i) =>
+                    String(i).padStart(2, "0"),
+                  ).map((m) => (
                     <Picker.Item key={m} label={m} value={m} />
                   ))}
                 </Picker>
@@ -1352,27 +1696,27 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 6,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: "rgba(255,255,255,0.15)",
     borderWidth: 1,
-    borderColor: '#FFF8F0',
+    borderColor: "#FFF8F0",
   },
   toggleButtonText: {
-    color: '#FFF8F0',
+    color: "#FFF8F0",
     fontSize: 13,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   formContainer: {
     padding: 16,
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 20,
     marginBottom: 8,
     color: palette.primary,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 12,
   },
   col: {
@@ -1390,29 +1734,86 @@ const styles = StyleSheet.create({
     borderColor: palette.border,
     borderRadius: 6,
     paddingHorizontal: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   pickerContainer: {
     borderWidth: 1,
     borderColor: palette.border,
     borderRadius: 6,
-    backgroundColor: '#ffffff',
-    height: 42,
-    justifyContent: 'center',
-    overflow: 'hidden',
+    backgroundColor: "#ffffff",
+    minHeight: 50,
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  pickerText: {
+    flex: 1,
+    color: palette.text,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  pickerArrow: {
+    color: palette.text,
+    fontSize: 18,
+    marginLeft: 8,
   },
   picker: {
-    width: '100%',
-    height: 42,
+    width: "100%",
+    height: 50,
+    color: palette.text,
+  },
+  pickerItem: {
+    color: palette.text,
+    fontSize: 14,
+    height: 50,
+  },
+  dropdownBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.45)",
+    justifyContent: "center",
+    padding: 20,
+  },
+  dropdownCard: {
+    maxHeight: "80%",
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: palette.border,
+    overflow: "hidden",
+  },
+  dropdownOption: {
+    minHeight: 48,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: palette.borderLight,
+  },
+  dropdownOptionSelected: {
+    backgroundColor: palette.surfaceSelected,
+  },
+  dropdownOptionText: {
+    flex: 1,
+    color: palette.text,
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  dropdownCheck: {
+    color: palette.primary,
+    fontSize: 18,
+    fontWeight: "700",
+    marginLeft: 12,
   },
   pickerTrigger: {
     height: 42,
     borderWidth: 1,
     borderColor: palette.border,
     borderRadius: 6,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   pickerTriggerText: {
     fontSize: 14,
@@ -1423,82 +1824,82 @@ const styles = StyleSheet.create({
     height: 40,
     marginHorizontal: 4,
     borderWidth: 1,
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
     borderColor: palette.primary,
     borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f9ff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f9ff",
     marginTop: 4,
   },
   imagePickerBtnText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: palette.primary,
   },
   cardWrapper: {
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   patrikaCard: {
     width: width - 32,
     borderWidth: 8,
-    borderColor: '#ffff00',
-    backgroundColor: '#fffb15',
+    borderColor: "#ffff00",
+    backgroundColor: "#fffb15",
     padding: 8,
-    alignItems: 'center',
-    position: 'relative',
-    overflow: 'hidden',
+    alignItems: "center",
+    position: "relative",
+    overflow: "hidden",
   },
   omWatermarkContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 0,
   },
   omWatermarkText: {
     fontSize: 200,
-    color: '#9e0000',
-    opacity: 0.10,
+    color: "#9e0000",
+    opacity: 0.1,
   },
   cardHeaderRed: {
-    width: '100%',
-    backgroundColor: '#9e0000',
+    width: "100%",
+    backgroundColor: "#9e0000",
     paddingVertical: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 4,
     marginBottom: 6,
   },
   cardHeaderRedText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 22,
-    fontWeight: 'bold',
-    fontFamily: 'CormorantGaramond_700Bold',
+    fontWeight: "bold",
+    fontFamily: "CormorantGaramond_700Bold",
   },
   cardHeaderGreen: {
-    width: '100%',
-    backgroundColor: '#a8e88e',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    width: "100%",
+    backgroundColor: "#a8e88e",
+    flexDirection: "row",
+    justifyContent: "space-around",
     paddingVertical: 6,
     borderRadius: 4,
     marginBottom: 8,
   },
   cardHeaderGreenText: {
-    color: '#9e0000',
+    color: "#9e0000",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   godSection: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginVertical: 8,
   },
   godImage: {
@@ -1508,27 +1909,27 @@ const styles = StyleSheet.create({
   },
   titlesBox: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 8,
   },
   innerTitleGreen: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#006c00',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#006c00",
+    textAlign: "center",
     marginBottom: 4,
   },
   innerTitleRed: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#c00000',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#c00000",
+    textAlign: "center",
   },
   paragraphBox: {
-    width: '100%',
-    backgroundColor: '#ffea79',
+    width: "100%",
+    backgroundColor: "#ffea79",
     borderWidth: 1,
-    borderColor: '#9e0000',
+    borderColor: "#9e0000",
     padding: 14,
     borderRadius: 4,
     marginVertical: 8,
@@ -1536,99 +1937,99 @@ const styles = StyleSheet.create({
   paragraphText: {
     fontSize: 15,
     lineHeight: 26,
-    color: '#000000',
-    fontWeight: '600',
-    textAlign: 'center',
+    color: "#000000",
+    fontWeight: "600",
+    textAlign: "center",
   },
   textRed: {
-    color: '#9e0000',
-    fontWeight: '700',
+    color: "#9e0000",
+    fontWeight: "700",
   },
   textBlue: {
-    color: '#0000cd',
-    fontWeight: '700',
+    color: "#0000cd",
+    fontWeight: "700",
   },
 
   /* CONTACT BAR - Fixed height, NO overflow, NO layout stretching loops */
   contactBlock: {
-    width: '100%',
+    width: "100%",
     height: 130,
-    flexDirection: 'row',
-    backgroundColor: '#fffdf2',
+    flexDirection: "row",
+    backgroundColor: "#fffdf2",
     borderWidth: 1.5,
-    borderColor: '#d4af37',
+    borderColor: "#d4af37",
     marginTop: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   contactLeft: {
     width: 110,
     height: 130,
     borderRightWidth: 1.5,
-    borderRightColor: '#d4af37',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f0e8',
-    overflow: 'hidden',
+    borderRightColor: "#d4af37",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f0e8",
+    overflow: "hidden",
   },
   contactAvatar: {
     width: 110,
     height: 130,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   contactAvatarPlaceholder: {
     width: 110,
     height: 130,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e3d8c5',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e3d8c5",
   },
   contactRight: {
     flex: 1,
     height: 130,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    justifyContent: 'center',
-    backgroundColor: '#fffdf2',
+    justifyContent: "center",
+    backgroundColor: "#fffdf2",
   },
   contactItem: {
     marginBottom: 4,
   },
   contactLabel: {
     fontSize: 9,
-    fontWeight: 'bold',
-    color: '#7a4a20',
-    textTransform: 'uppercase',
+    fontWeight: "bold",
+    color: "#7a4a20",
+    textTransform: "uppercase",
     letterSpacing: 1.2,
     marginBottom: 1,
   },
   contactValueMain: {
     fontSize: 15,
-    fontWeight: 'bold',
-    color: '#7b0a10',
+    fontWeight: "bold",
+    color: "#7b0a10",
   },
   contactValueSub: {
     fontSize: 13,
-    fontWeight: 'bold',
-    color: '#1a0a00',
+    fontWeight: "bold",
+    color: "#1a0a00",
   },
   contactPhone: {
     fontSize: 13,
-    fontWeight: 'bold',
-    color: '#075E54',
+    fontWeight: "bold",
+    color: "#075E54",
     letterSpacing: 0.5,
   },
   whatsappRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   whatsappIcon: {
     marginRight: 6,
     fontSize: 14,
-    color: '#25D366',
+    color: "#25D366",
   },
   contactDivider: {
     height: 1,
-    backgroundColor: '#e8d8b0',
+    backgroundColor: "#e8d8b0",
     marginTop: 2,
   },
   pdfButton: {
@@ -1636,24 +2037,24 @@ const styles = StyleSheet.create({
     height: 48,
     backgroundColor: palette.primary,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 20,
   },
   pdfButtonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   /* MODAL DATE / TIME PICKER STYLES */
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     padding: 20,
@@ -1661,14 +2062,14 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 16,
     color: palette.primary,
   },
   pickersRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   modalPickerCol: {
@@ -1678,35 +2079,35 @@ const styles = StyleSheet.create({
   modalPickerLabel: {
     fontSize: 11,
     color: palette.secondaryText,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 4,
   },
   modalButtonsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   modalButton: {
     flex: 1,
     height: 44,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 8,
   },
   cancelButton: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: "#e0e0e0",
   },
   cancelButtonText: {
-    color: '#333333',
-    fontWeight: 'bold',
+    color: "#333333",
+    fontWeight: "bold",
   },
   confirmButton: {
     backgroundColor: palette.primary,
   },
   confirmButtonText: {
-    color: '#ffffff',
-    fontWeight: 'bold',
+    color: "#ffffff",
+    fontWeight: "bold",
   },
 });
