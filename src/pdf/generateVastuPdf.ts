@@ -118,7 +118,7 @@ const buildRows = (table: ResultTable, form: VastuFormValues) => {
   const lang = form.language || "Telugu";
   const isEN = lang === "English";
   const isHI = lang === "Hindi";
-  const padamuLabel = isEN ? "Padamu" : isHI ? "पादम" : "పదము";
+  const padamuLabel = isEN ? "Padamu" : isHI ? "पादम" : "పదం";
   const strings = getAppStrings(lang);
 
   if (table.headers && table.rows.some((r) => r.columns)) {
@@ -392,8 +392,8 @@ const getPdfTranslations = (lang: string, isAllGood: boolean = true) => {
       width: 'వెడల్పు (Width)',
       diagonal: 'కర్ణం (Diagonal)',
       dayTitle: 'వారం',
-      areaTitle: 'పదము',
-      areaUnit: 'పదము',
+      areaTitle: 'పదం',
+      areaUnit: 'పదం',
       col1: 'క్రమం',
       col2: 'అంశం',
       col3: 'సూత్రం',
@@ -594,7 +594,7 @@ const buildHtml = (form: VastuFormValues, table: ResultTable, yantraBase64: stri
   };
 
   let padamuValStr = "0.00";
-  const padamuRow = table.rows.find(r => r.label === "Padamu" || r.label === "పదము" || r.label === "पदम");
+  const padamuRow = table.rows.find(r => r.label === "Padamu" || r.label === "పదము" || r.label === "పదం" || r.label === "पदम");
   if (padamuRow) {
     padamuValStr = padamuRow.value;
   }

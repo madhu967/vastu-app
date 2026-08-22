@@ -72,7 +72,7 @@ export const ResultTable = ({ table }: ResultTableProps) => {
               <View style={[styles.row, { backgroundColor: palette.surfaceWarm, paddingVertical: 8, paddingHorizontal: spacing.sm }]}>
                 {table.headers.map((header, i) => {
                   const translatedHeader = strings.resultTableLabels?.[header] || header;
-                  const isPadamu = header === "Padamu" || translatedHeader === "పదము" || translatedHeader === "पदम";
+                  const isPadamu = header === "Padamu" || translatedHeader === "పదము" || translatedHeader === "పదం" || translatedHeader === "पदम";
                   return (
                     <Text key={i} style={[styles.value, { width: getColWidth(header), textAlign: "center", fontWeight: "bold", fontSize: 12 }, isPadamu && { color: "#8B0000" }]}>
                       {translatedHeader}
@@ -133,7 +133,7 @@ export const ResultTable = ({ table }: ResultTableProps) => {
           {/* Rows */}
           {currentRows.map((row, index) => {
             const translatedLabel = strings.resultTableLabels?.[row.label] || row.label;
-            const isPadamu = row.label === "Padamu" || translatedLabel === "పదము" || translatedLabel === "पदम";
+            const isPadamu = row.label === "Padamu" || translatedLabel === "పదము" || translatedLabel === "పదం" || translatedLabel === "पदम";
             const isTara = row.label === "Owner Tara Phalam" || row.label === "Wife Tara Phalam";
             const translateTara = (v?: string) => {
               if (!isTara || !v) return v;

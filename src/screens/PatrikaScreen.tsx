@@ -728,14 +728,35 @@ export const PatrikaScreen = () => {
 
       const printResult = await Print.printToFileAsync({ html: htmlContent });
       const customPath = `${FileSystem.documentDirectory}Lagna_Patrika.pdf`;
+      let sharePath = printResult.uri;
+
+      try {
+        // Safe check and delete of old path to avoid lock/write exceptions
+        const fileInfo = await FileSystem.getInfoAsync(customPath);
+        if (fileInfo.exists) {
+          await FileSystem.deleteAsync(customPath, { idempotent: true });
+        }
+        
+        // Copy to custom path for professional WhatsApp file name display
+        await FileSystem.copyAsync({
+          from: printResult.uri,
+          to: customPath
+        });
+        sharePath = customPath;
+      } catch (copyErr) {
+        console.warn('Failed to rename PDF to Lagna_Patrika.pdf, falling back to temp URI:', copyErr);
+        sharePath = printResult.uri;
+      }
       
-      // Copy to custom path for professional WhatsApp file name display
-      await FileSystem.copyAsync({
-        from: printResult.uri,
-        to: customPath
-      });
-      
-      await Sharing.shareAsync(customPath, { mimeType: 'application/pdf', dialogTitle: 'Share Lagna Patrika' });
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(sharePath, {
+          mimeType: 'application/pdf',
+          dialogTitle: 'Share Lagna Patrika',
+          UTI: 'com.adobe.pdf'
+        });
+      } else {
+        Alert.alert('PDF Exported', 'Lagna Patrika PDF was generated, but sharing is not available on this device.');
+      }
 
     } catch (error: any) {
       console.warn('PDF export failed:', error);
