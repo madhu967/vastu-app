@@ -129,6 +129,7 @@ type AppStrings = {
   statusTab: string;
   profileTab: string;
   loginTab: string;
+  patrikaTab: string;
   home: HomeStrings;
   login: LoginStrings;
   profile: ProfileStrings;
@@ -146,6 +147,7 @@ const englishStrings: AppStrings = {
   statusTab: "Status",
   profileTab: "Profile",
   loginTab: "Login",
+  patrikaTab: "Patrika",
   home: {
     festivalTitle: "Vastu Shastra Analysis",
     festivalSub: "Know your home's Vastu today",
@@ -322,6 +324,7 @@ const teluguStrings: AppStrings = {
   statusTab: "స్థితి",
   profileTab: "ప్రొఫైల్",
   loginTab: "లాగిన్",
+  patrikaTab: "పత్రిక",
   home: {
     festivalTitle: "వాస్తు శాస్త్ర విశ్లేషణ",
     festivalSub: "ఈ రోజు మీ ఇంటి వాస్తు తెలుసుకోండి",
@@ -506,6 +509,7 @@ const hindiStrings: AppStrings = {
   statusTab: "स्थिति",
   profileTab: "प्रोफ़ाइल",
   loginTab: "लॉगिन",
+  patrikaTab: "पत्रिका",
   home: {
     festivalTitle: "वास्तु शास्त्र विश्लेषण",
     festivalSub: "आज अपने घर का वास्तु जानें",
@@ -1059,7 +1063,7 @@ const guideTranslations: Record<
       subtitle: "స్తలం యొక్క శుభాశుభాలను నిర్ణయించడంలో వీధి పోట్లు వీధి చూపుల ప్రముఖ పాత్ర వహిస్తాయి.",
       paragraphs: [
         "స్తలం యొక్క శుభాశుభాలను నిర్ణయించడంలో వీధి పోట్లు వీధి చూపుల ప్రముఖ పాత్ర వహిస్తాయి.",
-        "(పోట్లు) దీని స్థలం అన్ని విధాలా అనుకూలమైనది. పోట్లు (లు) ఉన్నస్థలం ఎన్నో ఉత్తరం, ఉత్తర ఈశాన్యం, పడమర కేంద్రంగా పనిచేసే వీధి అనుకూలతలను కలిగిస్తాయి.",
+        "వీధి చూపులు లేని స్థలం అన్ని విధాలా అనుకూలమైనది. తూర్పు, తూర్పు ఉత్తరం, ఉత్తర ఈశాన్యం,",
         "తూర్పు, పడమర, ఆగ్నేయం, ఉత్తర వాయవ్యం నైరుతి కేంద్రంగా పనిచేసే వాటివల్ల అనారోగ్యాలను, ఆర్థిక నష్టాలను కలుగజేస్తాయి."
       ],
     },

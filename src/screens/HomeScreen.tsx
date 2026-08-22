@@ -363,8 +363,23 @@ export const HomeScreen = () => {
     key: K,
     value: VastuFormValues[K],
   ) => {
-    setForm((current) => ({ ...current, [key]: value }));
+    setForm((current) => {
+      const next = { ...current, [key]: value };
+      if (key === "ownerName" || key === "wifeName" || key === "nakshatram" || key === "wifeNakshatram") {
+        AsyncStorage.setItem(
+          "current_home_owner_info",
+          JSON.stringify({
+            ownerName: next.ownerName,
+            wifeName: next.wifeName,
+            nakshatram: next.nakshatram,
+            wifeNakshatram: next.wifeNakshatram,
+          })
+        ).catch((err) => console.log("Failed caching owner info", err));
+      }
+      return next;
+    });
   };
+
 
   const [isCalc3Loading, setIsCalc3Loading] = useState(false);
 
