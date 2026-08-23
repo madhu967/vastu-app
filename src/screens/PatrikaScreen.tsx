@@ -1000,6 +1000,11 @@ export const PatrikaScreen = () => {
               ${paragraphHtml}
             </div>
 
+            <div style="margin: 8px 0 20px; text-align: center; padding: 8px 0;">
+              <div style="font-size: 26px; font-weight: 800; color: #7B0A10; line-height: 1.3;">మంగళం మహత్</div>
+              <div style="font-size: 16px; font-weight: 700; color: #8B0000; letter-spacing: 1.2px; margin-top: 4px;">శ్రీ శ్రీ శ్రీ శ్రీ శ్రీ</div>
+            </div>
+
             <!-- Contact Bar footer replacing Grid & Note boxes -->
             <div class="contact">
               <!-- LEFT: Image only -->
@@ -1468,6 +1473,13 @@ export const PatrikaScreen = () => {
                       </Text>
                     ),
                   )}
+                </Text>
+              </View>
+
+              <View style={styles.devotionalBanner}>
+                <Text style={styles.devotionalTitle}>మంగళం మహత్</Text>
+                <Text style={styles.devotionalSubtitle}>
+                  శ్రీ శ్రీ శ్రీ శ్రీ శ్రీ
                 </Text>
               </View>
 
@@ -1963,6 +1975,30 @@ const styles = StyleSheet.create({
   textBlue: {
     color: "#0000cd",
     fontWeight: "700",
+  },
+  devotionalBanner: {
+    width: "100%",
+    paddingVertical: 6,
+    paddingHorizontal: 0,
+    marginTop: 8,
+    marginBottom: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  devotionalTitle: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#7b0a10",
+    lineHeight: 28,
+    textAlign: "center",
+  },
+  devotionalSubtitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#8b0000",
+    letterSpacing: 1.2,
+    marginTop: 4,
+    textAlign: "center",
   },
 
   /* CONTACT BAR - Fixed height, NO overflow, NO layout stretching loops */
