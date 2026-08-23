@@ -9,7 +9,7 @@ import {
   Pressable,
   Modal,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { spacing } from "@/constants/theme";
@@ -23,22 +23,67 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 export const getContacts = (lang: string) => {
   if (lang === "English") {
     return [
-      { title: "Almanac Maker", name: "Brahmasri Pedagadi Mohan Ravishankar Daivagna", location: "Andhra Pradesh", phone: "9949598627" },
-      { title: "Vastu Ratna", name: "Sri Namana Siddhanti", location: "Andhra Pradesh", phone: "9949250888" },
-      { title: "Yuvapanditha", name: "Sri Namana Pavan, Civil B.Tech", location: "Andhra Pradesh", phone: "9949753939" },
+      {
+        title: "Almanac Maker",
+        name: "Brahmasri Pedagadi Mohan Ravishankar Daivagna",
+        location: "Andhra Pradesh",
+        phone: "9949598627",
+      },
+      {
+        title: "Vastu Ratna",
+        name: "Sri Namana Siddhanti",
+        location: "Andhra Pradesh",
+        phone: "9949250888",
+      },
+      {
+        title: "Vaastu Panditha",
+        name: "Sri Namana Pavan",
+        location: "Andhra Pradesh",
+        phone: "9949753939",
+      },
     ];
   }
   if (lang === "Hindi") {
     return [
-      { title: "पंचांगकर्ता", name: "ब्रह्मश्री पेदगाडी मोहन रविशंकर दैवज्ञ", location: "आंध्र प्रदेश", phone: "9949598627" },
-      { title: "वास्तुरत्न", name: "श्री नामन सिद्धान्ती", location: "आंध्र प्रदेश", phone: "9949250888" },
-      { title: "युवापंडित", name: "श्री नामन पवन, सिविल बी.टेक", location: "आंध्र प्रदेश", phone: "9949753939" },
+      {
+        title: "पंचांगकर्ता",
+        name: "ब्रह्मश्री पेदगाडी मोहन रविशंकर दैवज्ञ",
+        location: "आंध्र प्रदेश",
+        phone: "9949598627",
+      },
+      {
+        title: "वास्तुरत्न",
+        name: "श्री नामन सिद्धान्ती",
+        location: "आंध्र प्रदेश",
+        phone: "9949250888",
+      },
+      {
+        title: "वास्तु पंडित",
+        name: "श्री नामन पवन",
+        location: "आंध्र प्रदेश",
+        phone: "9949753939",
+      },
     ];
   }
   return [
-    { title: "పంచాంగకర్త", name: "బ్రహ్మశ్రీ పెదగాడి మోహన్ రవిశంకర్ దైవజ్ఞ", location: "ఆంధ్రప్రదేశ్", phone: "9949598627" },
-    { title: "వాస్తురత్న", name: "శ్రీ నామన సిద్ధాంతి", location: "ఆంధ్ర ప్రదేశ్", phone: "9949250888" },
-    { title: "యువపండిత", name: "శ్రీనామన పవన్, సివిల్ బి.టెక్", location: "ఆంధ్ర ప్రదేశ్", phone: "9949753939" },
+    {
+      title: "పంచాంగకర్త",
+      name: "బ్రహ్మశ్రీ పెదగాడి మోహన్ రవిశంకర్ దైవజ్ఞ",
+      location: "ఆంధ్రప్రదేశ్",
+      phone: "9949598627",
+    },
+    {
+      title: "వాస్తురత్న",
+      name: "శ్రీ నామన సిద్ధాంతి",
+      location: "ఆంధ్ర ప్రదేశ్",
+      phone: "9949250888",
+    },
+    {
+      title: "వాస్తు పండిత్",
+      name: "శ్రీనామన పవన్",
+      location: "ఆంధ్ర ప్రదేశ్",
+      phone: "9949753939",
+    },
   ];
 };
 
@@ -58,29 +103,55 @@ export const PhoneFAB = () => {
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.timing(scale, { toValue: 1.1, duration: 600, useNativeDriver: true }),
-        Animated.timing(scale, { toValue: 1,   duration: 600, useNativeDriver: true }),
+        Animated.timing(scale, {
+          toValue: 1.1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
       ]),
     ).start();
 
     Animated.loop(
       Animated.parallel([
-        Animated.timing(ripple, { toValue: 1, duration: 1500, useNativeDriver: true }),
+        Animated.timing(ripple, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
         Animated.sequence([
-          Animated.timing(rippleOpacity, { toValue: 0.4, duration: 750, useNativeDriver: true }),
-          Animated.timing(rippleOpacity, { toValue: 0,   duration: 750, useNativeDriver: true }),
+          Animated.timing(rippleOpacity, {
+            toValue: 0.4,
+            duration: 750,
+            useNativeDriver: true,
+          }),
+          Animated.timing(rippleOpacity, {
+            toValue: 0,
+            duration: 750,
+            useNativeDriver: true,
+          }),
         ]),
       ]),
     ).start();
   }, []);
 
-  const rippleScale = ripple.interpolate({ inputRange: [0, 1], outputRange: [1, 2.2] });
+  const rippleScale = ripple.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 2.2],
+  });
 
   return (
     <>
       <View style={fab.wrapper}>
         <Animated.View
-          style={[fab.rippleRing, { transform: [{ scale: rippleScale }], opacity: rippleOpacity }]}
+          style={[
+            fab.rippleRing,
+            { transform: [{ scale: rippleScale }], opacity: rippleOpacity },
+          ]}
         />
         <Pressable
           onPress={() => setModalVisible(true)}
@@ -106,11 +177,22 @@ export const PhoneFAB = () => {
         animationType="fade"
         onRequestClose={() => setModalVisible(false)}
       >
-        <Pressable style={fab.modalOverlay} onPress={() => setModalVisible(false)}>
+        <Pressable
+          style={fab.modalOverlay}
+          onPress={() => setModalVisible(false)}
+        >
           <Pressable style={fab.modalContent}>
             <Text style={fab.modalHeader}>{getHeader(language)}</Text>
             {getContacts(language).map((contact, i) => (
-              <View key={i} style={[fab.contactRow, i === getContacts(language).length - 1 && { borderBottomWidth: 0 }]}>
+              <View
+                key={i}
+                style={[
+                  fab.contactRow,
+                  i === getContacts(language).length - 1 && {
+                    borderBottomWidth: 0,
+                  },
+                ]}
+              >
                 <View style={fab.contactInfo}>
                   <Text style={fab.contactTitle}>{contact.title}</Text>
                   <Text style={fab.contactName}>{contact.name}</Text>
@@ -123,13 +205,19 @@ export const PhoneFAB = () => {
                   <FontAwesome name="phone" size={18} color="#FFFFFF" />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[fab.phoneBtn, { backgroundColor: "#25D366", marginLeft: 8 }]}
+                  style={[
+                    fab.phoneBtn,
+                    { backgroundColor: "#25D366", marginLeft: 8 },
+                  ]}
                   onPress={() => {
-                    let message = "Hello, I would like to inquire about Vastu consultation.";
+                    let message =
+                      "Hello, I would like to inquire about Vastu consultation.";
                     if (language === "Telugu") {
-                      message = "నమస్కారం, నేను వాస్తు సంప్రదింపుల గురించి తెలుసుకోవాలనుకుంటున్నాను.";
+                      message =
+                        "నమస్కారం, నేను వాస్తు సంప్రదింపుల గురించి తెలుసుకోవాలనుకుంటున్నాను.";
                     } else if (language === "Hindi") {
-                      message = "नमस्ते, मैं वास्तु परामर्श के बारे में पूछताछ करना चाहता हूँ।";
+                      message =
+                        "नमस्ते, मैं वास्तु परामर्श के बारे में पूछताछ करना चाहता हूँ।";
                     }
                     const url = `https://wa.me/91${contact.phone}?text=${encodeURIComponent(message)}`;
                     Linking.openURL(url).catch(() => {
@@ -154,7 +242,7 @@ export const PhoneFAB = () => {
 //  Gold + ivory accents, NO phone icon
 // ─────────────────────────────────────────────────────────────────────────────
 export const FooterSection = () => {
-  const spin  = useRef(new Animated.Value(0)).current;
+  const spin = useRef(new Animated.Value(0)).current;
   const glowA = useRef(new Animated.Value(0.3)).current;
   const glowB = useRef(new Animated.Value(0)).current;
   const shimX = useRef(new Animated.Value(-300)).current;
@@ -173,16 +261,32 @@ export const FooterSection = () => {
     // OM glow breathe
     Animated.loop(
       Animated.sequence([
-        Animated.timing(glowA, { toValue: 1,   duration: 1800, useNativeDriver: true }),
-        Animated.timing(glowA, { toValue: 0.3, duration: 1800, useNativeDriver: true }),
+        Animated.timing(glowA, {
+          toValue: 1,
+          duration: 1800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(glowA, {
+          toValue: 0.3,
+          duration: 1800,
+          useNativeDriver: true,
+        }),
       ]),
     ).start();
 
     // Particle drift B
     Animated.loop(
       Animated.sequence([
-        Animated.timing(glowB, { toValue: 1,   duration: 2400, useNativeDriver: true }),
-        Animated.timing(glowB, { toValue: 0,   duration: 2400, useNativeDriver: true }),
+        Animated.timing(glowB, {
+          toValue: 1,
+          duration: 2400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(glowB, {
+          toValue: 0,
+          duration: 2400,
+          useNativeDriver: true,
+        }),
       ]),
     ).start();
 
@@ -197,14 +301,22 @@ export const FooterSection = () => {
     ).start();
   }, []);
 
-  const spinDeg   = spin.interpolate({ inputRange: [0, 1], outputRange: ["0deg", "360deg"] });
-  const spinDegRv = spin.interpolate({ inputRange: [0, 1], outputRange: ["360deg", "0deg"] });
+  const spinDeg = spin.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+  const spinDegRv = spin.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["360deg", "0deg"],
+  });
 
   return (
     <View style={ft.outer}>
       {/* ── Shimmer gold stripe at the very top ── */}
       <View style={ft.shimmerTrack} pointerEvents="none">
-        <Animated.View style={[ft.shimmerBar, { transform: [{ translateX: shimX }] }]} />
+        <Animated.View
+          style={[ft.shimmerBar, { transform: [{ translateX: shimX }] }]}
+        />
       </View>
 
       <LinearGradient
@@ -214,8 +326,12 @@ export const FooterSection = () => {
         style={ft.gradient}
       >
         {/* ── Background mandala rings ── */}
-        <Animated.View style={[ft.bgRingLg, { transform: [{ rotate: spinDeg }] }]} />
-        <Animated.View style={[ft.bgRingMd, { transform: [{ rotate: spinDegRv }] }]} />
+        <Animated.View
+          style={[ft.bgRingLg, { transform: [{ rotate: spinDeg }] }]}
+        />
+        <Animated.View
+          style={[ft.bgRingMd, { transform: [{ rotate: spinDegRv }] }]}
+        />
         <View style={ft.bgRingSm} />
 
         {/* ── corner glyphs ── */}
@@ -232,7 +348,9 @@ export const FooterSection = () => {
           {/* OM Circle */}
           <View style={ft.omCircleOuter}>
             <View style={ft.omCircleInner}>
-              <Animated.Text style={[ft.omText, { opacity: glowA }]}>ॐ</Animated.Text>
+              <Animated.Text style={[ft.omText, { opacity: glowA }]}>
+                ॐ
+              </Animated.Text>
             </View>
           </View>
 
@@ -255,9 +373,10 @@ export const FooterSection = () => {
           </View>
 
           <Text style={ft.taglineTe}>దేవో వాస్తు ప్రజావతే</Text>
-          <Text style={ft.taglineEn}>Harmonise your home · align with the cosmos</Text>
+          <Text style={ft.taglineEn}>
+            Harmonise your home · align with the cosmos
+          </Text>
         </View>
-
 
         {/* ══════════ SANSKRIT VERSE BLOCK ══════════ */}
         <View style={ft.verseCard}>
@@ -277,13 +396,13 @@ export const FooterSection = () => {
         <View style={ft.bottomStrip}>
           <View style={ft.bottomLine} />
         </View>
-        <Text style={ft.copyright}>© 2025 Viswakarma Vastu Sarvaswam · All Rights Reserved</Text>
+        <Text style={ft.copyright}>
+          © 2025 Viswakarma Vastu Sarvaswam · All Rights Reserved
+        </Text>
       </LinearGradient>
     </View>
   );
 };
-
-
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
@@ -453,7 +572,11 @@ const ft = StyleSheet.create({
   },
 
   // ── corner glyphs ──
-  corner: { position: "absolute", fontSize: 13, color: "rgba(255,217,92,0.65)" },
+  corner: {
+    position: "absolute",
+    fontSize: 13,
+    color: "rgba(255,217,92,0.65)",
+  },
   cTL: { top: 16, left: 18 },
   cTR: { top: 16, right: 18 },
   cBL: { bottom: 16, left: 18 },
@@ -505,7 +628,7 @@ const ft = StyleSheet.create({
     marginVertical: 8,
   },
   heroDivLine: { flex: 1, height: 1, backgroundColor: "rgba(255,217,92,0.5)" },
-  heroDivDot:  { fontSize: 9, color: "rgba(255,217,92,0.9)" },
+  heroDivDot: { fontSize: 9, color: "rgba(255,217,92,0.9)" },
 
   brandTe: {
     fontFamily: "CormorantGaramond_700Bold",
@@ -542,7 +665,6 @@ const ft = StyleSheet.create({
     marginTop: 5,
     textAlign: "center",
   },
-
 
   // ══ VERSE CARD ══
   verseCard: {
@@ -596,7 +718,7 @@ const ft = StyleSheet.create({
 
   // ══ BOTTOM ══
   bottomStrip: { width: "100%", marginBottom: 10 },
-  bottomLine:  { height: 1, backgroundColor: "rgba(255,217,92,0.28)" },
+  bottomLine: { height: 1, backgroundColor: "rgba(255,217,92,0.28)" },
   copyright: {
     fontFamily: "Manrope_400Regular",
     fontSize: 10,
