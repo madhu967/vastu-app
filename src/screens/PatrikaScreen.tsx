@@ -403,7 +403,7 @@ export const PatrikaScreen = () => {
   const [subHeader2, setSubHeader2] = useState<string>("శుభమస్తు");
   const [subHeader3, setSubHeader3] = useState<string>("అవిఘ్నమస్తు");
   const [title1, setTitle1] = useState<string>("గృహారంభం");
-  const [title2, setTitle2] = useState<string>("సుముహూర్త లగ్న పత్రికే");
+  const [title2, setTitle2] = useState<string>("సుముహూర్త లగ్న పత్రిక");
 
   // Paragraph components for easy editing
   const [yearName, setYearName] = useState<string>("శ్రీ పరాభవ");
@@ -1165,7 +1165,7 @@ export const PatrikaScreen = () => {
                 <Text style={styles.label}>{labels.innerHeader1}</Text>
                 <PatrikaDropdown
                   value={title1}
-                  options={["గృహారంభం", "శంకుస్థాపన"]}
+                  options={["గృహారంభం", "గృహప్రవేశం"]}
                   onChange={setTitle1}
                 />
               </View>
